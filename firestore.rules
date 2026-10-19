@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Data lives under trips/<trip password>/...; without the password nobody can find it.
+    // Listing the trips collection itself is not allowed.
+    match /trips/{code}/{coll}/{doc} {
+      allow read, write: if true;
+    }
+  }
+}

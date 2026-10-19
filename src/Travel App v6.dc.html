@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#e8e3da;font-family:'Noto Sans TC',system-ui,sans-serif;color:#221f1a;-webkit-font-smoothing:antialiased}
+a{color:#221f1a}a:hover{color:oklch(0.55 0.14 40)}
+input{font-family:inherit}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.noscroll::-webkit-scrollbar{display:none}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:48px;padding:40px 24px;box-sizing:border-box">
+  <div style="max-width:300px;display:flex;flex-direction:column;gap:18px">
+    <div style="font:500 11px 'JetBrains Mono',monospace;letter-spacing:.08em;color:#6f685e">TRAVEL APP · 互動原型</div>
+    <div style="font:700 30px/1.25 'Noto Sans TC',sans-serif;text-wrap:pretty">行前好規劃，<br>路上用得到。</div>
+    <div style="font:400 14px/1.7 'Noto Sans TC';color:#4d473f;text-wrap:pretty">已匯入「東京河口湖7天行程」：7 天、6 人、所有交通段與備註。出發前排行程，出發當天自動切到「今日」。</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="font:500 11px 'JetBrains Mono',monospace;color:#6f685e">模擬時間</div>
+      <div style="display:flex;gap:6px;background:rgba(34,31,26,.07);padding:4px;border-radius:12px">
+        <sc-for list="{{ modeBtns }}" as="m" hint-placeholder-count="2">
+          <button onClick="{{ m.onClick }}" style="flex:1;border:0;cursor:pointer;padding:9px 10px;border-radius:9px;font:500 13px 'Noto Sans TC';background:{{ m.bg }};color:#221f1a;box-shadow:{{ m.shadow }}">{{ m.label }}</button>
+        </sc-for>
+      </div>
+      <div style="font:400 12px/1.6 'Noto Sans TC';color:#6f685e">{{ modeNote }}</div>
+    </div>
+  </div>
+
+  <div style="width:390px;height:844px;flex:none;border-radius:54px;background:#1b1915;padding:11px;box-sizing:border-box;box-shadow:0 30px 60px -20px rgba(40,30,20,.45)">
+    <div style="position:relative;width:100%;height:100%;border-radius:44px;overflow:hidden;background:#f7f4ef;display:flex;flex-direction:column">
+      <div style="height:50px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 34px;font:600 15px 'JetBrains Mono',monospace">
+        <span>{{ clock }}</span>
+        <div style="width:110px;height:32px;border-radius:20px;background:#1b1915;margin-top:4px"></div>
+        <span style="font-size:12px;white-space:nowrap">5G</span>
+      </div>
+
+      <div class="noscroll" style="scrollbar-width:none;flex:1;overflow-y:auto;overflow-x:hidden">
+
+        <sc-if value="{{ isToday }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:8px 20px 28px;display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div>
+                <div style="font:500 12px 'JetBrains Mono',monospace;color:#6f685e">{{ todayHead }}</div>
+                <div style="font:700 26px/1.3 'Noto Sans TC',sans-serif;margin-top:2px">{{ todayTitle }}</div>
+              </div>
+              <div style="display:flex;gap:6px;align-items:baseline">
+                <div style="font:400 11px 'Noto Sans TC';color:#6f685e;white-space:nowrap">今晚住</div>
+                <div style="font:500 12px/1.4 'Noto Sans TC'">{{ todayStay }}</div>
+              </div>
+            </div>
+
+            <div style="background:oklch(0.52 0.14 40);color:#fff;border-radius:22px;padding:18px 18px 16px;display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font:500 12px 'Noto Sans TC';opacity:.92">下一站 · {{ nextTime }} 抵達</span>
+                <span style="font:500 11px 'JetBrains Mono',monospace;background:rgba(255,255,255,.18);padding:3px 8px;border-radius:20px">建議出發 {{ leaveTime }}</span>
+              </div>
+              <div style="font:700 24px/1.25 'Noto Sans TC',sans-serif">{{ nextTitle }}</div>
+              <div style="display:flex;align-items:baseline;gap:8px">
+                <span style="font:600 40px/1 'JetBrains Mono',monospace;letter-spacing:-.02em">{{ countdown }}</span>
+                <span style="font:400 13px 'Noto Sans TC';opacity:.9">後該出發</span>
+              </div>
+              <div style="display:flex;gap:6px">
+                <sc-for list="{{ todayLegs }}" as="l" hint-placeholder-count="3">
+                  <button onClick="{{ l.onClick }}" style="flex:1;height:34px;border-radius:10px;border:1px solid rgba(255,255,255,.45);background:{{ l.tBg }};color:{{ l.tColor }};font:500 12px 'Noto Sans TC';cursor:pointer;opacity:{{ l.opacity }};white-space:nowrap">{{ l.label }} {{ l.mins }}</button>
+                </sc-for>
+              </div>
+              <div style="background:rgba(0,0,0,.16);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:10px">
+                <sc-for list="{{ route }}" as="r" hint-placeholder-count="4">
+                  <div style="display:flex;gap:10px;align-items:flex-start">
+                    <span style="flex:none;width:44px;font:600 11px 'JetBrains Mono',monospace;padding-top:2px;opacity:.85">{{ r.mins }}</span>
+                    <div style="flex:1">
+                      <div style="font:500 13.5px/1.4 'Noto Sans TC'">{{ r.t }}</div>
+                      <div style="font:400 11.5px 'Noto Sans TC';opacity:.82">{{ r.s }}</div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;gap:8px">
+                <button onClick="{{ startNav }}" style="flex:1;height:46px;border:0;border-radius:13px;background:#fff;color:#221f1a;font:700 14px 'Noto Sans TC';cursor:pointer">Google 地圖導航</button>
+                <button onClick="{{ delay30 }}" style="flex:none;height:46px;padding:0 16px;border:1px solid rgba(255,255,255,.5);border-radius:13px;background:transparent;color:#fff;font:500 14px 'Noto Sans TC';cursor:pointer">延後 30 分</button>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px">
+              <sc-for list="{{ quick }}" as="q" hint-placeholder-count="4">
+                <button onClick="{{ q.onClick }}" style="border:1px solid rgba(34,31,26,.1);background:#fffdf9;border-radius:16px;padding:14px 4px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;color:#221f1a" style-active="transform:scale(.96)">
+                  <span style="width:34px;height:34px;border-radius:11px;background:{{ q.color }};display:flex;align-items:center;justify-content:center;color:#fff;font:700 15px 'Noto Sans TC'">{{ q.glyph }}</span>
+                  <span style="font:500 12px 'Noto Sans TC'">{{ q.label }}</span>
+                </button>
+              </sc-for>
+            </div>
+
+            <div style="border:1px solid oklch(0.62 0.12 85);background:oklch(0.97 0.025 85);border-radius:14px;padding:12px 14px;display:flex;gap:10px">
+              <span style="flex:none;font:700 12px 'Noto Sans TC';color:oklch(0.45 0.1 85)">提醒</span>
+              <span style="font:400 12.5px/1.55 'Noto Sans TC';color:#4d473f">{{ nextNote }}</span>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;justify-content:space-between;align-items:baseline">
+                <span style="font:700 16px 'Noto Sans TC'">今天接下來</span>
+                <button onClick="{{ goPlan }}" style="border:0;background:none;font:500 12px 'Noto Sans TC';color:#6f685e;cursor:pointer">完整行程 →</button>
+              </div>
+              <sc-for list="{{ restToday }}" as="it" hint-placeholder-count="3">
+                <div onClick="{{ it.open }}" style="display:flex;gap:12px;align-items:center;padding:12px 14px;background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:14px;cursor:pointer">
+                  <span style="font:600 13px 'JetBrains Mono',monospace;width:42px">{{ it.time }}</span>
+                  <span style="width:8px;height:8px;border-radius:50%;background:{{ it.color }};flex:none"></span>
+                  <div style="flex:1;min-width:0">
+                    <div style="font:500 14px 'Noto Sans TC'">{{ it.title }}</div>
+                    <div style="font:400 11.5px 'Noto Sans TC';color:#6f685e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.sub }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isPlan }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:8px 20px 28px;display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <div>
+                <div style="font:500 12px 'JetBrains Mono',monospace;color:#6f685e;white-space:nowrap">2026.11.11 – 11.17 · 6 人</div>
+                <div style="font:700 28px/1.3 'Noto Sans TC',sans-serif;margin-top:2px;white-space:nowrap">東京・河口湖 7 天</div>
+              </div>
+              <div style="display:flex;flex:none;padding:4px 0 0 10px">
+                <sc-for list="{{ avatars }}" as="a" hint-placeholder-count="4">
+                  <span style="width:24px;height:24px;border-radius:50%;background:{{ a.bg }};border:2px solid #f7f4ef;margin-left:-10px;font-size:10px;display:flex;align-items:center;justify-content:center;font:700 11px 'Noto Sans TC';color:#fff">{{ a.i }}</span>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;background:#221f1a;color:#f7f4ef;border-radius:16px;padding:14px 16px">
+              <span style="font:500 13px 'Noto Sans TC'">{{ statusLabel }}</span>
+              <span style="font:600 18px 'JetBrains Mono',monospace">{{ statusValue }}</span>
+            </div>
+            <sc-if value="{{ isDraft }}">
+              <div style="display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:14px;background:oklch(0.97 0.02 255);border:1px solid oklch(0.85 0.05 255)">
+                <span style="flex:1;font:400 12.5px/1.5 'Noto Sans TC';color:#4d473f"><b style="color:oklch(0.42 0.11 255)">{{ draftLabel }}</b> · 可直接拖曳、改交通與停留時間</span>
+                <button onClick="{{ restoreTrip }}" style="flex:none;border:1px solid rgba(34,31,26,.18);background:transparent;border-radius:10px;padding:6px 10px;font:500 12px 'Noto Sans TC';cursor:pointer;color:#221f1a;white-space:nowrap">還原匯入行程</button>
+              </div>
+            </sc-if>
+            <button onClick="{{ openPlanner }}" style="height:46px;border:1.5px dashed rgba(34,31,26,.25);border-radius:14px;background:transparent;font:500 14px 'Noto Sans TC';color:#221f1a;cursor:pointer">＋ 規劃新旅程（選目的地，AI 排草稿）</button>
+            <div style="display:flex;align-items:center;gap:8px;font:400 12px 'Noto Sans TC';color:#4d473f"><span style="width:7px;height:7px;border-radius:50%;background:oklch(0.62 0.14 150);flex:none;animation:pulse 1.6s infinite"></span>{{ presence }}</div>
+            <div class="noscroll" style="scrollbar-width:none;display:flex;gap:8px;overflow-x:auto;margin:0 -20px;padding:0 20px 2px">
+              <sc-for list="{{ dayPills }}" as="d" hint-placeholder-count="5">
+                <button onClick="{{ d.onClick }}" style="flex:none;border:1px solid {{ d.border }};background:{{ d.bg }};color:{{ d.color }};border-radius:14px;padding:8px 14px;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:1px">
+                  <span style="font:600 13px 'JetBrains Mono',monospace">{{ d.label }}</span>
+                  <span style="font:400 11px 'Noto Sans TC';opacity:.75">{{ d.sub }}</span>
+                </button>
+              </sc-for>
+            </div>
+            <sc-if value="{{ showAi }}">
+              <div style="background:#fffdf9;border:1px solid oklch(0.56 0.11 255);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;animation:fade .3s">
+                <div style="display:flex;gap:8px;align-items:flex-start"><span style="font:700 10.5px/1.6 'Noto Sans TC';color:#fff;background:oklch(0.5 0.11 255);padding:1px 8px;border-radius:8px;flex:none;white-space:nowrap">順路建議</span><span style="flex:1;min-width:0;font:500 13.5px/1.45 'Noto Sans TC'">{{ ai.title }}</span></div>
+                <div style="font:400 12px/1.55 'Noto Sans TC';color:#4d473f">{{ ai.body }}</div>
+                <div style="display:flex;gap:8px">
+                  <button onClick="{{ ai.apply }}" style="border:0;background:oklch(0.5 0.11 255);color:#fff;border-radius:10px;padding:7px 14px;font:500 12.5px 'Noto Sans TC';cursor:pointer;white-space:nowrap">{{ ai.applyLabel }}</button>
+                  <button onClick="{{ ai.dismiss }}" style="border:1px solid rgba(34,31,26,.15);background:transparent;color:#4d473f;border-radius:10px;padding:7px 14px;font:500 12.5px 'Noto Sans TC';cursor:pointer;white-space:nowrap">略過</button>
+                </div>
+              </div>
+            </sc-if>
+            <div style="height:132px;border-radius:16px;border:1px solid rgba(34,31,26,.1);background:repeating-linear-gradient(135deg,#efe9df 0 10px,#e8e1d5 10px 20px);display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:6px;padding:10px 12px;box-sizing:border-box">
+              <span style="font:500 11px 'JetBrains Mono',monospace;color:#6f685e;background:#f7f4efcc;padding:3px 7px;border-radius:6px;white-space:nowrap">地圖：{{ dayCity }} 當日路線</span>
+              <span style="font:500 11px 'JetBrains Mono',monospace;color:#4d473f;background:#f7f4efcc;padding:3px 7px;border-radius:6px;white-space:nowrap">{{ dayStats }}</span>
+            </div>
+            <div style="font:400 11.5px 'Noto Sans TC';color:#6f685e;margin:-6px 0 -4px">長按卡片拖曳排序 · 放開後時間自動重排</div>
+            <div style="display:flex;flex-direction:column">
+              <sc-for list="{{ items }}" as="it" hint-placeholder-count="5">
+                <div data-row="1" style="display:flex;gap:10px;position:relative;user-select:none;-webkit-user-select:none;transform:{{ it.tf }};transition:{{ it.tr }};z-index:{{ it.z }}">
+                  <div style="width:44px;flex:none;padding-top:15px;font:600 13px 'JetBrains Mono',monospace;opacity:{{ it.opacity }}">{{ it.time }}</div>
+                  <div style="flex:none;width:12px;display:flex;flex-direction:column;align-items:center">
+                    <div style="width:8px;height:8px;border-radius:50%;margin-top:19px;background:{{ it.dot }};border:2px solid {{ it.color }};flex:none"></div>
+                    <div style="flex:1;width:2px;background:rgba(34,31,26,.1);margin-top:2px"></div>
+                  </div>
+                  <div style="flex:1;min-width:0;padding-bottom:4px">
+                    <div onClick="{{ it.open }}" onPointerDown="{{ it.down }}" onContextMenu="{{ noCtx }}" style="background:#fffdf9;border:1px solid {{ it.border }};border-radius:14px;padding:11px 14px;cursor:{{ it.cursor }};opacity:{{ it.opacity }};box-shadow:{{ it.shadow }};touch-action:pan-y;transition:box-shadow .15s" style-hover="background:#fff">
+                      <div style="display:flex;align-items:center;gap:6px">
+                        <span style="font:500 11px 'Noto Sans TC';color:{{ it.color }};white-space:nowrap">{{ it.type }}</span>
+                        <sc-if value="{{ it.isNext }}"><span style="font:700 10.5px 'Noto Sans TC';color:#fff;background:oklch(0.52 0.14 40);padding:1px 7px;border-radius:10px;white-space:nowrap">下一站</span></sc-if>
+                        <sc-if value="{{ it.done }}"><span style="font:500 10.5px 'Noto Sans TC';color:#6f685e;white-space:nowrap">✓ 已完成</span></sc-if>
+                        <span style="margin-left:auto;font:500 11px 'JetBrains Mono',monospace;color:#6f685e;white-space:nowrap">{{ it.stayLabel }}</span>
+                      </div>
+                      <div style="font:600 15px/1.35 'Noto Sans TC';margin-top:3px">{{ it.title }}</div>
+                      <div style="font:400 12px/1.5 'Noto Sans TC';color:#6f685e;margin-top:1px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ it.sub }}</div>
+                      <sc-if value="{{ it.hasWarn }}"><div style="font:500 11.5px/1.5 'Noto Sans TC';color:oklch(0.48 0.14 35);margin-top:4px">! {{ it.warnShort }}</div></sc-if>
+                    </div>
+                    <sc-if value="{{ it.hasMove }}"><div style="display:flex;align-items:center;gap:5px;padding:7px 0 6px">
+                      <span style="font:500 11px 'JetBrains Mono',monospace;color:#6f685e;width:10px;flex:none">↓</span>
+                      <sc-for list="{{ it.legs }}" as="l" hint-placeholder-count="3"><button onClick="{{ l.onClick }}" style="height:26px;padding:0 9px;border-radius:13px;border:1px solid {{ l.border }};background:{{ l.bg }};color:{{ l.color }};font:500 11px 'Noto Sans TC';cursor:pointer;white-space:nowrap;opacity:{{ l.opacity }}">{{ l.label }} {{ l.mins }}</button></sc-for>
+                      <sc-if value="{{ it.hasWait }}"><span style="font:500 10.5px 'JetBrains Mono',monospace;color:#6f685e;white-space:nowrap">+{{ it.wait }}分空檔</span></sc-if>
+                    </div></sc-if>
+                    <sc-if value="{{ it.hasLegNote }}"><div style="padding:0 0 7px 15px;font:400 11px/1.5 'Noto Sans TC';color:#6f685e">{{ it.legNote }}</div></sc-if>
+                    <sc-if value="{{ it.hasFixed }}"><div style="padding:7px 0 7px;font:500 11px/1.5 'Noto Sans TC';color:#6f685e">↓ {{ it.fixedText }}</div></sc-if>
+                  </div>
+                </div>
+              </sc-for>
+              <button onClick="{{ openAdd }}" style="margin:8px 0 0 66px;height:46px;border:1.5px dashed rgba(34,31,26,.25);border-radius:14px;background:transparent;font:500 14px 'Noto Sans TC';color:#4d473f;cursor:pointer">＋ 新增景點／餐廳</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isMoney }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:8px 20px 28px;display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-end">
+              <div style="font:700 26px/1.3 'Noto Sans TC',sans-serif">旅費與分帳</div>
+              <div style="display:flex;align-items:center;gap:6px;font:500 11.5px 'Noto Sans TC';color:#6f685e;padding-bottom:6px;white-space:nowrap"><span style="width:7px;height:7px;border-radius:50%;background:oklch(0.62 0.14 150);flex:none;animation:pulse 1.6s infinite"></span>{{ online }}</div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <span style="font:400 12px 'Noto Sans TC';color:#6f685e">{{ rateLabel }}</span>
+              <div style="display:flex;gap:2px;background:rgba(34,31,26,.07);padding:3px;border-radius:10px">
+                  <sc-for list="{{ curBtns }}" as="c" hint-placeholder-count="2"><button onClick="{{ c.onClick }}" style="border:0;cursor:pointer;height:30px;padding:0 12px;border-radius:8px;font:500 12.5px 'Noto Sans TC';background:{{ c.bg }};color:#221f1a;box-shadow:{{ c.shadow }};white-space:nowrap">{{ c.label }}</button></sc-for>
+                </div>
+            </div>
+            <div style="background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;justify-content:space-between;align-items:baseline">
+                <span style="font:500 12px 'Noto Sans TC';color:#6f685e">共同支出 · 6 人</span>
+                <span style="font:500 12px 'JetBrains Mono',monospace;color:#6f685e">{{ budgetStr }}</span>
+              </div>
+              <div style="display:flex;align-items:baseline;gap:8px">
+                <span style="font:600 32px 'JetBrains Mono',monospace">{{ totalStr }}</span>
+                <span style="font:400 12px 'Noto Sans TC';color:#6f685e">{{ totalTwd }}</span>
+              </div>
+              <div style="height:8px;border-radius:4px;background:rgba(34,31,26,.08);overflow:hidden">
+                <div style="height:100%;width:{{ budgetPct }};background:oklch(0.58 0.11 165);border-radius:4px;transition:width .4s"></div>
+              </div>
+            </div>
+            <div style="display:flex;gap:4px;background:rgba(34,31,26,.07);padding:4px;border-radius:12px">
+              <sc-for list="{{ moneyTabs }}" as="m" hint-placeholder-count="2">
+                <button onClick="{{ m.onClick }}" style="flex:1;border:0;cursor:pointer;height:36px;border-radius:9px;font:500 13px 'Noto Sans TC';background:{{ m.bg }};color:#221f1a;box-shadow:{{ m.shadow }}">{{ m.label }}</button>
+              </sc-for>
+            </div>
+
+            <sc-if value="{{ isList }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                  <sc-for list="{{ balances }}" as="b" hint-placeholder-count="4">
+                    <div style="background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:14px;padding:11px 13px;display:flex;align-items:center;gap:10px">
+                      <span style="width:28px;height:28px;border-radius:50%;background:{{ b.bg }};color:#fff;display:flex;align-items:center;justify-content:center;font:700 11px 'Noto Sans TC';flex:none">{{ b.i }}</span>
+                      <div style="min-width:0">
+                        <div style="font:500 12px 'Noto Sans TC'">{{ b.name }} <span style="color:#6f685e;font-weight:400">{{ b.sub }}</span></div>
+                        <div style="font:600 13px 'JetBrains Mono',monospace;color:{{ b.color }}">{{ b.net }}</div>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="display:flex;gap:10px;padding:11px 13px;border-radius:14px;background:oklch(0.97 0.02 255);border:1px solid oklch(0.85 0.05 255)">
+                  <span style="font:700 11px 'Noto Sans TC';color:oklch(0.45 0.11 255);flex:none;padding-top:1px">小建議</span>
+                  <span style="font:400 12.5px/1.55 'Noto Sans TC';color:#4d473f">{{ aiTip }}</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span style="font:700 16px 'Noto Sans TC'">明細</span>
+                  <button onClick="{{ openExp }}" style="border:0;background:#221f1a;color:#fff;border-radius:11px;padding:8px 14px;font:500 13px 'Noto Sans TC';cursor:pointer">＋ 記一筆</button>
+                </div>
+                <div style="display:flex;flex-direction:column;background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:16px;overflow:hidden">
+                  <sc-for list="{{ expList }}" as="e" hint-placeholder-count="4">
+                    <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid rgba(34,31,26,.07);background:{{ e.bg }};transition:background .6s">
+                      <span style="font:500 11px 'Noto Sans TC';color:#fff;background:{{ e.color }};border-radius:7px;padding:3px 7px;flex:none">{{ e.cat }}</span>
+                      <div style="flex:1;min-width:0">
+                        <div style="display:flex;align-items:center;gap:6px"><span style="font:500 14px 'Noto Sans TC'">{{ e.t }}</span><sc-if value="{{ e.fresh }}"><span style="font:700 10px 'Noto Sans TC';color:#fff;background:oklch(0.5 0.11 165);padding:1px 6px;border-radius:8px">剛新增</span></sc-if></div>
+                        <div style="font:400 11.5px 'Noto Sans TC';color:#6f685e">{{ e.meta }}</div>
+                      </div>
+                      <div style="text-align:right">
+                        <div style="font:600 14px 'JetBrains Mono',monospace">{{ e.amt }}</div>
+                        <div style="font:400 10.5px 'Noto Sans TC';color:#6f685e">{{ e.twd }}</div>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isSettle }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <sc-if value="{{ notClear }}">
+                  <div style="font:400 13px/1.6 'Noto Sans TC';color:#4d473f">{{ transferCount }}</div>
+                  <sc-for list="{{ transfers }}" as="x" hint-placeholder-count="2">
+                    <div style="background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:12px">
+                      <div style="display:flex;align-items:center;gap:10px">
+                        <span style="width:34px;height:34px;border-radius:50%;background:{{ x.fromBg }};color:#fff;display:flex;align-items:center;justify-content:center;font:700 12px 'Noto Sans TC';flex:none">{{ x.fromI }}</span>
+                        <span style="font:500 14px 'JetBrains Mono',monospace;color:#6f685e">→</span>
+                        <span style="width:34px;height:34px;border-radius:50%;background:{{ x.toBg }};color:#fff;display:flex;align-items:center;justify-content:center;font:700 12px 'Noto Sans TC';flex:none">{{ x.toI }}</span>
+                        <div style="flex:1;min-width:0">
+                          <div style="font:500 14px 'Noto Sans TC'">{{ x.from }} 付給 {{ x.to }}</div>
+                          <div style="font:400 11.5px 'Noto Sans TC';color:#6f685e">{{ x.twd }}</div>
+                        </div>
+                        <span style="font:600 17px 'JetBrains Mono',monospace">{{ x.amt }}</span>
+                      </div>
+                      <div style="display:flex;gap:8px">
+                        <button onClick="{{ x.onPaid }}" style="flex:1;height:40px;border:0;border-radius:11px;background:#221f1a;color:#fff;font:500 13px 'Noto Sans TC';cursor:pointer">標記已付</button>
+                        <button onClick="{{ x.onRemind }}" style="white-space:nowrap;flex:none;height:40px;padding:0 16px;border:1px solid rgba(34,31,26,.18);border-radius:11px;background:transparent;color:#221f1a;font:500 13px 'Noto Sans TC';cursor:pointer">提醒</button>
+                      </div>
+                    </div>
+                  </sc-for>
+                </sc-if>
+                <sc-if value="{{ allClear }}">
+                  <div style="background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:18px;padding:28px 18px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center">
+                    <span style="width:44px;height:44px;border-radius:50%;background:oklch(0.5 0.11 165);color:#fff;display:flex;align-items:center;justify-content:center;font:700 20px sans-serif">✓</span>
+                    <span style="font:700 17px 'Noto Sans TC'">大家都結清了</span>
+                    <span style="font:400 12.5px 'Noto Sans TC';color:#6f685e">之後新增的支出會重新計算</span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ hasSettled }}">
+                  <div style="font:500 12px 'Noto Sans TC';color:#6f685e;padding:4px 2px 0">已結清</div>
+                  <div style="background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:16px;overflow:hidden">
+                    <sc-for list="{{ settledList }}" as="x" hint-placeholder-count="1">
+                      <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid rgba(34,31,26,.07)">
+                        <span style="font:700 13px sans-serif;color:oklch(0.45 0.11 165)">✓</span>
+                        <span style="flex:1;font:400 13.5px 'Noto Sans TC';color:#4d473f">{{ x.from }} → {{ x.to }}</span>
+                        <span style="font:500 13px 'JetBrains Mono',monospace;color:#6f685e;text-decoration:line-through">{{ x.amt }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isPack }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:8px 20px 28px;display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-end">
+              <div style="font:700 26px/1.3 'Noto Sans TC',sans-serif">行李清單</div>
+              <span style="font:600 14px 'JetBrains Mono',monospace;color:#6f685e">{{ packCount }}</span>
+            </div>
+            <div style="height:8px;border-radius:4px;background:rgba(34,31,26,.08);overflow:hidden">
+              <div style="height:100%;width:{{ packPct }};background:oklch(0.6 0.13 40);transition:width .3s"></div>
+            </div>
+            <sc-for list="{{ packCats }}" as="c" hint-placeholder-count="3">
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <div style="font:500 12px 'Noto Sans TC';color:#6f685e;padding:0 2px">{{ c.name }}</div>
+                <div style="background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:16px;overflow:hidden">
+                  <sc-for list="{{ c.items }}" as="p" hint-placeholder-count="3">
+                    <div onClick="{{ p.onClick }}" style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid rgba(34,31,26,.07);cursor:pointer">
+                      <span style="width:20px;height:20px;border-radius:6px;border:1.5px solid {{ p.boxBorder }};background:{{ p.boxBg }};color:#fff;display:flex;align-items:center;justify-content:center;font:700 12px sans-serif;flex:none">{{ p.mark }}</span>
+                      <span style="flex:1;font:400 14px 'Noto Sans TC';color:{{ p.color }};text-decoration:{{ p.deco }}">{{ p.label }}</span>
+                      <span style="font:400 11px 'Noto Sans TC';color:#6f685e">{{ p.who }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+
+      <div style="flex:none;height:82px;border-top:1px solid rgba(34,31,26,.1);background:#f7f4efee;display:flex;padding:0 10px 18px">
+        <sc-for list="{{ nav }}" as="n" hint-placeholder-count="4">
+          <button onClick="{{ n.onClick }}" style="flex:1;border:0;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:{{ n.color }}">
+            <span style="width:22px;height:3px;border-radius:2px;background:{{ n.bar }}"></span>
+            <span style="font:{{ n.weight }} 13px 'Noto Sans TC'">{{ n.label }}</span>
+          </button>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ plOpen }}">
+        <div style="position:absolute;inset:0;z-index:25;background:#f7f4ef;display:flex;flex-direction:column;animation:up .25s ease-out">
+          <div style="height:50px;flex:none"></div>
+          <div style="display:flex;align-items:center;gap:10px;padding:4px 20px 10px">
+            <button onClick="{{ pl.close }}" style="border:0;background:none;font:500 14px 'Noto Sans TC';color:#6f685e;cursor:pointer;padding:6px 0">取消</button>
+            <div style="flex:1;display:flex;gap:5px;justify-content:center">
+              <sc-for list="{{ pl.dots }}" as="d" hint-placeholder-count="4"><span style="width:{{ d.w }};height:6px;border-radius:3px;background:{{ d.bg }};transition:width .2s"></span></sc-for>
+            </div>
+            <span style="font:500 12px 'JetBrains Mono',monospace;color:#6f685e;width:40px;text-align:right">{{ pl.stepLabel }}</span>
+          </div>
+          <div class="noscroll" style="scrollbar-width:none;flex:1;overflow-y:auto;padding:4px 20px 20px;display:flex;flex-direction:column;gap:16px">
+            <div style="font:700 24px/1.3 'Noto Sans TC',sans-serif">{{ pl.title }}</div>
+
+            <sc-if value="{{ pl.s1 }}">
+              <div style="display:flex;flex-direction:column;gap:16px">
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <span style="font:500 12px 'Noto Sans TC';color:#6f685e">目的地 · 可多選，依點選順序排</span>
+                  <div style="display:flex;flex-wrap:wrap;gap:8px">
+                    <sc-for list="{{ pl.cityChips }}" as="c" hint-placeholder-count="8">
+                      <button onClick="{{ c.onClick }}" style="flex:none;white-space:nowrap;display:flex;align-items:center;gap:6px;height:38px;padding:0 13px;border-radius:19px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};font:500 13.5px 'Noto Sans TC';cursor:pointer">
+                        <sc-if value="{{ c.on }}"><span style="width:18px;height:18px;border-radius:50%;background:#fff;color:#221f1a;font:700 10.5px 'JetBrains Mono',monospace;display:flex;align-items:center;justify-content:center">{{ c.order }}</span></sc-if>{{ c.label }}
+                      </button>
+                    </sc-for>
+                  </div>
+                  <sc-if value="{{ pl.errCity }}"><span style="font:400 12px 'Noto Sans TC';color:oklch(0.5 0.14 30)">至少選一個目的地</span></sc-if>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <span style="font:500 12px 'Noto Sans TC';color:#6f685e">出發日</span>
+                  <input type="date" value="{{ pl.start }}" onChange="{{ pl.setStart }}" style="height:48px;border-radius:14px;border:1.5px solid rgba(34,31,26,.15);background:#fffdf9;padding:0 14px;font:500 15px 'JetBrains Mono',monospace;color:#221f1a;outline:none">
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                  <div style="background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:8px"><span style="font:500 12px 'Noto Sans TC';color:#6f685e">天數</span><div style="display:flex;align-items:center;gap:6px"><button onClick="{{ pl.daysCtl.dec }}" style="width:40px;height:40px;border-radius:12px;border:1px solid rgba(34,31,26,.18);background:transparent;font:500 18px sans-serif;cursor:pointer;color:#221f1a">−</button><span style="flex:1;text-align:center;font:600 22px 'JetBrains Mono',monospace">{{ pl.daysCtl.v }}</span><button onClick="{{ pl.daysCtl.inc }}" style="width:40px;height:40px;border-radius:12px;border:1px solid rgba(34,31,26,.18);background:transparent;font:500 18px sans-serif;cursor:pointer;color:#221f1a">＋</button></div></div>
+                  <div style="background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:8px"><span style="font:500 12px 'Noto Sans TC';color:#6f685e">人數</span><div style="display:flex;align-items:center;gap:6px"><button onClick="{{ pl.pplCtl.dec }}" style="width:40px;height:40px;border-radius:12px;border:1px solid rgba(34,31,26,.18);background:transparent;font:500 18px sans-serif;cursor:pointer;color:#221f1a">−</button><span style="flex:1;text-align:center;font:600 22px 'JetBrains Mono',monospace">{{ pl.pplCtl.v }}</span><button onClick="{{ pl.pplCtl.inc }}" style="width:40px;height:40px;border-radius:12px;border:1px solid rgba(34,31,26,.18);background:transparent;font:500 18px sans-serif;cursor:pointer;color:#221f1a">＋</button></div></div>
+                </div>
+                <div style="background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:16px;padding:13px 14px;display:flex;flex-direction:column;gap:4px">
+                  <span style="font:600 14px 'JetBrains Mono',monospace">{{ pl.dateLine }}</span>
+                  <span style="font:400 12.5px 'Noto Sans TC';color:#4d473f">{{ pl.splitLine }}</span>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ pl.s2 }}">
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <div style="font:400 12.5px/1.6 'Noto Sans TC';color:#4d473f">{{ pl.route }}</div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <span style="font:500 12px 'Noto Sans TC';color:#6f685e">去程 · {{ pl.outDate }}</span>
+                  <sc-for list="{{ pl.outFl }}" as="x" hint-placeholder-count="4">
+                    <button onClick="{{ x.onClick }}" style="display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:14px;border:1.5px solid {{ x.border }};background:#fffdf9;cursor:pointer;text-align:left;color:#221f1a">
+                      <div style="flex:1;min-width:0">
+                        <div style="font:500 13.5px 'Noto Sans TC'">{{ x.air }}</div>
+                        <div style="font:500 12px 'JetBrains Mono',monospace;color:#4d473f;margin-top:2px">{{ x.time }} · 直飛</div>
+                      </div>
+                      <div style="text-align:right;flex:none">
+                        <div style="font:600 12.5px 'JetBrains Mono',monospace">{{ x.price }}</div>
+                        <div style="font:400 10.5px 'Noto Sans TC';color:#6f685e">{{ x.tag }}</div>
+                      </div>
+                    </button>
+                  </sc-for>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <span style="font:500 12px 'Noto Sans TC';color:#6f685e">回程 · {{ pl.retDate }}</span>
+                  <sc-for list="{{ pl.retFl }}" as="x" hint-placeholder-count="4">
+                    <button onClick="{{ x.onClick }}" style="display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:14px;border:1.5px solid {{ x.border }};background:#fffdf9;cursor:pointer;text-align:left;color:#221f1a">
+                      <div style="flex:1;min-width:0">
+                        <div style="font:500 13.5px 'Noto Sans TC'">{{ x.air }}</div>
+                        <div style="font:500 12px 'JetBrains Mono',monospace;color:#4d473f;margin-top:2px">{{ x.time }} · 直飛</div>
+                      </div>
+                      <div style="text-align:right;flex:none">
+                        <div style="font:600 12.5px 'JetBrains Mono',monospace">{{ x.price }}</div>
+                        <div style="font:400 10.5px 'Noto Sans TC';color:#6f685e">{{ x.tag }}</div>
+                      </div>
+                    </button>
+                  </sc-for>
+                </div>
+                <a href="{{ pl.flLink }}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;height:44px;border-radius:13px;background:#221f1a;color:#fff;font:500 13.5px 'Noto Sans TC';text-decoration:none">在 Google 航班查即時價格 ↗</a>
+                <div style="font:400 11.5px/1.6 'Noto Sans TC';color:#6f685e">標「你的行程」的是從匯入行程讀到的班次；其餘時刻與票價是示意。正式版會串接航班資料，或帶入你在 Google 航班選好的班次。</div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ pl.s3 }}">
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <span style="font:500 12px 'Noto Sans TC';color:#6f685e">想買什麼 · AI 會依品類排進對應城市的下午</span>
+                <div style="display:flex;flex-wrap:wrap;gap:8px">
+                  <sc-for list="{{ pl.shopChips }}" as="c" hint-placeholder-count="6">
+                    <button onClick="{{ c.onClick }}" style="flex:none;white-space:nowrap;height:38px;padding:0 13px;border-radius:19px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};font:500 13.5px 'Noto Sans TC';cursor:pointer">{{ c.label }}</button>
+                  </sc-for>
+                </div>
+                <div style="background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:16px;overflow:hidden">
+                  <sc-for list="{{ pl.shopPreview }}" as="p" hint-placeholder-count="3">
+                    <div style="display:flex;gap:10px;align-items:center;padding:11px 14px;border-bottom:1px solid rgba(34,31,26,.07)">
+                      <span style="font:500 11px 'Noto Sans TC';color:#fff;background:oklch(0.5 0.12 300);border-radius:7px;padding:3px 7px;flex:none">{{ p.cat }}</span>
+                      <span style="flex:1;font:500 13.5px 'Noto Sans TC'">{{ p.place }}</span>
+                      <span style="font:500 11.5px 'JetBrains Mono',monospace;color:#6f685e;white-space:nowrap">{{ p.where }}</span>
+                    </div>
+                  </sc-for>
+                  <sc-if value="{{ pl.noShop }}"><div style="padding:14px;font:400 12.5px 'Noto Sans TC';color:#6f685e">沒選品類：草稿以景點和美食為主。</div></sc-if>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ pl.s4 }}">
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:18px;overflow:hidden">
+                  <div style="display:flex;padding:10px 14px;border-bottom:1px solid rgba(34,31,26,.08);font:500 11px 'Noto Sans TC';color:#6f685e"><span style="flex:1">項目</span><span style="width:84px;text-align:right">每人</span><span style="width:96px;text-align:right">{{ pl.pplLabel }}</span></div>
+                  <sc-for list="{{ pl.budget }}" as="b" hint-placeholder-count="5">
+                    <div style="display:flex;align-items:center;padding:12px 14px;border-bottom:1px solid rgba(34,31,26,.06)">
+                      <div style="flex:1;min-width:0"><div style="font:500 14px 'Noto Sans TC'">{{ b.k }}</div><div style="font:400 11px 'Noto Sans TC';color:#6f685e">{{ b.basis }}</div></div>
+                      <span style="width:84px;text-align:right;font:500 12.5px 'JetBrains Mono',monospace;color:#4d473f">{{ b.pp }}</span>
+                      <span style="width:96px;text-align:right;font:600 13.5px 'JetBrains Mono',monospace">{{ b.total }}</span>
+                    </div>
+                  </sc-for>
+                  <div style="display:flex;align-items:center;padding:14px;background:#221f1a;color:#fff">
+                    <span style="flex:1;font:700 14px 'Noto Sans TC'">合計</span>
+                    <span style="width:84px;text-align:right;font:500 12.5px 'JetBrains Mono',monospace;opacity:.85">{{ pl.ppTotal }}</span>
+                    <span style="width:96px;text-align:right;font:600 15px 'JetBrains Mono',monospace">{{ pl.total }}</span>
+                  </div>
+                </div>
+                <div style="font:400 11.5px/1.6 'Noto Sans TC';color:#6f685e">新台幣估算，{{ pl.totalJpy }}。機票取所選班次票價區間中位數；其他依天數、人數與城市類型估算。行程排好後，記帳頁會把實際花費和這張表對照。</div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ pl.s5 }}">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:60px 0">
+                <div style="width:44px;height:44px;border-radius:50%;border:3px solid rgba(34,31,26,.12);border-top-color:oklch(0.5 0.11 255);animation:spin .8s linear infinite"></div>
+                <span style="font:500 14px 'Noto Sans TC'">Claude 正在排 {{ pl.days }} 天草稿…</span>
+                <span style="font:400 12px 'Noto Sans TC';color:#6f685e">約需 20–40 秒，失敗會自動改用規則草稿</span>
+                <span style="font:400 12px 'Noto Sans TC';color:#6f685e">{{ pl.splitLine }}</span>
+              </div>
+            </sc-if>
+          </div>
+          <sc-if value="{{ pl.showFoot }}">
+            <div style="flex:none;display:flex;gap:8px;padding:12px 20px 30px;border-top:1px solid rgba(34,31,26,.08)">
+              <sc-if value="{{ pl.canBack }}"><button onClick="{{ pl.back }}" style="height:50px;padding:0 18px;border:1px solid rgba(34,31,26,.18);border-radius:15px;background:transparent;font:500 14px 'Noto Sans TC';color:#221f1a;cursor:pointer">上一步</button></sc-if>
+              <button onClick="{{ pl.next }}" style="flex:1;height:50px;border:0;border-radius:15px;background:#221f1a;color:#fff;font:700 15px 'Noto Sans TC';cursor:pointer">{{ pl.nextLabel }}</button>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ hasToast }}">
+        <div style="position:absolute;left:50%;bottom:100px;transform:translateX(-50%);background:#221f1a;color:#fff;font:500 13px 'Noto Sans TC';padding:10px 16px;border-radius:12px;white-space:nowrap;animation:fade .2s;z-index:30">{{ toast }}</div>
+      </sc-if>
+
+      <sc-if value="{{ hasSheet }}">
+        <div onClick="{{ closeSheet }}" style="position:absolute;inset:0;background:rgba(27,25,21,.4);display:flex;align-items:flex-end;z-index:20;animation:fade .2s">
+          <div onClick="{{ stop }}" class="noscroll" style="scrollbar-width:none;width:100%;max-height:82%;overflow-y:auto;background:#f7f4ef;border-radius:26px 26px 0 0;padding:10px 20px 34px;box-sizing:border-box;animation:up .25s ease-out">
+            <div style="width:40px;height:5px;border-radius:3px;background:rgba(34,31,26,.2);margin:0 auto 14px"></div>
+
+            <sc-if value="{{ sh.stop }}">
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="height:110px;border-radius:16px;background:repeating-linear-gradient(135deg,#efe9df 0 10px,#e8e1d5 10px 20px);display:flex;align-items:center;justify-content:center;font:500 11px 'JetBrains Mono',monospace;color:#6f685e">照片：{{ sel.title }}</div>
+                <div style="font:500 12px 'Noto Sans TC';color:{{ sel.color }}">{{ sel.type }} · {{ sel.span }}</div>
+                <div style="font:700 22px/1.3 'Noto Sans TC',sans-serif">{{ sel.title }}</div>
+                <div style="font:400 13.5px/1.65 'Noto Sans TC';color:#4d473f">{{ sel.sub }}</div>
+                <sc-if value="{{ sel.hasAddr }}"><div style="font:400 12px 'Noto Sans TC';color:#6f685e">{{ sel.addrLine }}</div></sc-if>
+                <sc-if value="{{ sel.hasIn }}">
+                  <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
+                    <div style="font:500 12px 'Noto Sans TC';color:#6f685e">交通方式 · 從「{{ sel.prevTitle }}」過來</div>
+                    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+                      <sc-for list="{{ sel.inLegs }}" as="l" hint-placeholder-count="3">
+                        <button onClick="{{ l.onClick }}" style="border:1.5px solid {{ l.cardBorder }};background:{{ l.cardBg }};border-radius:14px;padding:10px 10px 9px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;cursor:pointer;opacity:{{ l.opacity }};color:#221f1a;text-align:left">
+                          <span style="font:500 12px 'Noto Sans TC'">{{ l.label }}</span>
+                          <span style="font:600 18px 'JetBrains Mono',monospace">{{ l.mins }}</span>
+                          <span style="font:400 10.5px 'Noto Sans TC';color:#6f685e">{{ l.note }}</span>
+                        </button>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-if>
+                <div style="display:flex;flex-direction:column;gap:10px;background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:16px;padding:14px">
+                  <div style="display:flex;justify-content:space-between;align-items:center">
+                    <span style="font:500 12px 'Noto Sans TC';color:#6f685e">停留時間</span>
+                    <span style="font:400 11.5px 'Noto Sans TC';color:oklch(0.45 0.11 255)">{{ sel.recLabel }}</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:12px">
+                    <button onClick="{{ sel.minus }}" style="width:44px;height:44px;border-radius:12px;border:1px solid rgba(34,31,26,.18);background:transparent;font:500 20px sans-serif;cursor:pointer;color:#221f1a">−</button>
+                    <div style="flex:1;text-align:center"><span style="font:600 30px 'JetBrains Mono',monospace">{{ sel.stay }}</span><span style="font:400 13px 'Noto Sans TC';color:#6f685e"> 分</span></div>
+                    <button onClick="{{ sel.plus }}" style="width:44px;height:44px;border-radius:12px;border:1px solid rgba(34,31,26,.18);background:transparent;font:500 20px sans-serif;cursor:pointer;color:#221f1a">＋</button>
+                  </div>
+                  <div style="display:flex;gap:6px">
+                    <sc-for list="{{ sel.presets }}" as="p" hint-placeholder-count="4"><button onClick="{{ p.onClick }}" style="flex:1;height:32px;border-radius:10px;border:1px solid {{ p.border }};background:{{ p.bg }};color:{{ p.color }};font:500 12px 'JetBrains Mono',monospace;cursor:pointer">{{ p.label }}</button></sc-for>
+                    <button onClick="{{ sel.applyRec }}" style="flex:none;height:32px;padding:0 10px;border-radius:10px;border:0;background:oklch(0.5 0.11 255);color:#fff;font:500 12px 'Noto Sans TC';cursor:pointer;white-space:nowrap">用建議</button>
+                  </div>
+                  <div style="font:400 12px 'Noto Sans TC';color:#4d473f">{{ sel.impact }}</div>
+                  <sc-if value="{{ sel.hasWarn }}">
+                    <div style="display:flex;gap:8px;align-items:center;padding:9px 11px;border-radius:11px;background:oklch(0.96 0.03 40)">
+                      <span style="flex:1;font:400 12px/1.5 'Noto Sans TC';color:oklch(0.42 0.13 35)">{{ sel.warn }}</span>
+                      <button onClick="{{ sel.fix }}" style="flex:none;height:30px;padding:0 10px;border:0;border-radius:9px;background:oklch(0.5 0.14 35);color:#fff;font:500 12px 'Noto Sans TC';cursor:pointer;white-space:nowrap">自動調整</button>
+                    </div>
+                  </sc-if>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:6px">
+                  <button onClick="{{ startNav }}" style="flex:1;height:48px;border:0;border-radius:14px;background:#221f1a;color:#fff;font:700 14px 'Noto Sans TC';cursor:pointer">Google 地圖導航</button>
+                  <button onClick="{{ delSel }}" style="height:48px;padding:0 18px;border:1px solid rgba(34,31,26,.2);border-radius:14px;background:transparent;font:500 14px 'Noto Sans TC';color:oklch(0.5 0.14 30);cursor:pointer">移除</button>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ sh.add }}">
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="font:700 20px 'Noto Sans TC',sans-serif">加入 {{ dayLabel }}</div>
+                <div style="font:400 12px 'Noto Sans TC';color:#6f685e">從你行程備註裡的備案與順路點整理 · 會排在當天最後</div>
+                <sc-for list="{{ suggest }}" as="s" hint-placeholder-count="4">
+                  <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:14px">
+                    <span style="width:8px;height:8px;border-radius:50%;background:{{ s.color }};flex:none"></span>
+                    <div style="flex:1">
+                      <div style="font:500 14px 'Noto Sans TC'">{{ s.title }}</div>
+                      <div style="font:400 11.5px 'Noto Sans TC';color:#6f685e">{{ s.sub }}</div>
+                    </div>
+                    <button onClick="{{ s.onClick }}" style="border:0;background:#221f1a;color:#fff;border-radius:10px;padding:7px 12px;font:500 12px 'Noto Sans TC';cursor:pointer">加入</button>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ sh.translate }}">
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="font:700 20px 'Noto Sans TC',sans-serif">翻譯卡</div>
+                <div style="display:flex;gap:8px">
+                  <input value="{{ trText }}" onChange="{{ setTr }}" onKeyDown="{{ trKey }}" placeholder="輸入中文，Claude 翻成日文" style="flex:1;min-width:0;height:44px;border-radius:13px;border:1.5px solid rgba(34,31,26,.15);background:#fffdf9;padding:0 13px;font:400 14.5px 'Noto Sans TC';color:#221f1a;outline:none">
+                  <button onClick="{{ doTr }}" style="flex:none;height:44px;padding:0 16px;border:0;border-radius:13px;background:oklch(0.5 0.11 255);color:#fff;font:500 13.5px 'Noto Sans TC';cursor:pointer;white-space:nowrap;opacity:{{ trOpacity }}">{{ trBtn }}</button>
+                </div>
+                <sc-if value="{{ trErr }}"><span style="font:400 12px 'Noto Sans TC';color:oklch(0.5 0.14 30)">{{ trErr }}</span></sc-if>
+                <div style="background:#fffdf9;border:1px solid rgba(34,31,26,.12);border-radius:18px;padding:22px 18px;display:flex;flex-direction:column;gap:8px;min-height:120px">
+                  <div style="font:700 28px/1.35 'Noto Sans TC';letter-spacing:.02em">{{ phrase.jp }}</div>
+                  <div style="font:500 12px 'JetBrains Mono',monospace;color:#6f685e">{{ phrase.ro }}</div>
+                  <div style="font:400 13px 'Noto Sans TC';color:#4d473f;margin-top:4px">{{ phrase.zh }}</div>
+                </div>
+                <div style="font:400 12px 'Noto Sans TC';color:#6f685e">把手機轉向店員即可 · 點選下方切換</div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px">
+                  <sc-for list="{{ phrases }}" as="p" hint-placeholder-count="5">
+                    <button onClick="{{ p.onClick }}" style="border:1px solid {{ p.border }};background:{{ p.bg }};color:{{ p.color }};border-radius:20px;padding:8px 13px;font:500 13px 'Noto Sans TC';cursor:pointer">{{ p.zh }}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ sh.food }}">
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="font:700 20px 'Noto Sans TC',sans-serif">附近美食 · 澀谷神南</div>
+                <div style="display:flex;flex-direction:column;gap:6px;padding:11px 13px;border-radius:14px;background:oklch(0.97 0.02 255);border:1px solid oklch(0.85 0.05 255)">
+                  <span style="font:700 11.5px 'Noto Sans TC';color:oklch(0.42 0.11 255)">推薦依據</span>
+                  <span style="font:400 12px/1.6 'Noto Sans TC';color:#4d473f">① 台灣網友實際推薦（Dcard／Threads 貼文）② Tabelog 分數與百名店。以目前位置（BEAMS 神南）約 15 分鐘步行內，並標出 6 人是否好坐。資料查於 2026/10/18，正式版會依當下位置即時搜尋。</span>
+                  <a href="https://www.google.com/maps/search/?api=1&amp;query=%E6%B8%8B%E8%B0%B7%20%E7%A5%9E%E5%8D%97%20%E3%83%AC%E3%82%B9%E3%83%88%E3%83%A9%E3%83%B3" target="_blank" rel="noopener" style="font:500 12px 'Noto Sans TC';color:oklch(0.42 0.11 255);text-decoration:none">在 Google 地圖看附近所有餐廳 ↗</a>
+                </div>
+                <sc-for list="{{ food }}" as="f" hint-placeholder-count="5">
+                  <div style="display:flex;flex-direction:column;gap:8px;padding:13px 14px;background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:16px">
+                    <div style="display:flex;gap:10px;align-items:flex-start">
+                      <div style="flex:1;min-width:0">
+                        <div style="font:600 14.5px 'Noto Sans TC'">{{ f.n }}</div>
+                        <div style="font:400 11.5px 'Noto Sans TC';color:#6f685e;margin-top:1px">{{ f.tag }}</div>
+                      </div>
+                      <button onClick="{{ f.onClick }}" style="flex:none;border:1px solid rgba(34,31,26,.2);background:transparent;border-radius:10px;padding:6px 10px;font:500 12px 'Noto Sans TC';cursor:pointer;color:#221f1a;white-space:nowrap">排入</button>
+                    </div>
+                    <div style="display:flex;flex-wrap:wrap;gap:6px">
+                      <span style="font:500 11px 'Noto Sans TC';padding:3px 8px;border-radius:8px;background:{{ f.twBg }};color:{{ f.twColor }}">{{ f.tw }}</span>
+                      <span style="font:500 11px 'JetBrains Mono',monospace;padding:3px 8px;border-radius:8px;background:{{ f.tbBg }};color:{{ f.tbColor }}">{{ f.tb }}</span>
+                      <span style="font:500 11px 'Noto Sans TC';padding:3px 8px;border-radius:8px;background:rgba(34,31,26,.06);color:#4d473f">{{ f.group }}</span>
+                    </div>
+                    <div style="font:400 12px/1.55 'Noto Sans TC';color:#4d473f">{{ f.why }}</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:14px">
+                      <a href="{{ f.url }}" target="_blank" rel="noopener" style="font:500 11.5px 'Noto Sans TC';color:oklch(0.45 0.11 255);text-decoration:none">來源：{{ f.src }} ↗</a>
+                      <a href="{{ f.map }}" target="_blank" rel="noopener" style="font:500 11.5px 'Noto Sans TC';color:oklch(0.45 0.11 255);text-decoration:none">Google 地圖 ↗</a>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ sh.ticket }}">
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="font:700 20px 'Noto Sans TC',sans-serif">票券（可離線）</div>
+                <div style="background:#fffdf9;border:1px solid rgba(34,31,26,.12);border-radius:18px;padding:18px;display:flex;flex-direction:column;align-items:center;gap:12px">
+                  <div style="width:170px;height:170px;border-radius:12px;background:repeating-linear-gradient(45deg,#e6dfd3 0 6px,#f3eee6 6px 12px);display:flex;align-items:center;justify-content:center;font:500 11px 'JetBrains Mono',monospace;color:#6f685e">QR code</div>
+                  <div style="font:700 16px 'Noto Sans TC'">{{ ticket.n }}</div>
+                  <div style="font:400 12px 'Noto Sans TC';color:#6f685e">{{ ticket.s }}</div>
+                </div>
+                <sc-for list="{{ tickets }}" as="t" hint-placeholder-count="3">
+                  <div onClick="{{ t.onClick }}" style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:14px;border:1px solid {{ t.border }};background:#fffdf9;cursor:pointer">
+                    <span style="font:500 14px 'Noto Sans TC'">{{ t.n }}</span>
+                    <span style="font:400 11.5px 'Noto Sans TC';color:#6f685e">{{ t.tag }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ sh.exp }}">
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <div style="font:700 20px 'Noto Sans TC',sans-serif">記一筆</div>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <div style="display:flex;justify-content:space-between;align-items:center">
+                    <label style="font:500 12px 'Noto Sans TC';color:#6f685e">金額 · {{ formCurName }}</label>
+                    <div style="display:flex;gap:2px;background:rgba(34,31,26,.07);padding:3px;border-radius:10px">
+                  <sc-for list="{{ formCurBtns }}" as="c" hint-placeholder-count="2"><button onClick="{{ c.onClick }}" style="border:0;cursor:pointer;height:30px;padding:0 12px;border-radius:8px;font:500 12.5px 'Noto Sans TC';background:{{ c.bg }};color:#221f1a;box-shadow:{{ c.shadow }};white-space:nowrap">{{ c.label }}</button></sc-for>
+                </div>
+                  </div>
+                  <input value="{{ form.amt }}" onChange="{{ setAmt }}" inputmode="numeric" placeholder="0" style="height:58px;border-radius:14px;border:1.5px solid {{ amtBorder }};background:#fffdf9;padding:0 16px;font:600 26px 'JetBrains Mono',monospace;color:#221f1a;outline:none">
+                  <sc-if value="{{ errs.amt }}"><span style="font:400 12px 'Noto Sans TC';color:oklch(0.5 0.14 30)">{{ errs.amt }}</span></sc-if>
+                  <span style="font:400 11.5px 'Noto Sans TC';color:#6f685e">{{ amtTwd }}</span>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <label style="font:500 12px 'Noto Sans TC';color:#6f685e">品項</label>
+                  <input value="{{ form.t }}" onChange="{{ setT }}" placeholder="例：錦市場 玉子燒" style="height:48px;border-radius:14px;border:1.5px solid {{ tBorder }};background:#fffdf9;padding:0 14px;font:400 15px 'Noto Sans TC';color:#221f1a;outline:none">
+                  <sc-if value="{{ errs.t }}"><span style="font:400 12px 'Noto Sans TC';color:oklch(0.5 0.14 30)">{{ errs.t }}</span></sc-if>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <label style="font:500 12px 'Noto Sans TC';color:#6f685e">誰付的</label>
+                  <div style="display:flex;gap:8px">
+                    <sc-for list="{{ payerChips }}" as="c" hint-placeholder-count="4">
+                      <button onClick="{{ c.onClick }}" style="flex:1;height:40px;border-radius:12px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};font:500 13px 'Noto Sans TC';cursor:pointer">{{ c.label }}</button>
+                    </sc-for>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <label style="font:500 12px 'Noto Sans TC';color:#6f685e">{{ catHint }}</label>
+                  <div style="display:flex;gap:8px">
+                    <sc-for list="{{ catChips }}" as="c" hint-placeholder-count="4">
+                      <button onClick="{{ c.onClick }}" style="flex:1;height:40px;border-radius:12px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};font:500 13px 'Noto Sans TC';cursor:pointer">{{ c.label }}</button>
+                    </sc-for>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <label style="font:500 12px 'Noto Sans TC';color:#6f685e">誰要分 · {{ withHint }}</label>
+                  <div style="display:flex;gap:8px">
+                    <sc-for list="{{ withChips }}" as="c" hint-placeholder-count="4">
+                      <button onClick="{{ c.onClick }}" style="flex:1;height:40px;border-radius:12px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};font:500 13px 'Noto Sans TC';cursor:pointer">{{ c.label }}</button>
+                    </sc-for>
+                  </div>
+                  <sc-if value="{{ errs.with }}"><span style="font:400 12px 'Noto Sans TC';color:oklch(0.5 0.14 30)">{{ errs.with }}</span></sc-if>
+                </div>
+                <button onClick="{{ saveExp }}" style="height:52px;border:0;border-radius:15px;background:#221f1a;color:#fff;font:700 15px 'Noto Sans TC';cursor:pointer;margin-top:4px">儲存</button>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startMode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;plan&quot;,&quot;trip&quot;],&quot;default&quot;:&quot;trip&quot;,&quot;tsType&quot;:&quot;'plan'|'trip'&quot;},&quot;showTWD&quot;:{&quot;label&quot;:&quot;顯示另一幣別換算&quot;,&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const MUTED='#6f685e', INK='#221f1a';
+const HUE={景點:40,餐飲:85,購物:300,住宿:255,夜生活:340,機場:165,行程:165,車站:165,交通:165};
+const tc=t=>'oklch(0.58 0.12 '+(HUE[t]??165)+')';
+const PEOPLE=[['我',40],['阿哲',165],['小安',255],['Mei',85],['阿凱',300],['Ken',340]].map(([n,hu])=>({n,bg:'oklch(0.5 0.12 '+hu+')'}));
+const ALL=PEOPLE.map(p=>p.n);
+const CAT={餐飲:tc('餐飲'),交通:tc('交通'),門票:tc('景點'),購物:tc('購物'),住宿:tc('住宿')};
+const RATE=0.21, NOW=13*60+30, TODAY=1, BUDGET=1000000;
+const tm=s=>{const[h,m]=s.split(':').map(Number);return h*60+m};
+const ft=n=>String(Math.floor(n/60)%24).padStart(2,'0')+':'+String(((n%60)+60)%60).padStart(2,'0');
+const fJ=n=>'¥'+Math.round(n).toLocaleString('en-US');
+const fT=n=>'NT$'+Math.round(n*RATE).toLocaleString('en-US');
+const MODES=[['train','電車'],['car','汽車'],['walk','步行']];
+const WALK_MAX=60;
+const REC={景點:[45,90],餐飲:[45,75],購物:[30,90],住宿:[10,30],夜生活:[60,120],機場:[30,60],行程:[10,40],車站:[5,15]};
+const DAYS=[{"date":"11/11 三","theme":"抵達東京・上野・吉原・東京車站夜景","city":"上野・東京車站","lodge":"the Moto Hotel Ueno II","start":"06:40","items":[{"title":"桃園機場出發","type":"機場","stay":0,"rating":"","addr":"Taoyuan International Airport","sub":"","close":null,"leg":{"mode":"flight","orig":"flight","real":255,"km":null,"label":"飛機","dist":"","note":"飛行約 3 小時（日本時間比台灣快 1 小時）","to":"成田機場抵達"},"wait":0,"from":null},{"title":"成田機場抵達","type":"機場","stay":60,"rating":"","addr":"Narita International Airport","sub":"入境＋領行李。Visit Japan Web 六人份出發前填好。班機 TR866，表定 10:55 抵達。包車司機從實際落地時間起等 90 分鐘","close":null,"leg":{"mode":"car","orig":"car","real":90,"km":null,"label":"開車","dist":"","note":"包車直達上野（已訂），六人＋行李比 Skyliner 省事","to":"飯店寄放行李"},"wait":0,"from":"桃園機場出發"},{"title":"飯店寄放行李","type":"住宿","stay":15,"rating":"","addr":"東京都台東区東上野1-10-13","sub":"Booking 確認碼 6402.905.665／PIN 4398（the Moto Hotel Ueno II 三臥室公寓・6 人・¥109,200・☎ 03-6240-6207）。15:00 才能入住","close":null,"leg":{"mode":"walk","orig":"walk","real":5,"km":0.4,"label":"步行","dist":"400 m","note":"","to":"午餐 · Gyu Star 牛スター"},"wait":0,"from":"成田機場抵達"},{"title":"午餐 · Gyu Star 牛スター","type":"餐飲","stay":70,"rating":"4.2","addr":"東京都台東区東上野2-15-6","sub":"和牛燒肉吃到飽。午市只到 15:00，14:30 前點完最後一輪。六人先訂 03-3834-2215","close":null,"leg":{"mode":"car","orig":"car","real":14,"km":3.3,"label":"計程車","dist":"3.3 km","note":"兩台各約 ¥1,200","to":"給酷"},"wait":5,"from":"飯店寄放行李"},{"title":"給酷","type":"夜生活","stay":150,"rating":"","addr":"東京都台東区千束4丁目","sub":"這類店集中在吉原，不在上野。多數店家不收不會日語的客人，六人同行務必事先確認能否接待、要不要指名、現金或刷卡","close":null,"leg":{"mode":"car","orig":"car","real":17,"km":6.6,"label":"計程車","dist":"6.6 km","note":"走首都高約 ¥2,200／台。走一般道約 20 分","to":"晚餐 · とんかつ 一（日本橋）"},"wait":0,"from":"午餐 · Gyu Star 牛スター"},{"title":"晚餐 · とんかつ 一（日本橋）","type":"餐飲","stay":75,"rating":"4.2","addr":"東京都中央区日本橋室町1-13-9 池田ビル1F","sub":"Google 顯示週三 11:00–21:00。現切現炸可挑部位。先吃飯再看夜景。備選：とんかつ 一 HANARE（4.3，室町 1-11-15，走 2 分）／東京車站一番街 六厘舎","close":"21:00","leg":{"mode":"car","orig":"car","real":10,"km":2.9,"label":"計程車","dist":"2.9 km","note":"改搭計程車（走路要 27 分）。兩台各約 ¥1,000","to":"KITTE 屋上庭園"},"wait":29,"from":"給酷"},{"title":"KITTE 屋上庭園","type":"景點","stay":30,"rating":"4.5","addr":"東京都千代田区丸の内2-7-2 KITTE 6F","sub":"免費，平日開到 23:00。俯拍東京車站紅磚站體最好的角度","close":null,"leg":{"mode":"walk","orig":"walk","real":8,"km":0.5,"label":"步行","dist":"500 m","note":"","to":"行幸通り・丸之內仲通り"},"wait":0,"from":"晚餐 · とんかつ 一（日本橋）"},{"title":"行幸通り・丸之內仲通り","type":"景點","stay":30,"rating":"","addr":"行幸通り","sub":"行幸通り正對站體中軸。丸之內聖誕點燈通常 11 月中才亮，11/11 可能還沒開燈","close":null,"leg":{"mode":"train","orig":"train","real":20,"km":null,"label":"電車","dist":"","note":"JR 山手線 東京 → 御徒町 ¥160（車程 14 分，含走路共 20 分）","to":"回飯店"},"wait":0,"from":"KITTE 屋上庭園"},{"title":"回飯店","type":"住宿","stay":0,"rating":"","addr":"東京都台東区東上野1-10-13","sub":"","close":null,"wait":0,"from":"行幸通り・丸之內仲通り"}]},{"date":"11/12 四","theme":"teamLab 豐洲・表參道・澀谷神南逛街・六本木（入鹿）・東京鐵塔夜拍","city":"豐洲・澀谷・六本木","lodge":"the Moto Hotel Ueno II","start":"07:05","items":[{"title":"飯店出發","type":"住宿","stay":0,"rating":"","addr":"東京都台東区東上野1-10-13","sub":"","close":null,"leg":{"mode":"train","orig":"train","real":45,"km":null,"label":"電車","dist":"","note":"JR 上野 → 新橋 ¥170（12 分），轉百合海鷗號 → 新豐洲 ¥390（17 分），出站走 1 分","to":"teamLab Planets TOKYO 豐洲"},"wait":0,"from":null},{"title":"teamLab Planets TOKYO 豐洲","type":"景點","stay":120,"rating":"4.5","addr":"東京都江東区豊洲6-1-16","sub":"KKday 訂單 #26KK268884483，憑證 KKDAY-20260929-FCD4，大人 6 張。票面寫 08:00，實際是 8:00–12:00 之間都可入場，但 08:00 最空。要脫鞋赤腳走水路，有一區水深到膝蓋——穿好捲的褲子（現場也借短褲）。地板大量鏡面，裙子不方便。手機容易掉進水裡。有免費置物櫃。分兩區，中間要回來拿一次東西","close":null,"leg":{"mode":"train","orig":"train","real":42,"km":null,"label":"電車","dist":"","note":"百合海鷗號 新豐洲 → 新橋（17 分），轉銀座線 → 表參道（12 分），¥600","to":"甜點外帶 · LOVE & TABLE 表參道"},"wait":10,"from":"飯店出發"},{"title":"甜點外帶 · LOVE & TABLE 表參道","type":"餐飲","stay":15,"rating":"4","addr":"東京都渋谷区神宮前4-3-2","sub":"地址：神宮前 4-3-2，Google 評分 4.0。10:00–19:00。草莓千層是招牌。改外帶，買了邊走邊吃，留胃給午餐（內用的話一人要點一杯飲料）","close":"19:00","leg":{"mode":"walk","orig":"walk","real":11,"km":0.85,"label":"步行","dist":"850 m","note":"","to":"午餐 · Hamburg YOSHI"},"wait":13,"from":"teamLab Planets TOKYO 豐洲"},{"title":"午餐 · Hamburg YOSHI","type":"餐飲","stay":75,"rating":"4.3","addr":"東京都渋谷区神宮前6-12-6 J-Cube B 1F","sub":"11:30 開門，提早到門口排第一輪，就避開 12:20 的尖峰（要排 25–35 分）。全店吧台席，六人可能被拆開坐。一份三塊漢堡排＋生蛋＋白飯無限續，約 ¥2,200–2,600","close":null,"leg":{"mode":"walk","orig":"walk","real":15,"km":1.1,"label":"步行","dist":"1.1 km","note":"Cat Street 南下 → 澀谷神南。沿途經過 HUMAN MADE TOKYO（神宮前 6-25-10，走 3 分）","to":"BEAMS MEN SHIBUYA"},"wait":0,"from":"甜點外帶 · LOVE & TABLE 表參道"},{"title":"BEAMS MEN SHIBUYA","type":"購物","stay":40,"rating":"4.5","addr":"東京都渋谷区神南1-15-1","sub":"4.5／896 則／11:00–20:00／兩層樓，全東京最大的 BEAMS 男裝店。評論提到店員會依預算整套配到好。護照帶著直接辦免稅","close":"20:00","leg":{"mode":"walk","orig":"walk","real":2,"km":0.15,"label":"步行","dist":"150 m","note":"","to":"FREAK'S STORE 澀谷"},"wait":64,"from":"午餐 · Hamburg YOSHI"},{"title":"FREAK'S STORE 澀谷","type":"購物","stay":35,"rating":"4.2","addr":"東京都渋谷区神南1-13-1 Mビル","sub":"4.2／470 則／週四 12:00–20:00。日系美式休閒選品，牛仔褲版型與價位評價特別好。貨更新很快","close":"20:00","leg":{"mode":"walk","orig":"walk","real":2,"km":0.13,"label":"步行","dist":"130 m","note":"","to":"SHIPS 澀谷"},"wait":0,"from":"BEAMS MEN SHIBUYA"},{"title":"SHIPS 澀谷","type":"購物","stay":20,"rating":"4.1","addr":"東京都渋谷区神南1-18-1","sub":"4.1／147 則／11:00–20:00／四層樓。男裝外套與正式休閒強，鞋區有 Paraboot／Alden／C&J。免稅當場退、不用 App","close":"20:00","leg":{"mode":"walk","orig":"walk","real":4,"km":0.28,"label":"步行","dist":"280 m","note":"","to":"澀谷 PARCO"},"wait":0,"from":"FREAK'S STORE 澀谷"},{"title":"澀谷 PARCO","type":"購物","stay":20,"rating":"4.3","addr":"渋谷PARCO","sub":"從原本 110 分砍到 20 分，只夠衝 6F 任天堂・Pokémon・Jump Shop。服飾樓層（1F CdG／UNDERCOVER、2F 街頭選品）等於放棄。想逛 PARCO 服飾就砍掉 SHIPS，把那 20 分還回來","close":null,"leg":{"mode":"walk","orig":"walk","real":12,"km":0.55,"label":"步行","dist":"550 m","note":"PARCO → 渋谷スクランブルスクエア","to":"SHIBUYA SKY"},"wait":0,"from":"SHIPS 澀谷"},{"title":"SHIBUYA SKY","type":"景點","stay":80,"rating":"4.6","addr":"SHIBUYA SKY","sub":"日落 16:35，務必提前線上訂 16:20 入場場次。先上 46F 室內看夕陽，天黑後再上頂樓。頂樓風大帶外套。17:30 一定要下樓，入鹿 19:40 關門","close":null,"leg":{"mode":"car","orig":"car","real":20,"km":6.5,"label":"計程車","dist":"6.5 km","note":"澀谷 → 六本木，約 ¥2,000／台","to":"晚餐 · 入鹿 TOKYO（拉麵）"},"wait":0,"from":"澀谷 PARCO"},{"title":"晚餐 · 入鹿 TOKYO（拉麵）","type":"餐飲","stay":80,"rating":"4.0","addr":"東京都港区六本木4-12-12","sub":"2026 米其林必比登／1,726 則／11:00–19:40，週一公休（11/12 週四有開）。松露牛肝菌醬油拉麵是招牌。只有 12 個吧台席，有評論寫 18:20 到、19:00 才入座。六人必被拆兩輪、19:40 就關門。保險作法：一到先點餐排隊，19:20 還沒輪到就放棄，直接去 63 ANGEL 附近吃。備案：TsuruTonTan 澀谷（SHIBUYA SKY 同棟 13F，完全不用移動）","close":"19:40","leg":{"mode":"walk","orig":"walk","real":10,"km":0.7,"label":"步行","dist":"700 m","note":"入鹿 → 日拓大樓","to":"63 ANGEL（Burlesque Tokyo）"},"wait":10,"from":"SHIBUYA SKY"},{"title":"63 ANGEL（Burlesque Tokyo）","type":"夜生活","stay":90,"rating":"5","addr":"東京都港区六本木3-8-15 日拓ビル B2F","sub":"18:00–翌 01:00。一定要線上先訂。訂位時確認場次時間，若只有 21:00 場則前面整條線可放鬆 30 分。現在改名 ROKUSAN ANGEL，限 20 歲以上，出發前 6 天內取消要收費","close":null,"leg":{"mode":"car","orig":"car","real":10,"km":2.2,"label":"計程車","dist":"2.2 km","note":"約 ¥1,200／台","to":"7-ELEVEN 港区芝3丁目店"},"wait":30,"from":"晚餐 · 入鹿 TOKYO（拉麵）"},{"title":"7-ELEVEN 港区芝3丁目店","type":"景點","stay":35,"rating":"4.1","addr":"東京都港区芝3-15-9","sub":"地址：芝 3-15-9。招牌正上方整支東京鐵塔，鐵塔點燈到 24:00。赤羽橋站走 4 分","close":null,"leg":{"mode":"train","orig":"train","real":37,"km":null,"label":"電車","dist":"","note":"都營大江戶線 赤羽橋 → 上野御徒町 ¥220（車程 12 分，含走路與等車共 37 分）","to":"回飯店"},"wait":0,"from":"63 ANGEL（Burlesque Tokyo）"},{"title":"回飯店","type":"住宿","stay":0,"rating":"","addr":"東京都台東区東上野1-10-13","sub":"","close":null,"wait":0,"from":"7-ELEVEN 港区芝3丁目店"}]},{"date":"11/13 五","theme":"東京 → 河口湖","city":"東京 → 河口湖","lodge":"城市度假別墅（柴菊房）","start":"07:30","items":[{"title":"退房","type":"住宿","stay":20,"rating":"","addr":"東京都台東区東上野1-10-13","sub":"大行李寄放飯店（11/15 晚上回來拿），只帶兩晚的小包上車，後車廂才放得下 Outlet 戰利品。早餐便利商店買了車上吃。ORIX 08:00 才開","close":null,"leg":{"mode":"car","orig":"car","real":9,"km":1.5,"label":"計程車","dist":"1.5 km","note":"兩台計程車約 ¥1,200／台","to":"ORIX 租車 取車"},"wait":0,"from":null},{"title":"ORIX 租車 取車","type":"行程","stay":40,"rating":"4.4","addr":"東京都千代田区外神田4-14-1 秋葉原UDX","sub":"Klook 訂單 XAA089762／現場付 ¥52,140／☎ 03-3525-7630。Klook 訂單 XAA089762，Honda Stepwagon 或同級 8 人座。台幣已付 NT$10,511，現場還要付 ¥52,140。店電話 03-3525-7630。後車廂只放得下 3 件行李——大行李留在上野飯店是對的。08:00–20:00。店在秋葉原 UDX 地下停車場 B1，地面完全沒指標，直接搭 UDX 停車場電梯下 B1。台灣駕照＋日文譯本＋護照三樣缺一不可，會開車的人全部要在櫃檯登記。11/6 08:00 前可免費取消，但不可更改","close":"20:00","leg":{"mode":"car","orig":"car","real":140,"km":108,"label":"開車","dist":"108 km","note":"中央道 → 河口湖 IC，過路費約 ¥5,400。Google 非尖峰 1 小時 50 分。08:40 出發會吃到通勤車潮，抓 140 分","to":"本町通り・日川時計店"},"wait":1,"from":"退房"},{"title":"本町通り・日川時計店","type":"景點","stay":20,"rating":"4.5","addr":"山梨県富士吉田市下吉田2-1-31","sub":"「街道盡頭一整座富士山」構圖。要站馬路中間拍，請人看車","close":null,"leg":{"mode":"car","orig":"car","real":16,"km":5.6,"label":"開車","dist":"5.6 km","note":"","to":"午餐 · 手打ちうどん 彩花"},"wait":0,"from":"ORIX 租車 取車"},{"title":"午餐 · 手打ちうどん 彩花","type":"餐飲","stay":60,"rating":"4.4","addr":"山梨県南都留郡富士河口湖町船津7436-2","sub":"4.4／691 則，河口湖一帶分數最高／11:00–14:00，週四公休（11/13 週五有開）／¥1,000 以下。吉田烏龍麵在地人店，麵又粗又硬是特色。位子以榻榻米為主、六人好坐，免費停車位多。不接訂位。☎ 0555-72-6606","close":"14:00","leg":{"mode":"car","orig":"car","real":23,"km":12.3,"label":"開車","dist":"12.3 km","note":"","to":"西湖いやしの里根場"},"wait":0,"from":"本町通り・日川時計店"},{"title":"西湖いやしの里根場","type":"景點","stay":85,"rating":"4.4","addr":"西湖いやしの里根場","sub":"入場 ¥500，09:00–17:00。茅草屋復原聚落，背景富士山","close":"17:00","leg":{"mode":"car","orig":"car","real":16,"km":9,"label":"開車","dist":"9.0 km","note":"","to":"紅葉隧道（もみじトンネル）"},"wait":39,"from":"午餐 · 手打ちうどん 彩花"},{"title":"紅葉隧道（もみじトンネル）","type":"景點","stay":20,"rating":"4.4","addr":"もみじトンネル 河口湖","sub":"河口湖北岸，大石公園附近。路邊停車位極少且會塞車，一人下車拍、車繼續找位子","close":null,"leg":{"mode":"car","orig":"car","real":5,"km":1.6,"label":"開車","dist":"1.6 km","note":"","to":"大石公園・湖畔紅葉迴廊"},"wait":0,"from":"西湖いやしの里根場"},{"title":"大石公園・湖畔紅葉迴廊","type":"景點","stay":66,"rating":"4.5","addr":"大石公園","sub":"免費，24 小時。日落 16:40，「紅富士」在 16:30–16:50 那十幾分鐘，提前站位","close":null,"leg":{"mode":"car","orig":"car","real":2,"km":0.29,"label":"開車","dist":"290 m","note":"走路約 4 分","to":"民宿 Check-in"},"wait":0,"from":"紅葉隧道（もみじトンネル）"},{"title":"民宿 Check-in","type":"住宿","stay":40,"rating":"","addr":"山梨県南都留郡富士河口湖町大石2585-122","sub":"Booking 確認碼 6946.194.818／PIN 9936（紫陽花・樓中樓房型・6 人・¥231,990・☎ +81 555-76-7223）。入住 15:00–21:30、退房 10:00 前","close":"21:30","leg":{"mode":"car","orig":"car","real":9,"km":2.8,"label":"開車","dist":"2.8 km","note":"","to":"晚餐 · 湖波（Konami）"},"wait":0,"from":"大石公園・湖畔紅葉迴廊"},{"title":"晚餐 · 湖波（Konami）","type":"餐飲","stay":75,"rating":"4.2","addr":"山梨県南都留郡富士河口湖町浅川367-1","sub":"4.2／1,176 則／晚餐只做 17:30–19:30。家庭經營，ほうとう與天婦羅定食，有英文菜單，窗邊看得到富士山。就在紅葉迴廊旁。19:30 關門：18:00 準時到、19:15 前結帳。六人先打 0555-72-0349 講一聲。備案：かにと和牛 富士山亭（4.5／118，河口 2974，17:00–21:00，螃蟹＋和牛涮涮鍋、正對富士山）","close":"19:30","leg":{"mode":"walk","orig":"walk","real":11,"km":0.8,"label":"步行","dist":"800 m","note":"也可以開車移過去","to":"河口湖もみじ回廊 點燈"},"wait":19,"from":"民宿 Check-in"},{"title":"河口湖もみじ回廊 點燈","type":"景點","stay":70,"rating":"4.3","addr":"河口湖もみじ回廊","sub":"點燈至 22:00，免費。梨川兩側 60 棵老楓樹打光，攤販到 21:00","close":null,"leg":{"mode":"car","orig":"car","real":13,"km":2,"label":"開車","dist":"2.0 km","note":"查詢時湖北ビューライン有塞車，平常約 5–8 分","to":"回民宿"},"wait":0,"from":"晚餐 · 湖波（Konami）"},{"title":"回民宿","type":"住宿","stay":0,"rating":"","addr":"山梨県南都留郡富士河口湖町大石2585-122","sub":"回程順路便利商店買明天早餐（明天 06:00 起床，到 11:32 午餐前沒有別的吃飯點）","close":null,"wait":0,"from":"河口湖もみじ回廊 點燈"}]},{"date":"11/14 六","theme":"晨拍・忠靈塔・天上山・天空鳥居・御殿場 Outlet","city":"河口湖・御殿場","lodge":"城市度假別墅（柴菊房）","start":"06:00","items":[{"title":"起床","type":"住宿","stay":0,"rating":"","addr":"山梨県南都留郡富士河口湖町大石2585-122","sub":"早餐吃昨晚買的，帶在車上吃也可以。河口湖清晨約 3–5°C，穿厚外套","close":null,"leg":{"mode":"walk","orig":"walk","real":4,"km":0.29,"label":"步行","dist":"290 m","note":"","to":"大石公園 晨拍"},"wait":0,"from":null},{"title":"大石公園 晨拍","type":"景點","stay":40,"rating":"4.5","addr":"大石公園","sub":"日出 06:15，清晨無風時逆富士（倒影）機率最高，整座公園幾乎沒人","close":null,"leg":{"mode":"car","orig":"car","real":20,"km":7.4,"label":"開車","dist":"7.4 km","note":"","to":"新倉山淺間公園・忠靈塔"},"wait":16,"from":"起床"},{"title":"新倉山淺間公園・忠靈塔","type":"景點","stay":60,"rating":"4.7","addr":"Chureito Pagoda 新倉山浅間公園","sub":"免費，24 小時。要爬 398 階，上去約 15 分，旁邊有較緩坡道。八點前人還不多","close":null,"leg":{"mode":"car","orig":"car","real":15,"km":6.9,"label":"開車","dist":"6.9 km","note":"","to":"河口湖～天上山公園纜車"},"wait":0,"from":"大石公園 晨拍"},{"title":"河口湖～天上山公園纜車","type":"景點","stay":80,"rating":"4.4","addr":"河口湖〜富士山パノラマロープウェイ","sub":"Google 顯示 08:30 開始營業，來回 ¥1,000。有評論說 10 點後排隊可能 50 分以上，早點到。山頂兔神社展望台、天上の鐘。08:30 開門就到，排隊最少","close":null,"leg":{"mode":"car","orig":"car","real":14,"km":5.3,"label":"開車","dist":"5.3 km","note":"天空鳥居移到午餐前，比較順路","to":"天空鳥居（河口淺間神社 遙拜所）"},"wait":0,"from":"新倉山淺間公園・忠靈塔"},{"title":"天空鳥居（河口淺間神社 遙拜所）","type":"景點","stay":65,"rating":"4.2","addr":"山梨県南都留郡富士河口湖町河口1119-2","sub":"09:00–16:00，入場 ¥200。可以直接開車上去停","close":"16:00","leg":{"mode":"car","orig":"car","real":18,"km":6.6,"label":"開車","dist":"6.6 km","note":"","to":"午餐 · 甲州ほうとう 小作 河口湖店"},"wait":0,"from":"河口湖～天上山公園纜車"},{"title":"午餐 · 甲州ほうとう 小作 河口湖店","type":"餐飲","stay":75,"rating":"4.2","addr":"山梨県南都留郡富士河口湖町船津1638-1","sub":"4.2／6,929 則，河口湖評論數最多／11:00–19:30 全年無休／纜車站開車 5 分。南瓜ほうとう是招牌，另有馬肉生魚片。店很大、六人不用等，11:00 開門到完全不排。有評論抱怨桌面清潔與服務慢，入座先自己擦一下。☎ 0555-72-1181","close":"19:30","leg":{"mode":"car","orig":"car","real":40,"km":33,"label":"開車","dist":"33 km","note":"國道 138 號，有收費路段。右側座位看富士山最好","to":"御殿場 Premium Outlets"},"wait":0,"from":"天空鳥居（河口淺間神社 遙拜所）"},{"title":"御殿場 Premium Outlets","type":"購物","stay":378,"rating":"4.2","addr":"静岡県御殿場市深沢1312","sub":"10:00–20:00，逛到閉館。精品在 WEST ZONE（Gucci／Prada／Bottega／Balenciaga），運動街頭在 EAST ZONE（Nike／New Balance／adidas／BEAMS）。護照帶著辦免稅。11/1 起免稅新制：結帳先付含稅價，出國時在機場確認後才退稅，收據和商品都要留著、不能拆來用。Food Bazaar 美食街 19:30 收，19:00 前吃完。可以逛到 19:45。男裝重點（已查證）：BEAMS OUTLET GOTEMBA（3.6／438）、JOURNAL STANDARD／EDIFICE／Spick&Span／IENA 御殿場店（3.6／71，HILL SIDE 3530 區）。兩家都 10:00–20:00。打法：D2 在澀谷正價店試穿記尺碼，這天用 Outlet 價補貨","close":"20:00","leg":{"mode":"car","orig":"car","real":58,"km":43,"label":"開車","dist":"43 km","note":"夜間山路，東富士五湖道路沒路燈、會起霧，開慢一點","to":"回民宿"},"wait":0,"from":"午餐 · 甲州ほうとう 小作 河口湖店"},{"title":"回民宿","type":"住宿","stay":0,"rating":"","addr":"山梨県南都留郡富士河口湖町大石2585-122","sub":"回程順路便利商店買明天早餐，明天 06:00 出發在車上吃","close":null,"wait":0,"from":"御殿場 Premium Outlets"}]},{"date":"11/15 日","theme":"自駕鎌倉・長谷・七里ヶ浜・稲村ヶ崎夕陽","city":"鎌倉・七里ヶ浜","lodge":"the Moto Hotel Ueno II","start":"06:00","items":[{"title":"起床・退房","type":"住宿","stay":30,"rating":"","addr":"山梨県南都留郡富士河口湖町大石2585-122","sub":"民宿退房 10:00 前（我們 07:00 就走）。Outlet 戰利品一起裝車。早餐吃昨晚買的，車上吃。河口湖 IC 前先把油加滿","close":null,"leg":{"mode":"car","orig":"car","real":149,"km":115,"label":"開車","dist":"115 km","note":"東名高速，約 115 km。週日早上下行順暢。途中足柄 SA 可以換人開","to":"鶴岡八幡宮 停車"},"wait":0,"from":null},{"title":"鶴岡八幡宮 停車","type":"行程","stay":10,"rating":"","addr":"神奈川県鎌倉市雪ノ下2-18-18","sub":"11/15 是七五三又是週日，參拜家庭很多，八幡宮停車場滿了不要排隊等，照順序直接換下一個：① 八幡宮自家停車場（約 40 台，¥600／首小時）→ ② 第 3 停車場（雪ノ下2-4-18）→ ③ タイムズ鎌倉雪ノ下第5（20 台，走 2 分）→ ④ 由比ヶ浜地下停車場（走 32 分，最後手段）","close":null,"leg":{"mode":"walk","orig":"walk","real":3,"km":null,"label":"步行","dist":"","note":"停車場走到本殿約 3 分","to":"鶴岡八幡宮"},"wait":0,"from":"起床・退房"},{"title":"鶴岡八幡宮","type":"景點","stay":50,"rating":"4.4","addr":"鶴岡八幡宮","sub":"免費，06:00–20:00。段葛參道兩側 11 月中是銀杏","close":"20:00","leg":{"mode":"walk","orig":"walk","real":9,"km":0.65,"label":"步行","dist":"650 m","note":"","to":"小町通り"},"wait":0,"from":"鶴岡八幡宮 停車"},{"title":"小町通り","type":"購物","stay":60,"rating":"","addr":"小町通り 鎌倉","sub":"邊走邊吃：夢見屋四色糰子、鎌倉五郎半月燒、TOMOYA 大佛燒。伴手禮豊島屋鳩サブレー（附近美食裡有清單）。不要逛過頭","close":null,"leg":{"mode":"car","orig":"car","real":13,"km":3.4,"label":"開車","dist":"3.4 km","note":"走回停車場再開到長谷，平常約 13 分，週日可能塞到 20 分","to":"高德院・鎌倉大佛"},"wait":0,"from":"鶴岡八幡宮"},{"title":"高德院・鎌倉大佛","type":"景點","stay":40,"rating":"4.4","addr":"神奈川県鎌倉市長谷4-2-28","sub":"08:00–16:45，¥300。加 ¥50 可進佛像內部","close":"16:45","leg":{"mode":"walk","orig":"walk","real":10,"km":0.7,"label":"步行","dist":"700 m","note":"大佛附近投幣停車場停著，走去長谷寺","to":"長谷寺"},"wait":0,"from":"小町通り"},{"title":"長谷寺","type":"景點","stay":50,"rating":"4.5","addr":"神奈川県鎌倉市長谷3-11-2","sub":"08:00–17:00，門票 ¥400。11 月中紅葉才剛開始轉紅，不是滿山紅。觀景台可看由比濱海景。寺內海光庵有咖哩烏龍麵","close":"17:00","leg":{"mode":"car","orig":"car","real":12,"km":3.2,"label":"開車","dist":"3.2 km","note":"開到七里ヶ浜海岸駐車場（約 123 台，¥700／小時），之後午餐、平交道都用走的","to":"七里ヶ浜海岸駐車場"},"wait":0,"from":"高德院・鎌倉大佛"},{"title":"七里ヶ浜海岸駐車場","type":"行程","stay":5,"rating":"","addr":"神奈川県鎌倉市七里ガ浜東2-1-12","sub":"停車 6:00–21:00。旁邊是 Pacific DRIVE-IN，用餐有時可抵停車費","close":"21:00","leg":{"mode":"walk","orig":"walk","real":8,"km":0.6,"label":"步行","dist":"600 m","note":"沿 134 號海岸線走","to":"午餐 · Espresso D Works 七里ヶ浜"},"wait":0,"from":"長谷寺"},{"title":"午餐 · Espresso D Works 七里ヶ浜","type":"餐飲","stay":80,"rating":"4.3","addr":"神奈川県鎌倉市七里ガ浜1-4-11 2F-B","sub":"08:00–20:00。招牌半熟蛋包飯，整面落地窗對海。只收刷卡不收現金。門口抽號碼牌，叫號只用日文，派人盯螢幕。評論褒貶都有。你指定要吃的店，週日午餐會排隊，到了先抽號碼牌","close":"20:00","leg":{"mode":"walk","orig":"walk","real":9,"km":0.6,"label":"步行","dist":"600 m","note":"","to":"鎌倉高校前 平交道"},"wait":0,"from":"七里ヶ浜海岸駐車場"},{"title":"鎌倉高校前 平交道","type":"景點","stay":20,"rating":"4.4","addr":"鎌倉高校前駅","sub":"《灌籃高手》片頭平交道。請站人行道上等，不要站馬路中央","close":null,"leg":{"mode":"walk","orig":"walk","real":17,"km":1.2,"label":"步行","dist":"1.2 km","note":"沿海走回停車場","to":"七里ヶ浜海岸駐車場 取車"},"wait":0,"from":"午餐 · Espresso D Works 七里ヶ浜"},{"title":"七里ヶ浜海岸駐車場 取車","type":"行程","stay":5,"rating":"","addr":"神奈川県鎌倉市七里ガ浜東2-1-12","sub":"","close":null,"leg":{"mode":"car","orig":"car","real":4,"km":0.95,"label":"開車","dist":"950 m","note":"","to":"稲村ヶ崎 夕陽"},"wait":0,"from":"鎌倉高校前 平交道"},{"title":"稲村ヶ崎 夕陽","type":"景點","stay":69,"rating":"","addr":"神奈川県鎌倉市稲村ガ崎1丁目","sub":"停稲村ガ崎駐車場（公園正前方，約 50 台，¥400／小時，千圓鈔或 Suica）。滿了就停附近アップルパーク稲村ガ崎1丁目第1（27 台）。日落約 16:35，從展望台看江之島和富士山，富士山要看天氣。旁邊 The Sunrise Shack 可外帶咖啡","close":null,"leg":{"mode":"car","orig":"car","real":132,"km":76,"label":"開車","dist":"76 km","note":"Google 約 2 小時 12 分（查詢時是週五下午）。週日傍晚可能更久，16:50 一定要出發，途中先加滿油","to":"ORIX 還車"},"wait":0,"from":"七里ヶ浜海岸駐車場 取車"},{"title":"ORIX 還車","type":"行程","stay":25,"rating":"","addr":"東京都千代田区外神田4-14-1 秋葉原UDX","sub":"秋葉原 UDX B1。檢查後車廂、座位底下","close":null,"leg":{"mode":"car","orig":"car","real":8,"km":1.4,"label":"計程車","dist":"1.4 km","note":"兩台各約 ¥1,300","to":"回飯店・取回寄放行李"},"wait":0,"from":"稲村ヶ崎 夕陽"},{"title":"回飯店・取回寄放行李","type":"住宿","stay":10,"rating":"","addr":"東京都台東区東上野1-10-13","sub":"Booking 確認碼 6013.900.321／PIN 4344（11/15–11/17 同一間・¥109,200）。拿回寄放的大行李，戰利品先放房間","close":null,"leg":{"mode":"walk","orig":"walk","real":3,"km":0.17,"label":"步行","dist":"170 m","note":"","to":"晚餐 · 牛たんの檸檬 秋葉原店"},"wait":0,"from":"ORIX 還車"},{"title":"晚餐 · 牛たんの檸檬 秋葉原店","type":"餐飲","stay":75,"rating":"4.2","addr":"東京都千代田区外神田3-13-8","sub":"還完車走 5 分直接過去，不用先回飯店／週一公休，11/15 週日有開。厚切炭烤牛舌＋麥飯＋牛尾湯。可線上訂位（TableCheck 有中文）。升級選項：同品牌淺草店 Google 4.9／4,152 則、全年無休、開到 21:30——多 15 分鐘車程換 0.7 分","close":null,"leg":{"mode":"walk","orig":"walk","real":3,"km":0.17,"label":"步行","dist":"170 m","note":"","to":"回飯店"},"wait":0,"from":"回飯店・取回寄放行李"},{"title":"回飯店","type":"住宿","stay":0,"rating":"","addr":"東京都台東区東上野1-10-13","sub":"","close":null,"wait":42,"from":"晚餐 · 牛たんの檸檬 秋葉原店"}]},{"date":"11/16 一","theme":"淺草（和牛壽喜燒＋炸肉餅＋鰻魚飯糰）・秋葉原・上野","city":"淺草・秋葉原・上野","lodge":"the Moto Hotel Ueno II","start":"07:30","items":[{"title":"飯店出發","type":"住宿","stay":0,"rating":"","addr":"東京都台東区東上野1-10-13","sub":"","close":null,"leg":{"mode":"train","orig":"train","real":18,"km":null,"label":"電車","dist":"","note":"筑波快線 新御徒町 → 淺草 ¥180。或銀座線約 20 分","to":"早餐 · Cafe Tomorrow 淺草"},"wait":0,"from":null},{"title":"早餐 · Cafe Tomorrow 淺草","type":"餐飲","stay":60,"rating":"4.3","addr":"東京都台東区浅草1-29-3 2F","sub":"06:30 就開。法式吐司與布丁是招牌。QR code 點餐可切英文。位子小，六人可能分兩桌。有評論說結帳機不收感應支付","close":null,"leg":{"mode":"walk","orig":"walk","real":6,"km":0.4,"label":"步行","dist":"400 m","note":"","to":"隅田公園"},"wait":0,"from":"飯店出發"},{"title":"隅田公園","type":"景點","stay":35,"rating":"","addr":"隅田公園","sub":"隔隅田川拍晴空塔＋吾妻橋","close":null,"leg":{"mode":"walk","orig":"walk","real":7,"km":0.45,"label":"步行","dist":"450 m","note":"","to":"淺草寺・雷門・仲見世通り"},"wait":0,"from":"早餐 · Cafe Tomorrow 淺草"},{"title":"淺草寺・雷門・仲見世通り","type":"景點","stay":121,"rating":"4.5","addr":"浅草寺","sub":"免費。雷門拍 10 分就夠，重點在仲見世通り和傳法院通り。10:00 後團客湧入","close":null,"leg":{"mode":"walk","orig":"walk","real":5,"km":0.35,"label":"步行","dist":"350 m","note":"","to":"午餐 · WAGYU SUKIYAKI 極 GOKU 淺草寺店"},"wait":0,"from":"隅田公園"},{"title":"午餐 · WAGYU SUKIYAKI 極 GOKU 淺草寺店","type":"餐飲","stay":85,"rating":"5.0","addr":"東京都台東区浅草1-18-12 JSビル 雷門1F","sub":"Google 5.0／5,958 則，全程分數最高／10:00–22:30 全年無休。熊本天草黑牛 A5 和牛壽喜燒，國產 A5 和牛 300g 套餐 ¥7,800／人，最後的松露蛋拌飯必點。英文服務 OK。淺草有三家同名分店：淺草寺店（5.0／5,958）、六区店（5.0／1,463）、國際通店（4.9／92）。要去雷門旁的「淺草寺店」。訂位：TableCheck 中文／☎ 03-5830-7710","close":"22:30","leg":{"mode":"walk","orig":"walk","real":5,"km":0.35,"label":"步行","dist":"350 m","note":"往傳法院通","to":"淺草メンチ（炸牛豬肉餅）"},"wait":0,"from":"淺草寺・雷門・仲見世通り"},{"title":"淺草メンチ（炸牛豬肉餅）","type":"餐飲","stay":15,"rating":"4.1","addr":"東京都台東区浅草2-3-3","sub":"4.1／3,569 則／10:00–19:00 無休／¥400 一個。現炸、外酥內多汁，隊伍消化很快。這一帶禁止邊走邊吃，店旁有專用立食區，站那裡吃完再走","close":"19:00","leg":{"mode":"walk","orig":"walk","real":5,"km":0.3,"label":"步行","dist":"300 m","note":"往初音小路商店街","to":"淺草うなな（鰻魚烤飯糰）"},"wait":0,"from":"午餐 · WAGYU SUKIYAKI 極 GOKU 淺草寺店"},{"title":"淺草うなな（鰻魚烤飯糰）","type":"餐飲","stay":20,"rating":"4.2","addr":"東京都台東区浅草2-7-21 初音小路商店街","sub":"4.2／1,429 則／09:00–17:30／¥600。國產鰻魚炭火現烤後包成飯糰，可加山椒。淺草排隊最長的鰻魚店之一，要先抽整理券。買的地方和吃的地方分開，立食區在前面幾間店外","close":"17:30","leg":{"mode":"train","orig":"train","real":15,"km":null,"label":"電車","dist":"","note":"筑波快線 淺草 → 秋葉原 ¥230。或銀座線約 25 分","to":"秋葉原電器街"},"wait":0,"from":"淺草メンチ（炸牛豬肉餅）"},{"title":"秋葉原電器街","type":"購物","stay":190,"rating":"","addr":"秋葉原電気街","sub":"駿河屋與 Mandarake、GiGO 1–3 號館、Super Potato、友都八喜（相機家電）。15:30 去女僕咖啡，剩下的回來再逛","close":null,"leg":{"mode":"walk","orig":"walk","real":7,"km":0.5,"label":"步行","dist":"500 m","note":"","to":"女僕咖啡 · Maidreamin 秋葉原本店"},"wait":0,"from":"淺草うなな（鰻魚烤飯糰）"},{"title":"女僕咖啡 · Maidreamin 秋葉原本店","type":"餐飲","stay":60,"rating":"4.9","addr":"東京都千代田区外神田3-16-17 住吉ビル 6F","sub":"Google 4.9。週一到五 11:30、週末 10:30 開到 23:00。官網先訂六人位。剛吃完今半，只點飲料或聖代就好。有舞台表演、女僕會講英文。店內不能拍女僕，可以加購拍立得合照","close":null,"leg":{"mode":"walk","orig":"walk","real":7,"km":0.5,"label":"步行","dist":"500 m","note":"","to":"友都八喜 Akiba · 免稅、最後補貨"},"wait":0,"from":"秋葉原電器街"},{"title":"友都八喜 Akiba · 免稅、最後補貨","type":"購物","stay":51,"rating":"4.2","addr":"東京都千代田区神田花岡町1-1","sub":"09:30–22:00。相機家電、玩具都在這。免稅要帶護照，單店單日滿 ¥5,000（未稅）。11/1 起改成先付含稅價、出國時再退稅","close":"22:00","leg":{"mode":"walk","orig":"walk","real":5,"km":0.3,"label":"步行","dist":"300 m","note":"從友都八喜走過去","to":"晚餐 · 伊豆榮 本店（鰻魚）"},"wait":0,"from":"女僕咖啡 · Maidreamin 秋葉原本店"},{"title":"晚餐 · 伊豆榮 本店（鰻魚）","type":"餐飲","stay":80,"rating":"4.1","addr":"東京都台東区上野2-12-22","sub":"4.1／3,181 則／不忍池旁／11:00–21:00 全年無休（11/16 週一照常）／價位偏高。300 年江戶老舖，醬汁不甜膩。①有外國客人反映排隊叫號規則沒解釋清楚，進門先確認要不要抽號碼牌。②隔天 D7 午餐川豐也是鰻魚，連兩餐鰻魚。☎ 03-3831-0954","close":"21:00","leg":{"mode":"train","orig":"train","real":12,"km":null,"label":"電車","dist":"","note":"日比谷線 秋葉原 → 上野 ¥180。或 JR 山手線約 14 分","to":"阿美橫町 · 最後一次採買"},"wait":0,"from":"友都八喜 Akiba · 免稅、最後補貨"},{"title":"阿美橫町 · 最後一次採買","type":"購物","stay":120,"rating":"4.3","addr":"アメ横商店街","sub":"明天早上不會再回上野，伴手禮今晚全部買完。先攻 20:00 打烊的：二木の菓子、志村商店、乾貨攤。再去開到 21:00 的多慶屋、大黑屋與 OS drug。唐吉訶德上野店 24 小時","close":null,"leg":{"mode":"walk","orig":"walk","real":10,"km":0.65,"label":"步行","dist":"650 m","note":"","to":"回飯店・整理行李"},"wait":0,"from":"晚餐 · 伊豆榮 本店（鰻魚）"},{"title":"回飯店・整理行李","type":"住宿","stay":0,"rating":"","addr":"東京都台東区東上野1-10-13","sub":"今晚打包完，明天 08:20 要出門","close":null,"wait":0,"from":"阿美橫町 · 最後一次採買"}]},{"date":"11/17 二","theme":"成田山表參道・新勝寺・返程（T1）","city":"成田 → 返程","lodge":"","start":"07:00","items":[{"title":"起床・退房","type":"住宿","stay":55,"rating":"","addr":"東京都台東区東上野1-10-13","sub":"Booking 確認碼 6013.900.321／PIN 4344。退房時段 05:00–11:00。不吃早餐，留胃給鰻魚飯。07:55 全員行李到飯店門口","close":"11:00","leg":{"mode":"car","orig":"car","real":80,"km":70,"label":"開車","dist":"70 km","note":"送機包車 SAR427709（已訂）· Toyota Hiace 9 人座 · 中文司機 · 只等 30 分","to":"成田機場 T1 · 寄行李"},"wait":0,"from":null},{"title":"成田機場 T1 · 寄行李","type":"機場","stay":25,"rating":"","addr":"成田空港 第1ターミナル","sub":"樂桃在第 1 航廈，上車先跟司機講清楚。投幣置物櫃（大型約 ¥700／天）在 B1 京成車站周邊與 1F。滿了用 4F 的 ABC 手荷物預かり櫃檯。樂桃櫃台起飛前約 2 小時才開，現在還不能託運","close":null,"leg":{"mode":"train","orig":"train","real":23,"km":null,"label":"電車","dist":"","note":"京成本線 成田空港 → 京成成田，往回兩站 ¥280，約 20 分一班。不要搭 Skyliner，它不停京成成田；步行 650 m 9 分：先往米屋走","to":"なごみの米屋 總本店 · 伴手禮"},"wait":5,"from":"起床・退房"},{"title":"なごみの米屋 總本店 · 伴手禮","type":"購物","stay":20,"rating":"4","addr":"千葉県成田市上町500","sub":"08:00 就開，先買完省得回程趕。栗羊羹與大福是招牌，千葉花生製品也在這買","close":null,"leg":{"mode":"walk","orig":"walk","real":3,"km":0.2,"label":"步行","dist":"200 m","note":"","to":"川豐本店 · 先抽號碼牌"},"wait":2,"from":"成田機場 T1 · 寄行李"},{"title":"川豐本店 · 先抽號碼牌","type":"餐飲","stay":10,"rating":"4.4","addr":"千葉県成田市仲町386","sub":"10:00–17:00。有人 9:30 到拿 155 號、11:30 才入座。一到先抽號碼牌再去逛，叫號可線上看","close":"17:00","leg":{"mode":"walk","orig":"walk","real":3,"km":null,"label":"步行","dist":"","note":"就在表參道上","to":"成田山表參道"},"wait":2,"from":"なごみの米屋 總本店 · 伴手禮"},{"title":"成田山表參道","type":"景點","stay":25,"rating":"4.6","addr":"成田山表参道","sub":"車站到總門約 800 公尺，江戶時代木造町屋。平日不封路會有車，走人行道","close":null,"leg":{"mode":"walk","orig":"walk","real":7,"km":0.45,"label":"步行","dist":"450 m","note":"","to":"成田山新勝寺・成田山公園"},"wait":0,"from":"川豐本店 · 先抽號碼牌"},{"title":"成田山新勝寺・成田山公園","type":"景點","stay":70,"rating":"4.5","addr":"成田山新勝寺","sub":"08:00–16:00，免費。總門 → 仁王門 → 大本堂 → 三重塔。後方成田山公園 11 月中下旬正是紅葉季，走一圈 25 分","close":"16:00","leg":{"mode":"walk","orig":"walk","real":7,"km":0.45,"label":"步行","dist":"450 m","note":"","to":"午餐 · 川豐本店"},"wait":0,"from":"成田山表參道"},{"title":"午餐 · 川豐本店","type":"餐飲","stay":65,"rating":"4.4","addr":"千葉県成田市仲町386","sub":"先付款再用餐，約 ¥4,000–5,000／人。備案：等超過兩小時就改買外帶鰻重便當，約等 20 分，拿到成田山公園吃。隔壁菊屋（Google 4.2）排隊短很多","close":null,"leg":{"mode":"walk","orig":"walk","real":12,"km":0.85,"label":"步行","dist":"850 m","note":"直接走回京成成田","to":"京成成田站"},"wait":3,"from":"成田山新勝寺・成田山公園"},{"title":"京成成田站","type":"車站","stay":0,"rating":"","addr":"京成成田駅","sub":"14:05 之前一定要上車，錯過要等 20 分。比原本 Skyliner 版多了 40 分餘裕","close":null,"leg":{"mode":"train","orig":"train","real":14,"km":null,"label":"電車","dist":"","note":"京成本線 → 成田空港（第 1 航廈）","to":"取行李・報到・出境（T1）"},"wait":3,"from":"午餐 · 川豐本店"},{"title":"取行李・報到・出境（T1）","type":"機場","stay":0,"rating":"","addr":"成田空港 第1ターミナル","sub":"先辦免稅退稅，再託運行李：11/1 起新制，免稅品要全部帶在身上給稅關確認，託運後就不能辦。樂桃櫃台約 14:40 開、起飛前 50 分（15:50）關櫃","close":null,"wait":6,"from":"京成成田站"},{"title":"MM623 起飛","type":"機場","stay":0,"rating":"","addr":"成田空港 第1ターミナル","sub":"","close":null,"wait":140,"from":"取行李・報到・出境（T1）"}]}];
+const vals=lg=>{let o;if(lg.km!=null){o={walk:Math.max(2,Math.round(lg.km*13)),car:Math.round(lg.km*2.2+4),train:Math.round(lg.km*1.5+10)}}
+  else{const n=lg.real||10,k=lg.orig;o=k==='walk'?{walk:n,train:n+7,car:Math.max(5,Math.round(n*.5)+3)}:k==='train'?{train:n,car:Math.round(n*1.2)+3,walk:n*5}:{car:n,train:Math.round(n*.9)+5,walk:n*4}}
+  if(lg.orig!=='flight')o[lg.orig]=lg.real;return o};
+const mins=lg=>lg.mode==='flight'?lg.real:vals(lg)[lg.mode];
+const legNote=(k,m)=>k==='train'?'約 ¥'+(Math.round((150+m*6)/10)*10)+' / 人':k==='car'?'計程車 2 台 約 ¥'+(Math.round((500+m*110)/100)*100)+' / 台':'約 '+(m*0.075).toFixed(1)+' km';
+const estLeg=(a,b,dayMode)=>{const w=8+((a.title.length*7+b.title.length*13)%28);const lg={orig:'walk',real:w,km:null,label:'估計',dist:'',note:'',est:true,to:b.title};lg.mode=dayMode==='car'?'car':w<=15?'walk':'train';return lg};
+const SUGGEST=[[['とんかつ 一 HANARE','行程備註的備案・室町 1-11-15・Google 4.3','餐飲'],['東京車站一番街 六厘舎','行程備註的備案・沾麵','餐飲']],
+ [['TsuruTonTan 澀谷','入鹿備案・SHIBUYA SKY 同棟 13F','餐飲'],['HUMAN MADE TOKYO','Cat Street 沿途・神宮前 6-25-10','購物'],['極味屋 澀谷PARCO店','台灣網友推薦・只能現場排隊','餐飲']],
+ [['かにと和牛 富士山亭','湖波備案・4.5・17:00–21:00','餐飲']],
+ [['BEAMS OUTLET GOTEMBA','御殿場 Outlet 內・10:00–20:00','購物'],['JOURNAL STANDARD 御殿場店','HILL SIDE 3530 區','購物']],
+ [['豊島屋 鳩サブレー','小町通り 伴手禮','購物'],['The Sunrise Shack','稲村ヶ崎旁・外帶咖啡','餐飲']],
+ [['牛たんの檸檬 淺草店','Google 4.9・開到 21:30','餐飲'],['唐吉訶德 上野店','24 小時・最後補貨','購物']],
+ [['菊屋（成田）','川豐備案・排隊短很多・Google 4.2','餐飲']]];
+const EXPS=[{t:'the Moto Hotel Ueno II 11/11–13',amt:109200,payer:'我',cat:'住宿',day:'D1'},{t:'Gyu Star 牛スター 午餐',amt:31800,payer:'阿哲',cat:'餐飲',day:'D1'},{t:'計程車 ×2 → 吉原',amt:2400,payer:'阿凱',cat:'交通',day:'D1'},{t:'とんかつ 一 晚餐',amt:16800,payer:'Mei',cat:'餐飲',day:'D1'},{t:'LOVE & TABLE 外帶',amt:5400,payer:'Ken',cat:'餐飲',day:'D2'},{t:'Hamburg YOSHI ×6',amt:14400,payer:'小安',cat:'餐飲',day:'D2'}].map(e=>({...e,with:ALL.slice()}));
+const AI={0:{title:'丸之內聖誕點燈 11/11 可能還沒亮',body:'你的備註提到點燈通常 11 月中才開始。行幸通り仍可拍站體，30 分鐘不用改。',info:true},
+  1:{title:'想逛 PARCO 服飾？刪掉 SHIPS，把 20 分給 PARCO',body:'照你備註的取捨：PARCO 停留 20 → 40 分，1F／2F 服飾樓層也能看，之後時間自動重排。',info:false}};
+const guess=t=>!t.trim()?null:/車|JR|巴士|地鐵|計程|特急|電車|Suica|新幹線|過路|油/.test(t)?'交通':/門票|入場|票|纜車/.test(t)?'門票':/買|藥妝|伴手|紀念|衣|唐吉|免稅|Outlet/.test(t)?'購物':/飯店|民宿|住/.test(t)?'住宿':'餐飲';
+const PACK=[{name:'證件與錢',items:[['護照（免稅要帶）','各自'],['台灣駕照＋日文譯本','會開車的人'],['Visit Japan Web 六人份','我'],['信用卡＋日圓現金','各自'],['千圓鈔（停車場）','阿哲']]},{name:'穿著',items:[['好捲的褲子（teamLab 水深到膝）','各自'],['厚外套（河口湖清晨 3–5°C）','各自'],['好走的鞋（忠靈塔 398 階）','各自']]},{name:'其他',items:[['行動電源（隨身行李）','各自'],['Suica','各自'],['防水手機袋（teamLab）','Mei'],['大購物袋（Outlet）','我']]}];
+const PHRASES=[{zh:'6 個人，有位子嗎？',jp:'6人です。席はありますか？',ro:'Rokunin desu. Seki wa arimasu ka?'},{zh:'我有預約',jp:'予約しています',ro:'Yoyaku shite imasu'},{zh:'可以分開坐沒關係',jp:'別々の席でも大丈夫です',ro:'Betsubetsu no seki demo daijōbu desu'},{zh:'可以刷卡嗎？',jp:'カードは使えますか？',ro:'Kādo wa tsukaemasu ka?'},{zh:'可以辦免稅嗎？',jp:'免税できますか？',ro:'Menzei dekimasu ka?'},{zh:'洗手間在哪裡？',jp:'トイレはどこですか？',ro:'Toire wa doko desu ka?'}];
+const TW={bg:'oklch(0.95 0.04 40)',c:'oklch(0.42 0.13 40)'},TB={bg:'oklch(0.95 0.04 85)',c:'oklch(0.42 0.1 85)'},NONE={bg:'rgba(34,31,26,.06)',c:'#6f685e'};
+const FOOD=[
+ {n:'極味屋 澀谷PARCO店',tag:'鐵板自煎和牛漢堡排・PARCO B1F（就是下一段的 PARCO）',tw:'台灣網友推薦 · Dcard／Threads',twS:TW,tb:'Tabelog —',tbS:NONE,group:'6 人：不適合，吧台約 20 席',why:'Dcard 上多篇東京美食文都把它排前幾名；Threads 也有網友推薦，但提到要避開飯點、吃完一身油煙。只能現場排，飯點可能等 1 小時。',src:'Threads 討論串',url:'https://www.threads.com/@yoho945/post/DFDHkySSggw?hl=zh-tw'},
+ {n:'白一 渋谷店',tag:'牛奶霜淇淋・神南 1-7-7・渋谷駅 600m',tw:'台灣網友：未查到',twS:NONE,tb:'Tabelog 3.69 · 百名店 2026',twBg:'',tbS:TB,group:'6 人：外帶 OK',why:'Tabelog 冰淇淋百名店 2026 選出店，神南一帶午間排名第一，可外帶邊走邊吃。',src:'Tabelog 神南午餐排行',url:'https://tabelog.com/tokyo/C13113/C36625/rstLst/lunch/cond10-04-00/'},
+ {n:'Kenyan 澀谷',tag:'奶茶・下午茶',tw:'台灣網友推薦 · Dcard',twS:TW,tb:'Tabelog —',tbS:NONE,group:'6 人：需確認',why:'Dcard 原宿澀谷購物文推薦走累了來這裡，冰奶茶必點，作者形容是喝過最好喝的。',src:'Dcard 日本旅遊版',url:'https://www.dcard.tw/f/japan_travel/p/255533000'},
+ {n:'HARBS 澀谷',tag:'水果千層蛋糕・下午茶',tw:'台灣網友推薦 · Dcard',twS:TW,tb:'Tabelog —',tbS:NONE,group:'6 人：可能要分桌',why:'Dcard 網友分享排約 20 分鐘，低消一杯飲料，水果千層必點；也有人說芒果慕斯普通。',src:'Dcard 日本旅遊版',url:'https://www.dcard.tw/f/japan_travel/p/254445973'},
+ {n:'Roasted COFFEE LABORATORY 渋谷神南店',tag:'自家烘焙咖啡・神南 1-6-3',tw:'台灣網友：未查到',twS:NONE,tb:'Tabelog 3.54',tbS:TB,group:'6 人：外帶 OK',why:'Tabelog 神南咖啡廳午間排名前段，可外帶。',src:'Tabelog 神南咖啡廳',url:'https://tabelog.com/tokyo/C13113/C36625/rstLst/lunch/cafe/'},
+ {n:'陳家私菜 渋谷店',tag:'四川菜・頂天石燒麻婆豆腐',tw:'台灣網友：未查到',twS:NONE,tb:'Tabelog 3.41',tbS:TB,group:'6 人：接受宴會訂位',why:'Tabelog 神南居酒屋分類排名前段，店家標明接受各種宴會，6 人比較好坐。',src:'Tabelog 神南居酒屋',url:'https://tabelog.com/tokyo/C13113/C36625/rstLst/izakaya/'}];
+const TICKETS=[{n:'teamLab Planets TOKYO',s:'11/12 08:00・KKday #26KK268884483・憑證 KKDAY-20260929-FCD4・大人 6',tag:'門票'},{n:'the Moto Hotel Ueno II',s:'11/11–13・Booking 6402.905.665／PIN 4398',tag:'住宿'},{n:'ORIX 租車',s:'11/13 08:00・Klook XAA089762・現場付 ¥52,140',tag:'租車'},{n:'民宿 紫陽花（柴菊房）',s:'11/13–15・Booking 6946.194.818／PIN 9936',tag:'住宿'},{n:'the Moto Hotel Ueno II',s:'11/15–17・Booking 6013.900.321／PIN 4344',tag:'住宿'},{n:'送機包車',s:'11/17・SAR427709・Toyota Hiace 9 人座・只等 30 分',tag:'交通'}];
+const clone=o=>JSON.parse(JSON.stringify(o));
+const dayModeOf=items=>{const c={};items.forEach(it=>{if(it.leg&&!it.leg.est)c[it.leg.orig]=(c[it.leg.orig]||0)+1});return (c.car||0)>(c.train||0)+(c.walk||0)/2?'car':'train'};
+
+
+const WD='日一二三四五六';
+const firstJson=t=>{const i=t.indexOf('{');if(i<0)throw new Error('no json');let d=0,q=false,e=false;for(let k=i;k<t.length;k++){const c=t[k];if(q){if(e)e=false;else if(c==='\\')e=true;else if(c==='"')q=false;continue}if(c==='"')q=true;else if(c==='{')d++;else if(c==='}'){d--;if(d===0)return JSON.parse(t.slice(i,k+1))}}throw new Error('unbalanced')};
+const CITIES=['東京','河口湖','鎌倉','大阪','京都','北海道','沖繩','福岡'];
+const AP={東京:'NRT',河口湖:'NRT',鎌倉:'NRT',大阪:'KIX',京都:'KIX',北海道:'CTS',沖繩:'OKA',福岡:'FUK'};
+const CW={東京:3,大阪:3,京都:2,河口湖:2,鎌倉:1,北海道:3,沖繩:3,福岡:2};
+const FLIGHTS={out:[['台灣虎航 TR866','06:40','10:55','NT$4,500–7,500','你的行程',1],['中華航空','08:10','12:30','NT$9,000–14,000','示意',0],['長榮航空','09:00','13:20','NT$9,500–15,000','示意',0],['樂桃航空','13:30','17:45','NT$4,000–7,000','示意',0]],
+  ret:[['樂桃 MM623','16:40','約 19:30','NT$4,000–7,000','你的行程',1],['台灣虎航','11:55','約 14:45','NT$4,500–7,500','示意',0],['中華航空','14:00','約 16:50','NT$9,000–14,000','示意',0],['長榮航空','15:00','約 17:50','NT$9,500–15,000','示意',0]]};
+const mid=s=>{const n=s.replace(/NT\$|,/g,'').split('–').map(Number);return (n[0]+n[1])/2};
+const POOL={
+ 東京:{s:[['淺草寺・雷門','仲見世通り・早上人少',90],['明治神宮','原宿旁的森林參道',60],['SHIBUYA SKY','日落前入場最美',80],['東京鐵塔','芝公園拍塔',45],['teamLab Planets','豐洲・需預約',120],['上野恩賜公園','阿美橫町旁',60]],f:[['淺草 和牛壽喜燒','A5 和牛'],['築地場外市場','海鮮丼'],['入鹿 TOKYO','必比登拉麵'],['とんかつ 一','日本橋炸豬排'],['牛たんの檸檬','厚切牛舌'],['Hamburg YOSHI','漢堡排']],hotel:'上野 三房公寓',m:'train'},
+ 河口湖:{s:[['新倉山淺間公園・忠靈塔','398 階・清晨最佳',60],['大石公園','湖畔紅葉迴廊',60],['河口湖纜車','天上山展望台',80],['西湖いやしの里根場','茅草屋聚落',85]],f:[['甲州ほうとう 小作','南瓜ほうとう'],['手打ちうどん 彩花','吉田烏龍麵'],['湖波','ほうとう定食']],hotel:'河口湖 湖畔別墅',m:'car'},
+ 鎌倉:{s:[['鶴岡八幡宮','段葛參道',50],['高德院・鎌倉大佛','門票 ¥300',40],['長谷寺','由比濱海景',50],['鎌倉高校前 平交道','灌籃高手片頭',20],['稲村ヶ崎 夕陽','看江之島與富士山',60]],f:[['小町通り 邊走邊吃','糰子・大佛燒'],['七里ヶ浜 海景餐廳','半熟蛋包飯']],hotel:'回東京住宿',m:'car'},
+ 大阪:{s:[['大阪城公園','天守閣',90],['道頓堀','固力果看板',90],['新世界・通天閣','串炸一條街',60],['梅田空中庭園','夜景',60]],f:[['大阪燒','排隊名店'],['黑門市場','邊走邊吃'],['新世界 串炸','醬汁禁止二度沾']],hotel:'難波 公寓',m:'train'},
+ 京都:{s:[['伏見稻荷大社','千本鳥居',120],['清水寺','清水舞台',90],['嵐山竹林小徑','早上人少',60],['金閣寺','鏡湖池倒影',50]],f:[['嵐山 湯豆腐',''],['錦市場','京都的廚房'],['京都拉麵小路','京都站 10F']],hotel:'京都站 公寓',m:'train'},
+ 北海道:{s:[['小樽運河','傍晚點燈',60],['大通公園・電視塔','札幌市中心',45],['白色戀人公園','',60]],f:[['湯咖哩','札幌'],['成吉思汗烤肉','羊肉'],['二條市場 海鮮丼','']],hotel:'札幌 公寓',m:'train'},
+ 沖繩:{s:[['美麗海水族館','黑潮之海',150],['古宇利大橋','',60],['國際通','',90]],f:[['沖繩麵','排骨'],['塔可飯','金武'],['A&W','沖繩限定']],hotel:'那霸 公寓',m:'car'},
+ 福岡:{s:[['太宰府天滿宮','',90],['中洲屋台','',60],['天神地下街','',90]],f:[['一蘭 總本店','豚骨拉麵'],['もつ鍋','牛腸鍋'],['明太子 早餐','']],hotel:'博多 公寓',m:'train'}};
+const SHOP={男裝選品:{東京:['BEAMS／SHIPS 澀谷神南','男裝選品一條街',100],大阪:['心齋橋 選品店','',90],any:['市區 選品店','',90]},
+ Outlet:{河口湖:['御殿場 Premium Outlets','逛到閉館',300],大阪:['臨空城 Premium Outlets','回程前順路',180],東京:['三井 Outlet 木更津','',240],any:['近郊 Outlet','',180]},
+ 藥妝:{東京:['上野 阿美橫町・藥妝','免稅',90],大阪:['心齋橋 藥妝街','免稅',90],any:['唐吉訶德','24 小時・免稅',60]},
+ 動漫電玩:{東京:['秋葉原電器街','駿河屋・GiGO・Super Potato',150],大阪:['日本橋 Den Den Town','',120],any:['Animate','',60]},
+ 相機家電:{東京:['友都八喜 Akiba','免稅・相機家電',60],大阪:['Bic Camera 難波','免稅',60],any:['Bic Camera','免稅',60]},
+ 伴手禮:{東京:['東京車站一番街','伴手禮最後採買',45],any:['車站伴手禮街','',45]}};
+const SHOPCATS=Object.keys(SHOP);
+const ymd=d=>d.toISOString().slice(0,10);
+const addD=(s,k)=>{const d=new Date(s+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+k);return d};
+const mdw=d=>(d.getUTCMonth()+1)+'/'+d.getUTCDate()+' '+WD[d.getUTCDay()];
+function splitDays(cities,n){const c=cities.slice(0,n),a=c.map(()=>1);let r=n-c.length;const order=c.map((x,i)=>[CW[x]||1,i]).sort((x,y)=>y[0]-x[0]).map(x=>x[1]);let k=0;while(r>0){a[order[k%order.length]]++;r--;k++}const out=[];c.forEach((x,i)=>{for(let j=0;j<a[i];j++)out.push(x)});return{alloc:c.map((x,i)=>[x,a[i]]),days:out}}
+function shopPlan(cats,cities){return cats.map(cat=>{const m=SHOP[cat];const city=cities.find(c=>m[c])||cities[0];return{cat,city,item:m[city]||m.any}})}
+function genDraft(pl){const {days:dc}=splitDays(pl.cities,pl.days),out=FLIGHTS.out[pl.out],ret=FLIGHTS.ret[pl.ret];const shops=shopPlan(pl.shop,pl.cities);const used={};const ix={};
+  const mkLeg=(m,real,to)=>({mode:m,orig:m,real,km:null,label:m==='car'?'開車':m==='walk'?'步行':'電車',dist:'',note:'AI 草稿估計，出發前請確認',to});
+  return dc.map((city,k)=>{const P=POOL[city],d=addD(pl.start,k),items=[],m=P.m;const nxt=()=>{ix[city]=(ix[city]||0);return ix[city]++};
+    const S=(title,sub,type,stay)=>({title,sub,type,stay,wait:0,rating:'',addr:'',close:null,leg:null,from:null});
+    let start='09:00';
+    if(k===0){start=out[2].replace('約 ','');items.push(S('機場抵達','入境＋領行李・'+out[0],'機場',60),S('飯店寄放行李',P.hotel,'住宿',15))}
+    else items.push(S(k===dc.length-1?'退房':'飯店出發',P.hotel,'住宿',k===dc.length-1?30:0));
+    const sA=P.s[nxt()%P.s.length],fA=P.f[(k*2)%P.f.length],fB=P.f[(k*2+1)%P.f.length];
+    if(k>0)items.push(S(sA[0],sA[1],'景點',sA[2]));
+    items.push(S('午餐 · '+fA[0],fA[1]||'AI 推薦','餐飲',60));
+    if(k<dc.length-1){const sp=shops.find((x,i)=>x.city===city&&!used[i]&&(used[i]=true));
+      if(sp)items.push(S(sp.item[0],sp.item[1]||sp.cat,'購物',sp.item[2]));else{const sB=P.s[nxt()%P.s.length];items.push(S(sB[0],sB[1],'景點',sB[2]))}
+      items.push(S('晚餐 · '+fB[0],fB[1]||'AI 推薦','餐飲',75),S('回飯店',P.hotel,'住宿',0))}
+    else items.push(S('前往機場・報到','起飛前 2 小時到','機場',120),S(ret[0]+' 起飛',ret[1]+' 起飛','機場',0));
+    items.forEach((it,i)=>{const nx=items[i+1];if(!nx)return;const r=(k===0&&i===0)?90:(nx.type==='機場'&&nx.stay===120)?80:m==='car'?18:it.type==='住宿'||nx.type==='住宿'?20:12;it.leg=mkLeg(i===0&&k===0?'car':m==='car'?'car':r<=12?'walk':'train',r,nx.title);nx.from=it.title});
+    if(k===dc.length-1){const dep=tm(ret[1]);let t=0;items.forEach((it,i)=>{if(i<items.length-1)t+=it.stay+it.leg.real});start=ft(Math.max(7*60,dep-t))}
+    return{date:mdw(d),theme:city,city,lodge:k===dc.length-1?'—':P.hotel,start,items}})}
+
+class Component extends DCLogic {
+  constructor(p){super(p);const m=p.startMode??'trip';
+    this.state={mode:m,tab:m==='trip'?'today':'plan',day:m==='trip'?TODAY:0,days:clone(DAYS),delay:0,elapsed:15,sheet:null,sel:null,drag:null,
+      exps:EXPS.slice(),pack:PACK.map(c=>({name:c.name,items:c.items.map(([l,w],i)=>({l,w,d:i===0}))})),cur:'JPY',
+      form:{t:'',amt:'',payer:'我',cat:'餐飲',with:ALL.slice(),cur:'JPY'},errs:{},toast:'',phrase:0,ticket:0,moneyView:'list',settled:[],aiDone:{},catTouched:false,pl:null,draft:false,trText:'',trRes:null,trLoading:false,trErr:''};}
+  componentDidMount(){
+    this.rt=setTimeout(()=>{this.setState(s=>({exps:[{t:'7-ELEVEN 飲料補給',amt:1380,payer:'Mei',cat:'餐飲',with:ALL.slice(),day:'D2',fresh:true},...s.exps]}));this.flash('Mei 剛新增：7-ELEVEN 飲料補給 ¥1,380');this.ft=setTimeout(()=>this.setState(s=>({exps:s.exps.map(e=>({...e,fresh:false}))})),5000)},6000);
+    this.iv=setInterval(()=>{if(this.state.mode==='trip')this.setState(s=>({elapsed:s.elapsed+1}))},1000);
+    this.onMove=e=>{const pr=this.press;if(pr&&!this.state.drag&&Math.abs(e.clientY-pr.y)>8){clearTimeout(pr.t);this.press=null}
+      const d=this.state.drag;if(!d)return;e.preventDefault();const dy=e.clientY-d.y0,c=d.mids[d.i]+dy;let over=0;d.mids.forEach((m,j)=>{if(j!==d.i&&m<c)over++});this.setState({drag:{...d,dy,over}})};
+    this.onUp=()=>{if(this.press){clearTimeout(this.press.t);this.press=null}const d=this.state.drag;if(!d)return;this.commitDrag(d)};
+    window.addEventListener('pointermove',this.onMove,{passive:false});window.addEventListener('pointerup',this.onUp);window.addEventListener('pointercancel',this.onUp)}
+  componentWillUnmount(){clearInterval(this.iv);clearTimeout(this.tt);clearTimeout(this.rt);clearTimeout(this.ft);clearTimeout(this.gt);window.removeEventListener('pointermove',this.onMove);window.removeEventListener('pointerup',this.onUp);window.removeEventListener('pointercancel',this.onUp)}
+  flash(t){this.setState({toast:t});clearTimeout(this.tt);this.tt=setTimeout(()=>this.setState({toast:''}),2400)}
+  startDrag(i,y){const rows=Array.from(document.querySelectorAll('[data-row]'));if(!rows[i])return;const r=rows.map(x=>x.getBoundingClientRect());
+    this.dragged=true;if(navigator.vibrate)navigator.vibrate(12);this.setState({drag:{i,y0:y,dy:0,over:i,mids:r.map(x=>x.top+x.height/2),h:r[i].height}})}
+  commitDrag(d){const di=this.state.day;
+    if(d.over!==d.i){this.edit(di,l=>{const[x]=l.splice(d.i,1);l.splice(d.over,0,x);this.relink(l)},{drag:null});this.flash('已移動，之後的時間已自動重排')}
+    else this.setState({drag:null});
+    setTimeout(()=>{this.dragged=false},60)}
+  relink(l){const dm=dayModeOf(l);l.forEach((it,k)=>{const nx=l[k+1],pv=l[k-1];
+      if(!nx)it.leg=null;else if(!it.leg||it.leg.to!==nx.title)it.leg=estLeg(it,nx,dm);
+      const from=pv?pv.title:null;if(it.from!==from){it.wait=0;it.from=from}})}
+  sched(di){const s=this.state,d=s.days[di],n=d.items.length;let t=tm(d.start);
+    const out=d.items.map((it,i)=>{const at=t+(it.wait||0),lm=it.leg?mins(it.leg):0;t=at+it.stay+(i<n-1?lm:0);return{...it,at,dep:at+it.stay,lm}});
+    if(s.mode==='trip'&&di===TODAY)out.forEach(o=>{if(o.at>NOW){o.at+=s.delay;o.dep+=s.delay}else if(o.dep>NOW)o.dep+=s.delay});
+    return out}
+  edit(di,fn,extra){this.setState(st=>{const days=clone(st.days);fn(days[di].items);return{days,...(extra||{})}})}
+  setLeg(di,i,k){this.edit(di,l=>{if(l[i]&&l[i].leg)l[i].leg.mode=k})}
+  setStay(di,i,v){this.edit(di,l=>{l[i].stay=Math.max(0,Math.min(480,v))})}
+  addItem(di,src,after){const list=this.state.days[di].items;const idx=after==null?list.length:after+1;const r=src.rec||REC[src.type]||[45,75];
+    this.edit(di,l=>{l.splice(idx,0,{title:src.title,sub:src.sub,type:src.type,rec:src.rec,close:src.close||null,rating:'',addr:'',wait:0,stay:Math.round((r[0]+r[1])/2/5)*5,leg:null,from:null});this.relink(l)},{sheet:'stop',sel:{di,i:idx}});
+    this.flash('已加入 — 選擇交通方式與停留時間')}
+  legChips(di,i,lg){return MODES.map(([k,l])=>{const v=vals(lg),m=v[k],dis=k==='walk'&&m>WALK_MAX,on=lg.mode===k,real=k===lg.orig&&!lg.est;
+    return{label:l,mins:dis?'太遠':m+'分',note:dis?'超過 '+WALK_MAX+' 分鐘':real?'你的行程原本安排':legNote(k,m)+'・估計',opacity:dis?.4:1,
+      bg:on?INK:'#fffdf9',color:on?'#fff':INK,border:on?INK:'rgba(34,31,26,.14)',tBg:on?'#fff':'transparent',tColor:on?INK:'#fff',
+      cardBg:on?'#fffdf9':'transparent',cardBorder:on?INK:'rgba(34,31,26,.14)',
+      onClick:dis?()=>this.flash('步行距離過遠，建議電車或汽車'):()=>this.setLeg(di,i,k)}})}
+  async aiDraft(p){const sp=splitDays(p.cities,p.days),out=FLIGHTS.out[p.out],ret=FLIGHTS.ret[p.ret];
+    const plan=sp.days.map((c,k)=>'D'+(k+1)+' '+mdw(addD(p.start,k))+' '+c).join('\n');
+    const prompt='幫 '+p.people+' 人排日本自由行草稿。\n每天城市（必須照這個分配）：\n'+plan+'\n去程：'+out[0]+' '+out[2]+' 抵達（第 1 天從「機場抵達」開始）。\n回程：'+ret[0]+' '+ret[1]+' 起飛（最後一天要有「前往機場・報到」和「起飛」）。\n想買：'+(p.shop.join('、')||'無')+'，請排進對應城市的時段。\n用真實、知名的景點與餐廳名稱；每天 5–7 站，含午餐晚餐；'+p.people+' 人同行要好坐。\n輸出 JSON：{"days":[{"theme":"當日主題","hotel":"住宿區域","items":[{"title":"地點名","type":"景點|餐飲|購物|住宿|機場","stay":停留分鐘,"note":"一句重點","move":"train|car|walk","moveMin":到下一站分鐘}]}]}，天數 '+p.days+'。';
+    const g=genDraft(p);let days=g,src='rule';
+    try{if(!window.claude)throw new Error('no claude');
+      const txt=await window.claude.complete({max_tokens:8000,system:'你是日本旅遊行程規劃師，熟悉台灣旅客。只輸出一個 JSON 物件，不要多個版本、不要說明、不要 markdown。',messages:[{role:'user',content:prompt}]});
+      const j=firstJson(txt);if(!j.days||!j.days.length)throw new Error('empty');
+      const TY=['景點','餐飲','購物','住宿','機場'],LB={train:'電車',car:'開車',walk:'步行'},cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+      days=sp.days.map((c,k)=>{const d=j.days[k];if(!d||!Array.isArray(d.items)||!d.items.length)return g[k];
+        const items=d.items.map(x=>({title:String(x.title||'未命名').slice(0,40),sub:String(x.note||''),type:TY.includes(x.type)?x.type:'景點',stay:cl(+x.stay||60,0,480),wait:0,rating:'',addr:'',close:null,leg:null,from:null,_m:x.move,_mm:+x.moveMin}));
+        items.forEach((it,i)=>{const nx=items[i+1];if(nx){const m=LB[it._m]?it._m:'train';it.leg={mode:m,orig:m,real:cl(it._mm||15,1,240),km:null,label:LB[m],dist:'',note:'Claude 估計，出發前請確認',to:nx.title};nx.from=it.title}delete it._m;delete it._mm});
+        let start=k===0?out[2].replace('約 ',''):'09:00';
+        if(k===sp.days.length-1){let t=0;items.forEach((it,i)=>{if(i<items.length-1)t+=it.stay+(it.leg?it.leg.real:0)});start=ft(Math.max(7*60,tm(ret[1])-t))}
+        return{date:mdw(addD(p.start,k)),theme:d.theme||c,city:c,lodge:String(d.hotel||POOL[c].hotel),start,items}});
+      src='ai'}catch(e){console.warn('AI draft fallback',e)}
+    if(!this.state.pl)return;
+    this.setState({days,draft:src,pl:null,mode:'plan',tab:'plan',day:0,aiDone:{0:true,1:true}});this.flash(src==='ai'?'Claude 已排好草稿，可以直接編輯':'AI 暫時無法使用，已改用規則草稿')}
+  async doTr(){const t=this.state.trText.trim();if(!t||this.state.trLoading)return;this.setState({trLoading:true,trErr:''});
+    try{const txt=await window.claude.complete({max_tokens:300,system:'把使用者的中文翻成自然、禮貌、適合旅遊現場對店員說的日文。只輸出一個 JSON 物件，不要多個版本、不要說明、不要 markdown：{"jp":"日文","ro":"羅馬拼音"}',messages:[{role:'user',content:t}]});
+      const j=firstJson(txt);this.setState({trRes:{zh:t,jp:j.jp,ro:j.ro||''},trLoading:false})}
+    catch(e){console.warn('translate failed',e);this.setState({trLoading:false,trErr:'翻譯失敗，請再試一次'})}}
+  mapUrl(it,leg){const q=encodeURIComponent((it.addr||it.title)+(it.addr?'':' 日本'));const m=leg?{train:'transit',car:'driving',walk:'walking'}[leg.mode]||'transit':'transit';return 'https://www.google.com/maps/dir/?api=1&destination='+q+'&travelmode='+m}
+  setPl(fn){this.setState(st=>({pl:{...st.pl,...fn(st.pl)}}))}
+  plVals(){const p=this.state.pl;if(!p)return{};const N=p.days,ppl=p.people,sp=splitDays(p.cities,N),end=addD(p.start,N-1),ap=AP[p.cities[0]]||'NRT';
+    const tog=(arr,v)=>arr.includes(v)?arr.filter(x=>x!==v):[...arr,v];
+    const fl=(list,key)=>FLIGHTS[list].map((f,i)=>({air:f[0],time:f[1]+' → '+f[2],price:f[3],tag:f[4],border:p[key]===i?INK:'rgba(34,31,26,.12)',onClick:()=>this.setPl(()=>({[key]:i}))}));
+    const nights=N-1,carDays=sp.days.filter(c=>POOL[c].m==='car').length;
+    const fp=mid(FLIGHTS.out[p.out][3])+mid(FLIGHTS.ret[p.ret][3]);
+    const rows=[['機票','所選去回程・票價中位數',fp*ppl],['住宿',nights+' 晚・6 人公寓／別墅 約 NT$1,800／人／晚',nights*ppl*1800],['交通',carDays?'市區交通＋租車 '+carDays+' 天':'市區電車・計程車',N*ppl*500+carDays*3500],['餐飲',N+' 天・約 NT$1,400／人／天',N*ppl*1400],['購物',p.shop.length?p.shop.join('、')+'・每類約 NT$2,500／人':'未選品類',p.shop.length*ppl*2500]];
+    const tot=rows.reduce((a,r)=>a+r[2],0),nt=n=>'NT$'+Math.round(n).toLocaleString('en-US');
+    const titles=['要去哪裡？','機票','想買什麼？','預算總表','產生中'];
+    return{s1:p.step===1,s2:p.step===2,s3:p.step===3,s4:p.step===4,s5:p.step===5,showFoot:p.step<5,canBack:p.step>1&&p.step<5,title:titles[p.step-1],stepLabel:p.step<5?p.step+' / 4':'',
+      dots:[1,2,3,4].map(i=>({w:i===p.step?'22px':'6px',bg:i<=p.step?INK:'rgba(34,31,26,.15)'})),
+      close:()=>this.setState({pl:null}),errCity:!!p.errCity,
+      cityChips:CITIES.map(c=>{const o=p.cities.indexOf(c),on=o>=0;return{label:c,on,order:o+1,bg:on?INK:'#fffdf9',color:on?'#fff':INK,border:on?INK:'rgba(34,31,26,.15)',onClick:()=>this.setPl(q=>({cities:tog(q.cities,c),errCity:false}))}}),
+      start:p.start,setStart:e=>{const v=e.target.value;if(v)this.setPl(()=>({start:v}))},
+      daysCtl:{v:N,dec:()=>this.setPl(q=>({days:Math.max(2,q.days-1)})),inc:()=>this.setPl(q=>({days:Math.min(14,q.days+1)}))},
+      pplCtl:{v:ppl,dec:()=>this.setPl(q=>({people:Math.max(1,q.people-1)})),inc:()=>this.setPl(q=>({people:Math.min(12,q.people+1)}))},
+      dateLine:mdw(addD(p.start,0))+' – '+mdw(end)+' · '+nights+' 晚 · '+ppl+' 人',
+      splitLine:p.cities.length?sp.alloc.map(([c,n])=>c+' '+n+' 天').join(' → '):'先選目的地',
+      route:'台北 TPE → '+ap+'（'+p.cities.join('・')+'）· '+ppl+' 人',outDate:mdw(addD(p.start,0)),retDate:mdw(end),
+      outFl:fl('out','out'),retFl:fl('ret','ret'),
+      flLink:'https://www.google.com/travel/flights?q='+encodeURIComponent('Flights from TPE to '+ap+' on '+p.start+' through '+ymd(end)+' '+ppl+' adults nonstop'),
+      shopChips:SHOPCATS.map(c=>{const on=p.shop.includes(c);return{label:c,bg:on?'oklch(0.5 0.12 300)':'#fffdf9',color:on?'#fff':INK,border:on?'oklch(0.5 0.12 300)':'rgba(34,31,26,.15)',onClick:()=>this.setPl(q=>({shop:tog(q.shop,c)}))}}),
+      shopPreview:shopPlan(p.shop,p.cities.length?p.cities:['東京']).map(x=>({cat:x.cat,place:x.item[0],where:x.city+' 的下午'})),noShop:!p.shop.length,
+      pplLabel:ppl+' 人合計',budget:rows.map(r=>({k:r[0],basis:r[1],pp:nt(r[2]/ppl),total:nt(r[2])})),total:nt(tot),ppTotal:nt(tot/ppl),totalJpy:'約 '+fJ(tot/RATE),days:N,
+      nextLabel:p.step===4?'產生草稿行程':'下一步',
+      back:()=>this.setPl(q=>({step:q.step-1})),
+      next:()=>{if(p.step===1&&!p.cities.length)return this.setPl(()=>({errCity:true}));
+        if(p.step<4)return this.setPl(q=>({step:q.step+1}));
+        this.setPl(()=>({step:5}));this.aiDraft(p)}}}
+  renderVals(){
+    const s=this.state, trip=s.mode==='trip', showSec=this.props.showTWD??true;
+    const M=n=>s.cur==='JPY'?fJ(n):fT(n), M2=n=>showSec?'≈ '+(s.cur==='JPY'?fT(n):fJ(n)):'';
+    const day=s.days[s.day], sch=this.sched(s.day), tsch=this.sched(TODAY), td=s.days[TODAY];
+    const nextIdx=tsch.findIndex(it=>it.at>NOW);
+    const next=tsch[nextIdx], prevT=nextIdx>0?tsch[nextIdx-1]:null, pl=prevT&&prevT.leg;
+    const leave=next?next.at-(prevT?prevT.lm:0):0;
+    const left=Math.max(0,(leave-NOW)*60-s.elapsed);
+    const open=(di,i)=>()=>{if(this.dragged)return;this.setState({sheet:'stop',sel:{di,i}})};
+    const warnOf=it=>it.close&&it.dep>tm(it.close)&&it.at<tm(it.close)+60?{short:'會超過 '+it.close+' 打烊／截止',long:'離開時間 '+ft(it.dep)+' 超過 '+it.close+'（依你的備註），建議停留 '+Math.max(5,tm(it.close)-it.at)+' 分以內。',fix:Math.max(5,tm(it.close)-it.at)}:null;
+    const d=s.drag;
+    const mk=(di,arr,dragList)=>(it,i)=>{const done=trip&&(di<TODAY||(di===TODAY&&it.dep<=NOW)),isNext=trip&&di===TODAY&&i===nextIdx,c=tc(it.type),w=warnOf(it),lg=it.leg;
+      let tf='none',z=1,shadow='none';
+      if(dragList&&d){if(i===d.i){tf='translateY('+d.dy+'px) scale(1.02)';z=5;shadow='0 14px 32px rgba(40,30,20,.22)'}else if(d.i<d.over&&i>d.i&&i<=d.over)tf='translateY(-'+d.h+'px)';else if(d.i>d.over&&i>=d.over&&i<d.i)tf='translateY('+d.h+'px)'}
+      const nxt=arr[i+1];
+      return{...it,time:ft(it.at),color:c,dot:done?c:'#f7f4ef',done,isNext,opacity:done?.55:1,
+        stayLabel:[it.rating?'★'+it.rating:'',it.stay?'停留 '+it.stay+' 分':''].filter(Boolean).join(' · '),hasWarn:!!w,warnShort:w?w.short:'',
+        border:w?'oklch(0.6 0.14 35)':isNext?'oklch(0.52 0.14 40)':'rgba(34,31,26,.1)',
+        hasMove:!!lg&&lg.mode!=='flight'&&!!nxt,legs:lg&&lg.mode!=='flight'?this.legChips(di,i,lg):[],
+        hasFixed:!!lg&&lg.mode==='flight',fixedText:lg?'飛機 '+Math.floor(lg.real/60)+' 小時 '+(lg.real%60)+' 分（含時差）· '+lg.note:'',
+        hasLegNote:!!lg&&lg.mode!=='flight'&&(!!lg.note||!!lg.est)&&!!nxt,legNote:lg?(lg.est?'移動後重新估算，出發前請用地圖確認':lg.mode===lg.orig?lg.note:'改為'+(MODES.find(m=>m[0]===lg.mode)||['',''])[1]+'・原本：'+lg.label+(lg.note?'，'+lg.note:'')):'',
+        hasWait:!!(nxt&&nxt.wait>4),wait:nxt?nxt.wait:0,
+        tf,z,tr:d&&dragList&&i===d.i?'none':'transform .18s ease',shadow,cursor:d?'grabbing':'pointer',
+        down:dragList?e=>{if(e.button>0)return;const y=e.clientY;this.press={i,y,t:setTimeout(()=>this.startDrag(i,y),380)}}:null,open:open(di,i)}};
+    const items=sch.map(mk(s.day,sch,true));
+    const restToday=tsch.map(mk(TODAY,tsch,false)).filter((it,i)=>i>nextIdx);
+    const travel=sch.reduce((a,it,i)=>a+(i<sch.length-1?it.lm:0),0);
+    const go=tab=>()=>this.setState({tab,sheet:null});
+    const navDefs=(trip?[['today','今日']]:[]).concat([['plan','行程'],['money','記帳'],['pack','清單']]);
+    const nav=navDefs.map(([k,l])=>{const a=s.tab===k;return{label:l,onClick:go(k),color:a?INK:MUTED,weight:a?700:400,bar:a?'oklch(0.52 0.14 40)':'transparent'}});
+    const setMode=m=>()=>this.setState({mode:m,tab:m==='trip'?'today':'plan',day:m==='trip'?TODAY:0,sheet:null,delay:0,elapsed:15});
+    let route=[];
+    if(pl){const lab=(MODES.find(m=>m[0]===pl.mode)||['','移動'])[1];
+      if(pl.mode===pl.orig&&!pl.est){const parts=(pl.note||'').split(/。|；/).filter(Boolean);route=[{mins:prevT.lm+' 分',t:pl.label+(pl.dist?' '+pl.dist:''),s:parts[0]||''}].concat(parts.slice(1).map(p=>({mins:'',t:p,s:''})))}
+      else route=[{mins:prevT.lm+' 分',t:'改搭'+lab,s:legNote(pl.mode,prevT.lm)+'・估計'},{mins:'',t:'原本：'+pl.label+(pl.dist?' '+pl.dist:''),s:pl.note||''}]}
+    const total=s.exps.reduce((a,e)=>a+e.amt,0);
+    const net={};ALL.forEach(n=>net[n]=0);
+    s.exps.forEach(e=>{const w=e.with&&e.with.length?e.with:ALL;net[e.payer]+=e.amt;w.forEach(n=>net[n]-=e.amt/w.length)});
+    s.settled.forEach(x=>{net[x.from]+=x.amt;net[x.to]-=x.amt});
+    const balances=PEOPLE.map(p=>{const v=net[p.n],z=Math.abs(v)<1;return{name:p.n,i:p.n.slice(0,1),bg:p.bg,v,net:z?'已打平':(v>0?'+':'−')+M(Math.abs(v)),sub:z?'':v>0?'應收':'應付',color:z?MUTED:v>0?'oklch(0.45 0.11 165)':'oklch(0.5 0.14 30)'}});
+    const low=balances.reduce((a,b)=>b.v<a.v?b:a);
+    const aiTip=low.v<-1?low.name+' 目前應付最多（'+M(-low.v)+'）。下一筆由 '+low.name+' 先付，可以少轉一次帳。':'帳目平衡，目前不需要轉帳。';
+    const cr=balances.filter(b=>b.v>1).map(b=>({n:b.name,v:b.v})).sort((a,b)=>b.v-a.v),db=balances.filter(b=>b.v<-1).map(b=>({n:b.name,v:-b.v})).sort((a,b)=>b.v-a.v);
+    const tr=[];{let i=0,j=0;while(i<db.length&&j<cr.length){const a=Math.min(db[i].v,cr[j].v);tr.push({from:db[i].n,to:cr[j].n,amt:Math.round(a)});db[i].v-=a;cr[j].v-=a;if(db[i].v<1)i++;if(cr[j].v<1)j++;}}
+    const bgOf=n=>PEOPLE.find(p=>p.n===n).bg;
+    const allPack=s.pack.flatMap(c=>c.items), doneN=allPack.filter(p=>p.d).length;
+    const f=s.form, amtN=Number(String(f.amt).replace(/,/g,'')), amtJ=f.cur==='TWD'?amtN/RATE:amtN;
+    const chip=(cur,v,key)=>({label:v,onClick:()=>this.setState(st=>({form:{...st.form,[key]:v}})),bg:cur===v?INK:'#fffdf9',color:cur===v?'#fff':INK,border:cur===v?INK:'rgba(34,31,26,.15)'});
+    const tog=(cur,fn)=>[['JPY','¥ 日幣'],['TWD','NT$ 台幣']].map(([k,l])=>({label:l,onClick:()=>fn(k),bg:cur===k?'#fffdf9':'transparent',shadow:cur===k?'0 1px 3px rgba(0,0,0,.12)':'none'}));
+    let selV={};
+    if(s.sel&&s.days[s.sel.di]&&s.days[s.sel.di].items[s.sel.i]){const {di,i}=s.sel,ss=this.sched(di),it=ss[i],pv=i>0?ss[i-1]:null,r=it.rec||REC[it.type]||[45,75],w=warnOf(it),nx=ss[i+1];
+      selV={...it,color:tc(it.type),span:ft(it.at)+' 抵達 · '+ft(it.dep)+' 離開',stay:it.stay,
+        hasAddr:!!it.addr,addrLine:(it.rating?'★ '+it.rating+'　':'')+it.addr,
+        hasIn:!!(pv&&pv.leg&&pv.leg.mode!=='flight'),prevTitle:pv?pv.title:'',inLegs:pv&&pv.leg&&pv.leg.mode!=='flight'?this.legChips(di,i-1,pv.leg):[],
+        recLabel:'建議 '+r[0]+'–'+r[1]+' 分',
+        minus:()=>this.setStay(di,i,it.stay-15),plus:()=>this.setStay(di,i,it.stay+15),
+        presets:[30,60,90,120].map(v=>({label:v+'',onClick:()=>this.setStay(di,i,v),bg:it.stay===v?INK:'transparent',color:it.stay===v?'#fff':INK,border:it.stay===v?INK:'rgba(34,31,26,.15)'})),
+        applyRec:()=>{this.setStay(di,i,Math.round((r[0]+r[1])/2/5)*5);this.flash('已套用建議停留時間')},
+        impact:nx?'下一站「'+nx.title+'」'+ft(nx.at)+' 抵達 · 當天 '+ft(ss[ss.length-1].dep)+' 結束':'當天行程 '+ft(it.dep)+' 結束',
+        hasWarn:!!w,warn:w?w.long:'',fix:()=>{if(w){this.setStay(di,i,w.fix);this.flash('已調整停留為 '+w.fix+' 分')}}};}
+    const sheet=s.sheet, ai=AI[s.day];
+    return {
+      clock:trip?'13:30':'09:12',
+      plOpen:!!s.pl,pl:this.plVals(),isDraft:s.draft,
+      openPlanner:()=>this.setState({pl:{step:1,cities:['東京','河口湖','鎌倉'],start:'2026-11-11',days:7,people:6,out:0,ret:0,shop:['男裝選品','Outlet','動漫電玩','伴手禮']}}),
+      restoreTrip:()=>{this.setState({days:clone(DAYS),draft:false,day:0,aiDone:{}});this.flash('已還原匯入的行程')},noCtx:e=>e.preventDefault(),
+      modeBtns:[['plan','出發前 · 10/18'],['trip','旅途中 · 11/12']].map(([k,l])=>({label:l,onClick:setMode(k),bg:s.mode===k?'#fffdf9':'transparent',shadow:s.mode===k?'0 1px 3px rgba(0,0,0,.12)':'none'})),
+      modeNote:trip?'模擬 11/12 13:30 在澀谷神南：下一站倒數即時跑，可試「延後 30 分」與切換交通方式。':'出發前首頁是行程規劃；「今日」分頁尚未出現。',
+      isToday:s.tab==='today',isPlan:s.tab==='plan',isMoney:s.tab==='money',isPack:s.tab==='pack',
+      nav,goPlan:()=>this.setState({tab:'plan',day:TODAY}),
+      todayHead:'DAY 2 / 7 · '+td.date.replace(' ',' 週'),todayTitle:td.city,todayStay:td.lodge,
+      nextTitle:next?next.title:'今日行程已完成',nextTime:next?ft(next.at):'--:--',leaveTime:next?ft(leave):'--:--',
+      nextNote:next?(next.sub||'沒有備註'):'今天的行程都完成了',
+      countdown:String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0'),
+      todayLegs:pl&&pl.mode!=='flight'?this.legChips(TODAY,nextIdx-1,pl):[],route,
+      startNav:()=>{let url;if(s.sheet==='stop'&&s.sel){const ss=this.sched(s.sel.di),it=ss[s.sel.i],pv=ss[s.sel.i-1];url=this.mapUrl(it,pv&&pv.leg)}else if(next)url=this.mapUrl(next,pl);if(url)window.open(url,'_blank');this.setState({sheet:null})},
+      draftLabel:s.draft==='ai'?'Claude 草稿':'規則草稿',
+      trText:s.trText,setTr:e=>this.setState({trText:e.target.value,trErr:''}),trKey:e=>{if(e.key==='Enter')this.doTr()},doTr:()=>this.doTr(),
+      trBtn:s.trLoading?'翻譯中…':'翻譯',trOpacity:s.trLoading?.6:1,trErr:s.trErr,
+      delay30:()=>{this.setState(st=>({delay:st.delay+30}));this.flash('之後行程已全部延後 30 分鐘')},
+      quick:[['翻','翻譯卡','translate',tc('交通')],['食','附近美食','food',tc('餐飲')],['¥','記一筆','exp',tc('景點')],['票','票券','ticket',tc('住宿')]].map(([g,l,k,c])=>({glyph:g,label:l,color:c,onClick:()=>this.setState({sheet:k,errs:{}})})),
+      restToday,
+      avatars:PEOPLE.map(p=>({i:p.n.slice(0,1),bg:p.bg})),
+      statusLabel:trip?'旅途中':'出發倒數',statusValue:trip?'Day 2 / 7':'24 天',
+      dayPills:s.days.map((dd,i)=>{const a=i===s.day;return{label:'D'+(i+1)+' '+dd.date,sub:dd.city,onClick:()=>this.setState({day:i,drag:null}),bg:a?INK:'#fffdf9',color:a?'#fff':INK,border:a?INK:'rgba(34,31,26,.12)'}}),
+      dayCity:day.city,dayLabel:'D'+(s.day+1),dayStats:sch.length?sch.length+' 站 · '+ft(sch[0].at)+'–'+ft(sch[sch.length-1].dep)+' · 移動 '+travel+' 分 · 住 '+(day.lodge||'—'):'0 站',items,
+      openAdd:()=>this.setState({sheet:'add'}),
+      suggest:(SUGGEST[s.day]||[]).map(([t,sub,type])=>({title:t,sub,type,color:tc(type),onClick:()=>this.addItem(s.day,{title:t,sub,type})})),
+      rateLabel:'匯率 ¥1 = NT$'+RATE,curBtns:tog(s.cur,k=>this.setState(st=>({cur:k,form:{...st.form,cur:k}}))),
+      totalStr:M(total),totalTwd:M2(total),budgetStr:'預算 '+M(BUDGET),budgetPct:Math.min(100,total/BUDGET*100)+'%',
+      balances,aiTip,online:'阿哲、Mei 在線上',
+      moneyTabs:[['list','明細'],['settle',tr.length?'結算（'+tr.length+'）':'結算']].map(([k,l])=>({label:l,onClick:()=>this.setState({moneyView:k}),bg:s.moneyView===k?'#fffdf9':'transparent',shadow:s.moneyView===k?'0 1px 3px rgba(0,0,0,.12)':'none'})),
+      isList:s.moneyView==='list',isSettle:s.moneyView==='settle',notClear:tr.length>0,allClear:tr.length===0,
+      transferCount:'依目前帳目，最少 '+tr.length+' 筆轉帳就能讓 6 人打平（以'+(s.cur==='JPY'?'日幣':'台幣')+'顯示）。',
+      transfers:tr.map(x=>({...x,fromI:x.from.slice(0,1),toI:x.to.slice(0,1),fromBg:bgOf(x.from),toBg:bgOf(x.to),amt:M(x.amt),twd:M2(x.amt),
+        onPaid:()=>{this.setState(st=>({settled:[...st.settled,x]}));this.flash('已標記：'+x.from+' → '+x.to+' '+M(x.amt))},
+        onRemind:()=>this.flash('已傳送提醒給 '+x.from)})),
+      settledList:s.settled.map(x=>({...x,amt:M(x.amt)})),hasSettled:s.settled.length>0,
+      expList:s.exps.map(e=>{const w=e.with||ALL;return{...e,amt:M(e.amt),twd:M2(e.amt),color:CAT[e.cat],fresh:!!e.fresh,bg:e.fresh?'oklch(0.96 0.035 165)':'transparent',meta:e.day+' · '+e.payer+' 付 · '+(w.length===ALL.length?ALL.length+' 人均分':w.join('、')+' 分')}}),
+      openExp:()=>this.setState(st=>({sheet:'exp',errs:{},form:{...st.form,cur:st.cur}})),
+      packCount:doneN+' / '+allPack.length,packPct:(doneN/allPack.length*100)+'%',
+      packCats:s.pack.map((c,ci)=>({name:c.name,items:c.items.map((p,pi)=>({label:p.l,who:p.w,mark:p.d?'✓':'',boxBg:p.d?INK:'transparent',boxBorder:p.d?INK:'rgba(34,31,26,.3)',color:p.d?MUTED:INK,deco:p.d?'line-through':'none',
+        onClick:()=>this.setState(st=>{const pack=st.pack.map((cc,i)=>i!==ci?cc:{...cc,items:cc.items.map((pp,j)=>j!==pi?pp:{...pp,d:!pp.d})});return{pack}})}))})),
+      toast:s.toast,hasToast:!!s.toast,
+      hasSheet:!!sheet,closeSheet:()=>this.setState({sheet:null}),stop:e=>e.stopPropagation(),
+      sh:{stop:sheet==='stop'&&!!selV.title,add:sheet==='add',translate:sheet==='translate',food:sheet==='food',ticket:sheet==='ticket',exp:sheet==='exp'},
+      sel:selV,
+      delSel:()=>{const{di,i}=s.sel;this.edit(di,l=>{l.splice(i,1);this.relink(l)},{sheet:null,sel:null});this.flash('已從行程移除')},
+      phrase:s.trRes||PHRASES[s.phrase],phrases:PHRASES.map((p,i)=>{const on=!s.trRes&&i===s.phrase;return{zh:p.zh,onClick:()=>this.setState({phrase:i,trRes:null}),bg:on?INK:'#fffdf9',color:on?'#fff':INK,border:on?INK:'rgba(34,31,26,.15)'}}),
+      food:FOOD.map(x=>({...x,map:'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(x.n),twBg:x.twS.bg,twColor:x.twS.c,tbBg:x.tbS.bg,tbColor:x.tbS.c,onClick:()=>this.addItem(TODAY,{title:x.n,sub:x.why,type:'餐飲',rec:[20,45]},nextIdx-1)})),
+      ticket:TICKETS[s.ticket],tickets:TICKETS.map((t,i)=>({...t,onClick:()=>this.setState({ticket:i}),border:i===s.ticket?INK:'rgba(34,31,26,.1)'})),
+      form:f,errs:s.errs,formCurName:f.cur==='JPY'?'日幣':'台幣',
+      formCurBtns:tog(f.cur,k=>this.setState(st=>({form:{...st.form,cur:k}}))),
+      amtTwd:amtN>0&&f.with.length?'≈ '+(f.cur==='JPY'?fT(amtJ):fJ(amtJ))+' · 每人 '+(f.cur==='JPY'?fJ(amtJ/f.with.length):fT(amtJ/f.with.length)):'輸入後自動換算'+(f.cur==='JPY'?'台幣':'日幣')+'與每人分攤',
+      amtBorder:s.errs.amt?'oklch(0.5 0.14 30)':'rgba(34,31,26,.15)',tBorder:s.errs.t?'oklch(0.5 0.14 30)':'rgba(34,31,26,.15)',
+      setAmt:e=>{const v=e.target.value.replace(/[^\d]/g,'');this.setState(st=>({form:{...st.form,amt:v?Number(v).toLocaleString('en-US'):''},errs:{...st.errs,amt:''}}))},
+      setT:e=>{const v=e.target.value;this.setState(st=>({form:{...st.form,t:v,cat:st.catTouched?st.form.cat:(guess(v)||st.form.cat)},errs:{...st.errs,t:''}}))},
+      payerChips:PEOPLE.map(p=>chip(f.payer,p.n,'payer')),catChips:Object.keys(CAT).map(c=>({...chip(f.cat,c,'cat'),onClick:()=>this.setState(st=>({form:{...st.form,cat:c},catTouched:true}))})),
+      catHint:!s.catTouched&&f.t.trim()?'分類 · 已依品項自動判斷':'分類',
+      withHint:f.with.length===ALL.length?'全員均分':f.with.length+' 人分',
+      withChips:PEOPLE.map(p=>{const on=f.with.includes(p.n);return{label:p.n,bg:on?p.bg:'#fffdf9',color:on?'#fff':INK,border:on?p.bg:'rgba(34,31,26,.15)',
+        onClick:()=>this.setState(st=>{const w=st.form.with.includes(p.n)?st.form.with.filter(x=>x!==p.n):ALL.filter(x=>x===p.n||st.form.with.includes(x));return{form:{...st.form,with:w},errs:{...st.errs,with:''}}})}}),
+      presence:'阿哲 正在編輯 D3 河口湖 · Mei 在線上',
+      showAi:!!ai&&!s.aiDone[s.day],
+      ai:ai?{...ai,applyLabel:ai.info?'知道了':'套用',
+        apply:()=>{const dd=s.day;if(ai.info)return this.setState(st=>({aiDone:{...st.aiDone,[dd]:true}}));
+          this.edit(dd,l=>{const pi=l.findIndex(x=>/PARCO/.test(x.title)),si=l.findIndex(x=>/SHIPS/.test(x.title));if(pi>=0)l[pi].stay+=20;if(si>=0){l.splice(si,1)}this.relink(l)},{aiDone:{...s.aiDone,[dd]:true}});this.flash('已套用：SHIPS 移除、PARCO 40 分')},
+        dismiss:()=>this.setState(st=>({aiDone:{...st.aiDone,[s.day]:true}}))}:{},
+      saveExp:()=>{const errs={};if(!(amtN>0))errs.amt='請輸入金額';if(!f.t.trim())errs.t='請輸入品項';if(!f.with.length)errs.with='至少選一位分攤的人';
+        if(errs.amt||errs.t||errs.with)return this.setState({errs});
+        this.setState(st=>({exps:[{t:f.t.trim(),amt:Math.round(amtJ),payer:f.payer,cat:f.cat,with:f.with,day:trip?'D2':'行前'},...st.exps],form:{t:'',amt:'',payer:'我',cat:'餐飲',with:ALL.slice(),cur:st.cur},catTouched:false,sheet:null,tab:'money',moneyView:'list',errs:{}}));this.flash('已記帳，全員同步更新')}
+    };
+  }
+}
+</script>
+</body>
+</html>
