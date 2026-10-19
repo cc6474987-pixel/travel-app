@@ -16,6 +16,8 @@ if seed != "-":
 page = rep(page, "目前只存在這台裝置，在 Claude 裡開啟才會和旅伴同步", "目前只存在這台裝置，連上網路後會和旅伴同步")
 page = rep(page, "'要先登入 Claude，並在 Claude 裡打開這個連結才能搜尋'", "'AI 搜尋還沒設定好，請先用地圖連結'")
 page = rep(page, "'需要允許這個 app 使用 Claude 才能搜尋'", "'AI 搜尋暫時無法使用，請稍後再試'")
+exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "places_patch.py"), encoding="utf-8").read())
+page = apply(page, rep)
 
 head_extra = """<meta charset="utf-8">
 <meta name="apple-mobile-web-app-capable" content="yes">
