@@ -8,7 +8,7 @@ window.TRIP_CONFIG = {
     appId: "1:47951169561:web:85b62d11928dce8e30c288"
   },
   // SHA-256 of the trip password (Claude computes this for you)
-  tripHash: "",
+  tripHash: "bdbfdaabb8082709644595ffb386028dedaceba8a1f08307ceeb137aaa6b0d92",
   // Cloudflare Worker address for Claude search, e.g. https://travel-ai.<you>.workers.dev
   workerUrl: ""
 };
