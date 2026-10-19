@@ -598,7 +598,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
                 <div style="font:400 12px/1.6 'Noto Sans TC';color:#6f685e">{{ srHint }}</div>
                 <sc-if value="{{ srErr }}"><span style="font:400 12px 'Noto Sans TC';color:oklch(0.5 0.14 30)">{{ srErr }}</span></sc-if>
                 <sc-if value="{{ hasSr }}">
-                  <div style="font:500 12px 'Noto Sans TC';color:oklch(0.42 0.11 255)">Claude 推薦 · 營業時間請點地圖確認</div>
+                  <div style="font:500 12px 'Noto Sans TC';color:oklch(0.42 0.11 255)">美食清單 · 營業時間請點地圖確認</div>
                   <sc-for list="{{ srList }}" as="s">
                     <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#fffdf9;border:1px solid oklch(0.85 0.05 255);border-radius:14px">
                       <span style="width:8px;height:8px;border-radius:50%;background:{{ s.color }};flex:none"></span>
@@ -611,8 +611,23 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
                     </div>
                   </sc-for>
                 </sc-if>
+                <sc-if value="{{ npClosed }}"><button onClick="{{ npStart }}" style="align-self:flex-start;border:0;background:transparent;padding:2px 0;font:500 12.5px 'Noto Sans TC';color:oklch(0.45 0.11 255);cursor:pointer">＋ 清單裡沒有？把一家店加進清單（旅伴都看得到）</button></sc-if>
+                <sc-if value="{{ npOpen }}">
+                  <div style="display:flex;flex-direction:column;gap:8px;padding:12px 13px;border-radius:14px;background:#fffdf9;border:1px solid rgba(34,31,26,.12)">
+                    <div style="font:600 13.5px 'Noto Sans TC'">把店加進美食清單</div>
+                    <input value="{{ np.name }}" onChange="{{ npName }}" placeholder="店名" style="height:42px;border-radius:12px;border:1.5px solid rgba(34,31,26,.15);background:#fff;padding:0 12px;font:400 16px 'Noto Sans TC';color:#221f1a;outline:none">
+                    <button onClick="{{ npHere }}" style="align-self:flex-start;height:34px;padding:0 13px;border-radius:17px;border:1px solid rgba(34,31,26,.15);background:{{ npHereBg }};color:{{ npHereColor }};font:500 12.5px 'Noto Sans TC';cursor:pointer">{{ npHereLabel }}</button>
+                    <input value="{{ np.addr }}" onChange="{{ npAddr }}" placeholder="日文地址（不在店裡時填，例：東京都台東区浅草1-29-3）" style="height:42px;border-radius:12px;border:1.5px solid rgba(34,31,26,.15);background:#fff;padding:0 12px;font:400 16px 'Noto Sans TC';color:#221f1a;outline:none">
+                    <input value="{{ np.note }}" onChange="{{ npNote }}" placeholder="一句備註（招牌菜、價位）" style="height:42px;border-radius:12px;border:1.5px solid rgba(34,31,26,.15);background:#fff;padding:0 12px;font:400 16px 'Noto Sans TC';color:#221f1a;outline:none">
+                    <sc-if value="{{ npErr }}"><span style="font:400 12px 'Noto Sans TC';color:oklch(0.5 0.14 30)">{{ npErr }}</span></sc-if>
+                    <div style="display:flex;gap:8px">
+                      <button onClick="{{ saveNp }}" style="flex:1;height:42px;border:0;border-radius:12px;background:#221f1a;color:#fff;font:500 13.5px 'Noto Sans TC';cursor:pointer">{{ npSave }}</button>
+                      <button onClick="{{ npCancel }}" style="flex:none;height:42px;padding:0 14px;border:1px solid rgba(34,31,26,.15);border-radius:12px;background:transparent;font:500 13.5px 'Noto Sans TC';color:#221f1a;cursor:pointer">取消</button>
+                    </div>
+                  </div>
+                </sc-if>
                 <sc-if value="{{ hasLocal }}"><div style="font:500 12px 'Noto Sans TC';color:#6f685e">你行程備註裡的備案與順路點</div></sc-if>
-                <sc-if value="{{ noLocal }}"><div style="font:400 12px 'Noto Sans TC';color:#6f685e">行程備註裡沒有符合的地點，按「請 Claude 找」查附近。</div></sc-if>
+                <sc-if value="{{ noLocal }}"><div style="font:400 12px 'Noto Sans TC';color:#6f685e">行程備註裡沒有符合的地點，按「搜尋清單」找附近的店。</div></sc-if>
                 <sc-for list="{{ suggest }}" as="s" hint-placeholder-count="4">
                   <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:14px">
                     <span style="width:8px;height:8px;border-radius:50%;background:{{ s.color }};flex:none"></span>
@@ -919,13 +934,33 @@ const LSK='travel-app-v6';
 const lsGet=()=>{try{return JSON.parse(localStorage.getItem(LSK)||'{}')||{}}catch(e){return {}}};
 const lsSet=o=>{try{localStorage.setItem(LSK,JSON.stringify({...lsGet(),...o}))}catch(e){}};
 const getLoc=()=>new Promise(res=>{try{if(!navigator.geolocation)return res({err:'none'});navigator.geolocation.getCurrentPosition(p=>res({lat:p.coords.latitude,lng:p.coords.longitude,acc:p.coords.accuracy}),e=>res({err:e&&e.code===1?'denied':'fail'}),{enableHighAccuracy:true,timeout:10000,maximumAge:120000})}catch(e){res({err:'none'})}});
+let PLDATA=null;
+const getPlData=async()=>{if(PLDATA)return PLDATA;try{const r=await fetch('places.json',{cache:'no-cache'});PLDATA=await r.json()}catch(e){PLDATA={places:[],stops:{}}}return PLDATA};
+const distM=(a,b)=>{const R=6371e3,r=Math.PI/180,dl=(b.lat-a.lat)*r,dg=(b.lng-a.lng)*r,x=Math.sin(dl/2)**2+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(dg/2)**2;return 2*R*Math.asin(Math.sqrt(x))};
+const fmtDist=m=>m<30?'就在附近':m<1000?'約 '+Math.round(m/10)*10+'m':'約 '+(m/1000).toFixed(1)+'km';
+const PL_SYN={'拉麵':'ラーメン 拉麺 らーめん','壽司':'寿司 鮨 すし','燒肉':'焼肉 和牛','和牛':'焼肉 燒肉 牛','咖啡':'カフェ 珈琲 喫茶 コーヒー','甜點':'スイーツ 甘味 ケーキ パフェ','鰻魚':'うなぎ 鰻','烏龍麵':'うどん','蕎麥麵':'そば 蕎麦','豬排':'とんかつ かつ','咖哩':'カレー','居酒屋':'酒場 居酒屋','海鮮':'魚 海鮮 丼','丼飯':'丼','天婦羅':'天ぷら 天麩羅 天丼 天婦羅','天ぷら':'天麩羅 天丼 天婦羅','蕎麥':'そば 蕎麦','燒鳥':'焼鳥 やきとり','餺飥':'ほうとう','烏龍':'うどん'};
+const plNorm=t=>(t||'').replace(/淺/g,'浅').replace(/榮/g,'栄').replace(/豐/g,'豊').replace(/[\s・·]/g,'');
+const plHead=t=>plNorm((t||'').split(/[ （(]/)[0]);
+const PL_ANY=/^(美食|吃的?|餐廳|食物|好吃的?|午餐|晚餐|早餐|宵夜|吃飯)?$/;
+const plText=p=>[p.name,p.jp,p.cat,p.area,p.note].join(' ');
+const plMatch=(p,q)=>{if(PL_ANY.test(q))return true;const t=plText(p);if(t.includes(q))return true;
+  for(const k in PL_SYN){if(q.includes(k)||k.includes(q)){if(t.includes(k)||PL_SYN[k].split(' ').some(w=>t.includes(w)))return true}}return false};
+const stopGeo=(it,G)=>{const a=it.addr||'';let g=G[a]||G[it.title];if(!g&&a){const k=Object.keys(G).find(k=>a.startsWith(k)&&a[k.length]===' ');if(k)g=G[k]}return g?{lat:g[0],lng:g[1]}:null};
+function findPlaces(all,G,o){const q=(o.q||'').trim(),have=o.stops.map(it=>plNorm(it.title)),cand=all.filter(p=>plMatch(p,q)&&![plHead(p.name),plHead(p.jp)].some(h=>h.length>1&&have.some(t=>t.includes(h)))),out=[];
+  if(o.loc){cand.forEach(p=>{if(p.lat!=null)out.push({p,d:distM(o.loc,p)})});out.sort((a,b)=>a.d-b.d);
+    const near=out.filter(x=>x.d<=800);return{list:(near.length?near:out.filter(x=>x.d<=3000)).slice(0,8),wide:!near.length}}
+  const anchors=o.stops.map(it=>({it,g:stopGeo(it,G)})).filter(a=>a.g);
+  cand.forEach(p=>{if(p.lat==null)return;let best=null;anchors.forEach(a=>{const d=distM(a.g,p);if(!best||d<best.d)best={d,after:a.it.title}});if(best)out.push({p,...best})});
+  out.sort((a,b)=>a.d-b.d);let list=out.filter(x=>x.d<=1500);const wide=!list.length;if(wide)list=out.filter(x=>x.d<=6000);
+  return{list:list.slice(0,8),wide}}
+const gsiGeo=async addr=>{try{const r=await fetch('https://msearch.gsi.go.jp/address-search/AddressSearch?q='+encodeURIComponent(addr));const j=await r.json();const c=j&&j[0]&&j[0].geometry&&j[0].geometry.coordinates;return c?{lat:+c[1],lng:+c[0]}:null}catch(e){return null}};
 const getSample=async()=>{try{return window.claude&&window.claude.use?await window.claude.use('sample'):null}catch(e){return null}};
 
 class Component extends DCLogic {
   constructor(p){super(p);const C=clockOf(null,0),m=C.trip?'trip':'plan',L=lsGet();if(Array.isArray(L.people)&&L.people.length)setPeopleG(L.people);
     this.state={people:Array.isArray(L.people)&&L.people.length?L.people:PEOPLE0,newName:'',sim:null,mode:m,tab:m==='trip'?'today':'plan',day:m==='trip'?C.today:0,days:L.plan&&Array.isArray(L.plan.days)?L.plan.days:clone(DAYS),delay:0,elapsed:15,sheet:null,sel:null,drag:null,
       exps:L.exps||EXPS.slice(),checked:L.checked||{},cur:'JPY',
-      form:{t:'',amt:'',payer:ALL[0],cat:'餐飲',with:ALL.slice(),cur:'JPY'},errs:{},toast:'',phrase:0,ticket:0,moneyView:'list',settled:L.settled||[],aiDone:{},catTouched:false,pl:null,draft:L.plan&&L.plan.draft||false,trText:'',trRes:null,trLoading:false,trErr:'',sync:'local',delArm:null,addQ:'',sr:null,srLoading:false,srErr:'',nearMe:false};
+      form:{t:'',amt:'',payer:ALL[0],cat:'餐飲',with:ALL.slice(),cur:'JPY'},errs:{},toast:'',phrase:0,ticket:0,moneyView:'list',settled:L.settled||[],aiDone:{},catTouched:false,pl:null,draft:L.plan&&L.plan.draft||false,trText:'',trRes:null,trLoading:false,trErr:'',sync:'local',delArm:null,addQ:'',sr:null,srLoading:false,srErr:'',nearMe:false,myPlaces:[],np:null};
     this.mine=new Set();this.q=Promise.resolve();}
   componentDidMount(){
     this.iv=setInterval(()=>this.tick(),1000);this.initStore();
@@ -973,7 +1008,8 @@ class Component extends DCLogic {
       if(added.length){const e=exps.find(x=>x.id===added[0]);if(e)this.flash(NM(e.payer)+' 剛記了一筆：'+e.t+' '+fJ(e.amt));clearTimeout(this.ft);this.ft=setTimeout(()=>this.setState(st=>({exps:st.exps.map(x=>({...x,fresh:false}))})),5000)}
       if(!qs.metadata.fromCache)first=false},warn);
     db.doc('shared/people').onSnapshot(snap=>{if(this.pplBusy||snap.metadata.hasPendingWrites)return;const d=snap.exists?snap.data():null;if(d&&Array.isArray(d.list)&&d.list.length)this.applyPeople(d.list)},warn);
-    db.collection('settled').onSnapshot(qs=>{this.setState({settled:qs.docs.map(d=>({...d.data()})).sort((a,b)=>(a.ts||0)-(b.ts||0))})},warn)}
+    db.collection('settled').onSnapshot(qs=>{this.setState({settled:qs.docs.map(d=>({...d.data()})).sort((a,b)=>(a.ts||0)-(b.ts||0))})},warn);
+    db.collection('places').onSnapshot(qs=>{this.setState({myPlaces:qs.docs.map(d=>({id:d.id,...d.data()}))})},warn)}
   startDrag(i,y){this.press=null;const rows=Array.from(document.querySelectorAll('[data-row]'));if(!rows[i])return;const r=rows.map(x=>x.getBoundingClientRect()),sc=rows[i].closest('.noscroll');
     this.dragged=true;if(navigator.vibrate)navigator.vibrate(12);try{window.getSelection().removeAllRanges()}catch(e){}
     this.lastY=y;this.setState({drag:{i,y0:y,dy:0,over:i,mids:r.map(x=>x.top+x.height/2),h:r[i].height,sc,st0:sc?sc.scrollTop:0,max:sc?sc.scrollHeight-sc.clientHeight:0}});
@@ -996,20 +1032,27 @@ class Component extends DCLogic {
   setLeg(di,i,k){this.edit(di,l=>{if(l[i]&&l[i].leg)l[i].leg.mode=k})}
   setStay(di,i,v){this.edit(di,l=>{l[i].stay=Math.max(0,Math.min(480,v))})}
   addItem(di,src,after){const list=this.state.days[di].items;const idx=after==null?list.length:after+1;const r=src.rec||REC[src.type]||[45,75];
-    this.edit(di,l=>{l.splice(idx,0,{title:src.title,sub:src.sub,type:src.type,rec:src.rec,close:src.close||null,rating:'',addr:'',wait:0,stay:Math.round((r[0]+r[1])/2/5)*5,leg:null,from:null});this.relink(l)},{sheet:'stop',sel:{di,i:idx}});
+    this.edit(di,l=>{l.splice(idx,0,{title:src.title,sub:src.sub,type:src.type,rec:src.rec,close:src.close||null,rating:'',addr:src.addr||'',wait:0,stay:Math.round((r[0]+r[1])/2/5)*5,leg:null,from:null});this.relink(l)},{sheet:'stop',sel:{di,i:idx}});
     this.flash(idx>0&&list[idx-1]?'已排在「'+list[idx-1].title+'」之後，可以再調整':'已加入')}
   bestAfter(di){const l=this.state.days[di].items,n=l.length;if(!n)return null;const last=l[n-1];return (last.type==='住宿'||last.type==='機場')&&n>1?n-2:n-1}
   findAfter(di,t){const l=this.state.days[di].items;t=(t||'').trim();if(t){let i=l.findIndex(x=>x.title===t);if(i<0)i=l.findIndex(x=>x.title.includes(t)||t.includes(x.title));if(i>=0)return i===l.length-1&&l.length>1&&(l[i].type==='住宿'||l[i].type==='機場')?i-1:i}return this.bestAfter(di)}
+  async savePlace(){const np=this.state.np;if(!np||np.busy)return;const name=(np.name||'').trim();if(!name)return this.setState({np:{...np,err:'請填店名'}});
+    this.setState({np:{...np,busy:true,err:''}});let g=null;
+    if(np.here){const l=await getLoc();if(l.err)return this.setState({np:{...np,busy:false,err:l.err==='denied'?'沒有定位權限，請在手機設定允許瀏覽器使用位置，或改填地址':'讀不到目前位置，請改填地址'}});g={lat:l.lat,lng:l.lng}}
+    else if((np.addr||'').trim())g=await gsiGeo(np.addr.trim());
+    const doc={name:name.slice(0,40),jp:'',cat:'',area:'',addr:(np.addr||'').trim(),note:(np.note||'').trim().slice(0,80),hours:'',by:'旅伴',ts:Date.now(),...(g?{lat:g.lat,lng:g.lng}:{})};
+    try{const db=this.db;if(!db)throw 0;await db.collection('places').add(doc);
+      this.setState({np:null});this.flash(g?'已把「'+doc.name+'」加進美食清單':'已加進清單，但找不到地址位置，距離搜尋不會出現它')}
+    catch(e){this.setState({np:{...np,busy:false,err:'存不進清單，請確認網路後再試'}})}}
   async searchPlaces(){const s=this.state;if(s.srLoading)return;const q=s.addQ.trim(),di=s.day,d=s.days[di],sch=this.sched(di);
-    this.setState({srLoading:true,srErr:''});let loc=null;
-    if(s.nearMe){const g=await getLoc();if(g.err){this.setState({srLoading:false,srErr:g.err==='denied'?'沒有定位權限。請在手機設定允許 Claude 使用位置，或關掉「用我現在的位置」改用當天行程區域':'讀不到目前位置，請到戶外再試，或關掉「用我現在的位置」'});return}loc=g}
-    try{const sample=await getSample();if(!sample)throw {code:'unavailable'};
-      const stops=sch.map((it,i)=>(i+1)+'. '+ft(it.at)+' '+it.title+(it.addr?'（'+it.addr+'）':'')).join('\n');
-      const prompt='你是熟悉日本的旅遊助理，幫 '+ALL.length+' 位台灣旅客找可以加進當天行程的地點。\n日期：'+d.date+'，當天區域：'+d.city+'\n當天行程：\n'+stops+'\n\n想找：'+(q||'順路、值得去的景點或美食')+(loc?'\n\n使用者現在的位置：緯度 '+loc.lat.toFixed(5)+'，經度 '+loc.lng.toFixed(5)+'（誤差約 '+Math.round(loc.acc)+' 公尺）。先判斷這個座標在哪一區，只推薦離這個位置步行約 10 分鐘（800 公尺）內、真實存在的地點，最多 6 個，由近到遠排，note 開頭寫大概距離（例：約 300m・），area 寫這個位置所在的區域，':'\n\n只推薦真實存在、就在當天行程經過的區域附近（離某一站步行或車程約 15 分鐘內）的地點，最多 6 個，')+'不要重複行程裡已有的站。每個地點指出最順路要排在哪一站之後，after 請照抄上面清單的站名。\n只輸出 JSON：{"items":[{"title":"地點名稱","type":"景點|餐飲|購物|夜生活","note":"一句重點，含大概營業時間","area":"所在區域","after":"要排在其後的站名","stay":建議停留分鐘}]}';
-      const j=await sample.json(prompt,{model:'claude-haiku-5-5',modelTier:'quick'});const arr=j&&Array.isArray(j.items)?j.items:[],TY=['景點','餐飲','購物','夜生活'];
-      const sr=arr.slice(0,6).map(x=>({title:String(x.title||'').slice(0,40),type:TY.includes(x.type)?x.type:'景點',sub:String(x.note||''),area:String(x.area||''),after:String(x.after||''),stay:Math.max(0,Math.min(480,+x.stay||0))})).filter(x=>x.title);
+    this.setState({srLoading:true,srErr:'',np:null});let loc=null;
+    if(s.nearMe){const g=await getLoc();if(g.err){this.setState({srLoading:false,srErr:g.err==='denied'?'沒有定位權限。請在手機設定允許瀏覽器使用位置，或關掉「用我現在的位置」改用當天行程區域':'讀不到目前位置，請到戶外再試，或關掉「用我現在的位置」'});return}loc=g}
+    try{const P=await getPlData(),all=P.places.concat(this.state.myPlaces||[]);
+      const res=findPlaces(all,P.stops||{},{q,loc,stops:sch});
+      const sr=res.list.map(({p,d,after})=>({title:p.name,type:'餐飲',sub:[p.note,p.hours].filter(Boolean).join(' · '),area:p.area||'',after:after||'',
+        stay:/咖啡|甜點|小吃/.test(p.cat||'')?30:60,dist:d,addr:p.addr||'',jp:p.jp||'',mine:!!p.by}));
       if(this.state.day!==di)return this.setState({srLoading:false});
-      this.setState({sr,srLoading:false,srErr:sr.length?'':'沒有找到合適的地點，換個關鍵字試試'})}
+      this.setState({sr,srLoading:false,srErr:sr.length?(res.wide?(loc?'步行 10 分鐘內沒有清單裡的店，以下是最近的':'當天行程附近較少，以下包含稍遠的店'):''):(q&&!PL_ANY.test(q)?'清單裡沒有「'+q+'」，換個關鍵字，或點下面把店加進清單':'清單裡這附近還沒有店，可以點下面把店加進清單')})}
     catch(e){console.warn('search failed',e);this.setState({srLoading:false,srErr:e&&e.code==='not_granted'?'AI 搜尋暫時無法使用，請稍後再試':e&&e.code==='unavailable'?'AI 搜尋還沒設定好，請先用地圖連結':'搜尋失敗，請再試一次'})}}
   legChips(di,i,lg){return MODES.map(([k,l])=>{const v=vals(lg),m=v[k],dis=k==='walk'&&m>WALK_MAX,on=lg.mode===k,real=k===lg.orig&&!lg.est;
     return{label:l,mins:dis?'太遠':m+'分',note:dis?'超過 '+WALK_MAX+' 分鐘':real?'你的行程原本安排':legNote(k,m)+'・估計',opacity:dis?.4:1,
@@ -1037,7 +1080,7 @@ class Component extends DCLogic {
     try{const sample=await getSample();if(!sample)throw new Error('no claude');
       const {text:txt}=await sample('把下面的中文翻成自然、禮貌、適合旅遊現場對店員說的日文。只輸出一個 JSON 物件，不要多個版本、不要說明、不要 markdown：{"jp":"日文","ro":"羅馬拼音"}\n\n中文：'+t,{modelTier:'quick'});
       const j=firstJson(txt);this.setState({trRes:{zh:t,jp:j.jp,ro:j.ro||''},trLoading:false})}
-    catch(e){console.warn('translate failed',e);this.setState({trLoading:false,trErr:'翻譯失敗，請再試一次'})}}
+    catch(e){console.warn('translate failed',e);this.setState({trLoading:false,trErr:'翻譯要用 AI，目前還沒開啟'})}}
   mapUrl(it,leg){const q=encodeURIComponent((it.addr||it.title)+(it.addr?'':' 日本'));const m=leg?{train:'transit',car:'driving',walk:'walking'}[leg.mode]||'transit':'transit';return 'https://www.google.com/maps/dir/?api=1&destination='+q+'&travelmode='+m}
   setPl(fn){this.setState(st=>({pl:{...st.pl,...fn(st.pl)}}))}
   plVals(){const p=this.state.pl;if(!p)return{};const N=p.days,ppl=p.people,sp=splitDays(p.cities,N),end=addD(p.start,N-1),ap=AP[p.cities[0]]||'NRT';
@@ -1176,16 +1219,21 @@ class Component extends DCLogic {
       dayMapUrl:dayMapUrl(sch),openAdd:()=>this.setState({sheet:'add',addQ:'',sr:null,srErr:''}),
       suggest:localSug,hasLocal:localSug.length>0,noLocal:!localSug.length&&!(s.sr&&s.sr.length),
       addQ:s.addQ,setAddQ:e=>this.setState({addQ:e.target.value}),addKey:e=>{if(e.key==='Enter')this.searchPlaces()},askClaude:()=>this.searchPlaces(),
-      srBtn:s.srLoading?'搜尋中…':'請 Claude 找',srOpacity:s.srLoading?.6:1,srErr:s.srErr,
+      srBtn:s.srLoading?'搜尋中…':'搜尋清單',srOpacity:s.srLoading?.6:1,srErr:s.srErr,
       nearLabel:s.nearMe?'📍 用我現在的位置 · 開':'📍 用我現在的位置 · 關',nearBg:s.nearMe?'oklch(0.5 0.11 255)':'#fffdf9',nearColor:s.nearMe?'#fff':INK,
       toggleNear:()=>this.setState(st=>({nearMe:!st.nearMe,sr:null,srErr:''})),
       foodNear:()=>{this.setState({sheet:'add',day:trip?TODAY:s.day,tab:'plan',addQ:s.addQ||'美食',nearMe:true,sr:null,srErr:''},()=>this.searchPlaces())},
-      srHint:s.nearMe?(s.srLoading?'正在讀取位置並請 Claude 找附近的地點…':'Claude 會找你現在位置步行約 10 分鐘內的地點'):s.srLoading?'Claude 正在找 '+day.city+' 附近的地點，約需 10–30 秒':'Claude 只找 '+day.city+' 一帶、排得進當天行程的地點',
+      srHint:s.nearMe?(s.srLoading?'正在讀取你的位置…':'從美食清單找你現在位置步行約 10 分鐘內的店'):s.srLoading?'搜尋中…':'從美食清單找當天行程附近的店，會排在最近的那一站之後',
+      npOpen:!!s.np,npClosed:!s.np,np:s.np||{},npErr:s.np&&s.np.err||'',npSave:s.np&&s.np.busy?'儲存中…':'加進清單',
+      npStart:()=>this.setState({np:{name:s.addQ&&!PL_ANY.test(s.addQ.trim())?s.addQ.trim():'',addr:'',note:'',here:false}}),npCancel:()=>this.setState({np:null}),
+      npName:e=>{const v=e.target.value;this.setState(st=>({np:{...st.np,name:v}}))},npAddr:e=>{const v=e.target.value;this.setState(st=>({np:{...st.np,addr:v}}))},npNote:e=>{const v=e.target.value;this.setState(st=>({np:{...st.np,note:v}}))},npHere:()=>this.setState(st=>({np:{...st.np,here:!st.np.here}})),
+      npHereLabel:s.np&&s.np.here?'📍 店家就在我現在的位置 · 開':'📍 店家就在我現在的位置 · 關',npHereBg:s.np&&s.np.here?'oklch(0.5 0.11 255)':'#fffdf9',npHereColor:s.np&&s.np.here?'#fff':INK,
+      saveNp:()=>this.savePlace(),myCount:(s.myPlaces||[]).length,
       hasSr:!!(s.sr&&s.sr.length),
       srList:(s.sr||[]).map(r=>{const ai=this.findAfter(s.day,r.after),at=ai!=null&&dItems[ai]?dItems[ai].title:'';
-        return{title:r.title,sub:r.sub,color:tc(r.type),where:(r.area?r.area+' · ':'')+(at?'會排在「'+at+'」之後':'會排在當天最後'),
-          map:'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(r.title+' '+(r.area||day.city)),
-          onClick:()=>this.addItem(s.day,{title:r.title,sub:r.sub,type:r.type,rec:r.stay?[r.stay,r.stay]:undefined},ai)}}),
+        return{title:r.title+(r.mine?'（旅伴加的）':''),sub:r.sub,color:tc(r.type),where:(r.dist!=null?fmtDist(r.dist)+(s.nearMe?'':'（離'+(r.after||'行程')+'）')+' · ':'')+(r.area?r.area+' · ':'')+(at?'會排在「'+at+'」之後':'會排在當天最後'),
+          map:'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(r.addr?(r.jp||r.title)+' '+r.addr:r.title+' '+(r.area||day.city)),
+          onClick:()=>this.addItem(s.day,{title:r.title,sub:r.sub,type:r.type,addr:r.addr,rec:r.stay?[r.stay,r.stay]:undefined},ai)}}),
       rateLabel:'匯率 ¥1 = NT$'+RATE,curBtns:tog(s.cur,k=>this.setState(st=>({cur:k,form:{...st.form,cur:k}}))),
       totalStr:M(total),totalTwd:M2(total),budgetStr:'預算 '+M(BUDGET),budgetPct:Math.min(100,total/BUDGET*100)+'%',
       balances,aiTip,online:shared?'與旅伴即時同步':'只存在這台裝置',

@@ -5,13 +5,15 @@ HELP = r"""let PLDATA=null;
 const getPlData=async()=>{if(PLDATA)return PLDATA;try{const r=await fetch('places.json',{cache:'no-cache'});PLDATA=await r.json()}catch(e){PLDATA={places:[],stops:{}}}return PLDATA};
 const distM=(a,b)=>{const R=6371e3,r=Math.PI/180,dl=(b.lat-a.lat)*r,dg=(b.lng-a.lng)*r,x=Math.sin(dl/2)**2+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(dg/2)**2;return 2*R*Math.asin(Math.sqrt(x))};
 const fmtDist=m=>m<30?'就在附近':m<1000?'約 '+Math.round(m/10)*10+'m':'約 '+(m/1000).toFixed(1)+'km';
-const PL_SYN={'拉麵':'ラーメン 拉麺 らーめん','壽司':'寿司 鮨 すし','燒肉':'焼肉 和牛','和牛':'焼肉 燒肉 牛','咖啡':'カフェ 珈琲 喫茶 コーヒー','甜點':'スイーツ 甘味 ケーキ パフェ','鰻魚':'うなぎ 鰻','烏龍麵':'うどん','蕎麥麵':'そば 蕎麦','豬排':'とんかつ かつ','咖哩':'カレー','居酒屋':'酒場 居酒屋','海鮮':'魚 海鮮 丼','丼飯':'丼'};
+const PL_SYN={'拉麵':'ラーメン 拉麺 らーめん','壽司':'寿司 鮨 すし','燒肉':'焼肉 和牛','和牛':'焼肉 燒肉 牛','咖啡':'カフェ 珈琲 喫茶 コーヒー','甜點':'スイーツ 甘味 ケーキ パフェ','鰻魚':'うなぎ 鰻','烏龍麵':'うどん','蕎麥麵':'そば 蕎麦','豬排':'とんかつ かつ','咖哩':'カレー','居酒屋':'酒場 居酒屋','海鮮':'魚 海鮮 丼','丼飯':'丼','天婦羅':'天ぷら 天麩羅 天丼 天婦羅','天ぷら':'天麩羅 天丼 天婦羅','蕎麥':'そば 蕎麦','燒鳥':'焼鳥 やきとり','餺飥':'ほうとう','烏龍':'うどん'};
+const plNorm=t=>(t||'').replace(/淺/g,'浅').replace(/榮/g,'栄').replace(/豐/g,'豊').replace(/[\s・·]/g,'');
+const plHead=t=>plNorm((t||'').split(/[ （(]/)[0]);
 const PL_ANY=/^(美食|吃的?|餐廳|食物|好吃的?|午餐|晚餐|早餐|宵夜|吃飯)?$/;
 const plText=p=>[p.name,p.jp,p.cat,p.area,p.note].join(' ');
 const plMatch=(p,q)=>{if(PL_ANY.test(q))return true;const t=plText(p);if(t.includes(q))return true;
   for(const k in PL_SYN){if(q.includes(k)||k.includes(q)){if(t.includes(k)||PL_SYN[k].split(' ').some(w=>t.includes(w)))return true}}return false};
-const stopGeo=(it,G)=>{const g=G[it.addr]||G[it.title];return g?{lat:g[0],lng:g[1]}:null};
-function findPlaces(all,G,o){const q=(o.q||'').trim(),cand=all.filter(p=>plMatch(p,q)),out=[];
+const stopGeo=(it,G)=>{const a=it.addr||'';let g=G[a]||G[it.title];if(!g&&a){const k=Object.keys(G).find(k=>a.startsWith(k)&&a[k.length]===' ');if(k)g=G[k]}return g?{lat:g[0],lng:g[1]}:null};
+function findPlaces(all,G,o){const q=(o.q||'').trim(),have=o.stops.map(it=>plNorm(it.title)),cand=all.filter(p=>plMatch(p,q)&&![plHead(p.name),plHead(p.jp)].some(h=>h.length>1&&have.some(t=>t.includes(h)))),out=[];
   if(o.loc){cand.forEach(p=>{if(p.lat!=null)out.push({p,d:distM(o.loc,p)})});out.sort((a,b)=>a.d-b.d);
     const near=out.filter(x=>x.d<=800);return{list:(near.length?near:out.filter(x=>x.d<=3000)).slice(0,8),wide:!near.length}}
   const anchors=o.stops.map(it=>({it,g:stopGeo(it,G)})).filter(a=>a.g);
