@@ -10,11 +10,11 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-192.png">
-<script src="config.js?v=981164426b"></script>
+<script src="config.js?v=be8a401431"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="shim.js?v=981164426b"></script>
-<script>window.APP_V='981164426b';
+<script src="shim.js?v=be8a401431"></script>
+<script>window.APP_V='be8a401431';
 // Pages that stay open pick up a new version on their own: check every minute and whenever the app comes back to the screen.
 (function(){let busy=false;const check=()=>{if(busy||document.hidden)return;busy=true;
   fetch('version.json?ts='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j&&j.v&&j.v!==window.APP_V)location.replace(location.pathname+'?v='+j.v)}).catch(()=>{}).finally(()=>{busy=false})};
@@ -376,8 +376,13 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
                       <span style="width:20px;height:20px;border-radius:6px;border:1.5px solid {{ p.boxBorder }};background:{{ p.boxBg }};color:#fff;display:flex;align-items:center;justify-content:center;font:700 12px sans-serif;flex:none">{{ p.mark }}</span>
                       <span style="flex:1;font:400 14px 'Noto Sans TC';color:{{ p.color }};text-decoration:{{ p.deco }}">{{ p.label }}</span>
                       <span style="font:400 11px 'Noto Sans TC';color:#6f685e">{{ p.who }}</span>
+                      <sc-if value="{{ p.isX }}"><button onClick="{{ p.onDel }}" style="flex:none;border:0;background:transparent;padding:2px 2px 2px 6px;font:500 12px 'Noto Sans TC';color:#9a8f82;cursor:pointer">刪除</button></sc-if>
                     </div>
                   </sc-for>
+                  <div style="display:flex;gap:8px;padding:8px 10px 10px 14px">
+                    <input value="{{ c.newVal }}" onChange="{{ c.setNew }}" onKeyDown="{{ c.newKey }}" placeholder="＋ 新增項目" style="flex:1;min-width:0;height:38px;border-radius:10px;border:1.5px dashed rgba(34,31,26,.22);background:transparent;padding:0 10px;font:400 16px 'Noto Sans TC';color:#221f1a;outline:none">
+                    <button onClick="{{ c.add }}" style="flex:none;height:38px;padding:0 12px;border:0;border-radius:10px;background:#221f1a;color:#fff;font:500 13px 'Noto Sans TC';cursor:pointer">新增</button>
+                  </div>
                 </div>
               </div>
             </sc-for>
@@ -945,7 +950,7 @@ const lsSet=o=>{try{localStorage.setItem(LSK,JSON.stringify({...lsGet(),...o}))}
 const ADMIN_H='21a450ca63e673188f62d47608211457ed9f61dc8184b39c38d8fdf4b9cbaa71';
 let ADMIN_OK=(()=>{try{return sessionStorage.getItem('trip-admin')===ADMIN_H}catch(e){return false}})();
 const sha256=async s=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)))).map(b=>b.toString(16).padStart(2,'0')).join('');
-const askAdmin=(why,fn)=>{if(ADMIN_OK)return fn();const w=document.createElement('div');w.id='admin-gate';
+const askAdmin=(why,fn,always)=>{if(ADMIN_OK&&!always)return fn();const w=document.createElement('div');w.id='admin-gate';
   w.style.cssText='position:fixed;inset:0;z-index:9999;background:rgba(20,18,15,.45);display:flex;align-items:center;justify-content:center;padding:24px';
   w.innerHTML='<div style="background:#fffdf9;border-radius:18px;padding:20px;width:100%;max-width:320px;display:flex;flex-direction:column;gap:10px;font-family:\'Noto Sans TC\',sans-serif;color:#221f1a">'
    +'<div style="font-weight:700;font-size:17px">請輸入管理密碼</div><div style="font-size:13px;line-height:1.5;color:#6f685e">'+why+'</div>'
@@ -984,7 +989,7 @@ const getSample=async()=>{try{return window.claude&&window.claude.use?await wind
 class Component extends DCLogic {
   constructor(p){super(p);const C=clockOf(null,0),m=C.trip?'trip':'plan',L=lsGet();if(Array.isArray(L.people)&&L.people.length)setPeopleG(L.people);
     this.state={people:Array.isArray(L.people)&&L.people.length?L.people:PEOPLE0,newName:'',sim:null,mode:m,tab:m==='trip'?'today':'plan',day:m==='trip'?C.today:0,days:L.plan&&Array.isArray(L.plan.days)?L.plan.days:clone(DAYS),delay:0,elapsed:15,sheet:null,sel:null,drag:null,
-      exps:L.exps||EXPS.slice(),checked:L.checked||{},cur:'JPY',
+      exps:L.exps||EXPS.slice(),checked:L.checked||{},packX:L.packX||[],packNew:{},cur:'JPY',
       form:{t:'',amt:'',payer:ALL[0],cat:'餐飲',with:ALL.slice(),cur:'JPY'},errs:{},toast:'',phrase:0,ticket:0,moneyView:'list',settled:L.settled||[],aiDone:{},catTouched:false,pl:null,draft:L.plan&&L.plan.draft||false,trText:'',trRes:null,trLoading:false,trErr:'',sync:'local',delArm:null,addQ:'',sr:null,srLoading:false,srErr:'',nearMe:false,myPlaces:[],np:null};
     this.mine=new Set();this.q=Promise.resolve();}
   componentDidMount(){
@@ -1007,6 +1012,13 @@ class Component extends DCLogic {
   write(fn){this.q=this.q.then(fn).catch(e=>{console.warn('sync failed',e);this.flash('同步失敗，請檢查網路後再試')})}
   savePlan(){clearTimeout(this.pt);this.pt=setTimeout(()=>{this.pt=null;const s=this.state,body={days:s.days,draft:s.draft||false};
     if(this.db){this.saving=(this.saving||0)+1;this.write(()=>this.db.doc('shared/plan').set(body).finally(()=>{this.saving--}))}else lsSet({plan:body})},600)}
+  addPackItem(ci,v){const l=(v!=null?v:((this.state.packNew||{})[ci]||'')).trim().slice(0,40);if(!l)return;const x={cat:PACK[ci].name,l,w:'',ts:Date.now()};
+    this.setState(st=>({packNew:{...st.packNew,[ci]:''}}));
+    if(this.db){const ref=this.db.collection('packitems').doc();this.setState(st=>({packX:[...st.packX,{...x,id:ref.id}]}));this.write(()=>ref.set(x))}
+    else{const px=[...this.state.packX,{...x,id:'l'+x.ts}];this.setState({packX:px});lsSet({packX:px})}this.flash('已新增「'+l+'」')}
+  delPackItem(id,l){askAdmin('刪除清單項目「'+l+'」要先輸入管理密碼。',()=>{const checked={...this.state.checked};delete checked['x-'+id];
+    this.setState(st=>({packX:st.packX.filter(x=>x.id!==id),checked}));
+    if(this.db){this.write(()=>this.db.collection('packitems').doc(id).delete());this.write(()=>this.db.doc('shared/pack').set({checked}))}else lsSet({packX:this.state.packX.filter(x=>x.id!==id),checked});this.flash('已刪除「'+l+'」')},true)}
   togglePack(k){const checked={...this.state.checked};if(checked[k])delete checked[k];else checked[k]=true;this.setState({checked});
     if(this.db)this.write(()=>this.db.doc('shared/pack').set({checked}));else lsSet({checked})}
   addExp(e){const x={...e,ts:Date.now()};
@@ -1014,7 +1026,7 @@ class Component extends DCLogic {
     else{this.setState(st=>({exps:[{...x,id:'l'+x.ts},...st.exps]}));lsSet({exps:this.state.exps})}}
   tapExp(id){if(this.state.delArm!==id){clearTimeout(this.dt);this.setState({delArm:id});this.dt=setTimeout(()=>this.setState({delArm:null}),3000);return}
     clearTimeout(this.dt);this.setState({delArm:null});askAdmin('刪除記帳要先輸入管理密碼。',()=>{const ex=(this.state.exps||[]).find(e=>e.id===id)||{};this.setState(st=>({exps:st.exps.filter(e=>e.id!==id)}));
-    if(this.db){const {fresh,id:_i,...data}=ex;this.write(()=>this.db.collection('expenses').doc(id).set({...data,del:true,v:2}))}else lsSet({exps:this.state.exps});this.flash('已刪除這筆')})}
+    if(this.db){const {fresh,id:_i,...data}=ex;this.write(()=>this.db.collection('expenses').doc(id).set({...data,del:true,v:2}))}else lsSet({exps:this.state.exps});this.flash('已刪除這筆')},true)}
   applyPeople(l){setPeopleG(l);this.setState(st=>{const wasAll=st.people.every(p=>st.form.with.includes(p.id));const w=wasAll?ALL.slice():st.form.with.filter(id=>ALL.includes(id));
     return{people:l,form:{...st.form,with:w,payer:ALL.includes(st.form.payer)?st.form.payer:ALL[0]}}})}
   setPeople(l){this.applyPeople(l);this.pplBusy=true;clearTimeout(this.pplT);
@@ -1027,6 +1039,7 @@ class Component extends DCLogic {
     db.doc('shared/plan').onSnapshot(snap=>{if(this.pt||this.saving||snap.metadata.hasPendingWrites)return;const d=snap.exists?snap.data():null;
       const days=d&&Array.isArray(d.days)?clone(d.days):clone(DAYS),before=JSON.stringify(days);days.forEach(x=>this.relink(x.items));
       this.setState({sync:'shared',days,draft:d?d.draft||false:false});if(d&&JSON.stringify(days)!==before)this.savePlan()},warn);
+    db.collection('packitems').onSnapshot(qs=>{this.setState({packX:qs.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(a.ts||0)-(b.ts||0))})},warn);
     db.doc('shared/pack').onSnapshot(snap=>{const d=snap.exists?snap.data():null;this.setState({checked:d&&d.checked?{...d.checked}:{}})},warn);
     db.collection('expenses').onSnapshot(qs=>{const added=first?[]:qs.docChanges().filter(c=>c.type==='added'&&!this.mine.has(c.doc.id)).map(c=>c.doc.id);
       const exps=qs.docs.filter(d=>!d.data().del).map(d=>({...d.data(),id:d.id,fresh:added.includes(d.id)})).sort((a,b)=>(b.ts||0)-(a.ts||0));
@@ -1190,7 +1203,7 @@ class Component extends DCLogic {
     const cr=balances.filter(b=>b.v>1).map(b=>({n:b.id,v:b.v})).sort((a,b)=>b.v-a.v),db=balances.filter(b=>b.v<-1).map(b=>({n:b.id,v:-b.v})).sort((a,b)=>b.v-a.v);
     const tr=[];{let i=0,j=0;while(i<db.length&&j<cr.length){const a=Math.min(db[i].v,cr[j].v);tr.push({from:db[i].n,to:cr[j].n,amt:Math.round(a)});db[i].v-=a;cr[j].v-=a;if(db[i].v<1)i++;if(cr[j].v<1)j++;}}
     const bgOf=n=>(PEOPLE.find(p=>p.id===n)||{bg:'oklch(0.6 0 0)'}).bg;
-    const pack=PACK.map((c,ci)=>({name:c.name,items:c.items.map(([l,w],pi)=>({l,w,d:!!s.checked[ci+'-'+pi]}))})), allPack=pack.flatMap(c=>c.items), doneN=allPack.filter(p=>p.d).length;
+    const pack=PACK.map((c,ci)=>({name:c.name,items:c.items.map(([l,w],pi)=>({l,w,k:ci+'-'+pi,d:!!s.checked[ci+'-'+pi]})).concat((s.packX||[]).filter(x=>x.cat===c.name).map(x=>({l:x.l,w:x.w||'',k:'x-'+x.id,d:!!s.checked['x-'+x.id],xid:x.id})))})), allPack=pack.flatMap(c=>c.items), doneN=allPack.filter(p=>p.d).length;
     const f=s.form, amtN=Number(String(f.amt).replace(/,/g,'')), amtJ=f.cur==='TWD'?amtN/RATE:amtN;
     const chip=(cur,v,key)=>({label:v,onClick:()=>this.setState(st=>({form:{...st.form,[key]:v}})),bg:cur===v?INK:'#fffdf9',color:cur===v?'#fff':INK,border:cur===v?INK:'rgba(34,31,26,.15)'});
     const tog=(cur,fn)=>[['JPY','¥ 日幣'],['TWD','NT$ 台幣']].map(([k,l])=>({label:l,onClick:()=>fn(k),bg:cur===k?'#fffdf9':'transparent',shadow:cur===k?'0 1px 3px rgba(0,0,0,.12)':'none'}));
@@ -1214,14 +1227,14 @@ class Component extends DCLogic {
       clock:ft(NOW),
       plOpen:!!s.pl,pl:this.plVals(),isDraft:s.draft,
       openPlanner:()=>this.setState({pl:{step:1,cities:['東京','河口湖','鎌倉'],start:'2026-11-11',days:7,people:6,out:0,ret:0,shop:['男裝選品','Outlet','動漫電玩','伴手禮']}}),
-      restoreTrip:()=>{this.setState({days:clone(DAYS),draft:false,day:0,aiDone:{}});this.savePlan();this.flash('已還原匯入的行程')},noCtx:e=>e.preventDefault(),stopClick:e=>e.stopPropagation(),nPeople:ALL.length,openPeople:()=>askAdmin('編輯成員要先輸入管理密碼。',()=>this.setState({sheet:'people'})),
+      restoreTrip:()=>{this.setState({days:clone(DAYS),draft:false,day:0,aiDone:{}});this.savePlan();this.flash('已還原匯入的行程')},noCtx:e=>e.preventDefault(),stopClick:e=>e.stopPropagation(),nPeople:ALL.length,openPeople:()=>this.setState({sheet:'people'}),
       peopleRows:s.people.map((p,k)=>{const used=s.exps.some(e=>e.payer===p.id||(e.with||[]).includes(p.id))||s.settled.some(x=>x.from===p.id||x.to===p.id);
         return{n:p.n,bg:PEOPLE[k]?PEOPLE[k].bg:'#999',delLabel:used?'有帳目':'刪除',delOp:used||s.people.length<=1?.35:1,
           onName:e=>{const v=e.target.value.slice(0,12);this.setPeople(this.state.people.map(x=>x.id===p.id?{...x,n:v}:x))},
-          onDel:()=>{if(used)return this.flash((p.n||'這位')+' 還有帳目，先刪掉相關帳目才能移除');if(this.state.people.length<=1)return;this.setPeople(this.state.people.filter(x=>x.id!==p.id));this.flash('已移除 '+(p.n||''))}}}),
+          onDel:()=>{if(used)return this.flash((p.n||'這位')+' 還有帳目，先刪掉相關帳目才能移除');if(this.state.people.length<=1)return;askAdmin('移除成員「'+(p.n||'')+'」要先輸入管理密碼。',()=>{this.setPeople(this.state.people.filter(x=>x.id!==p.id));this.flash('已移除 '+(p.n||''))},true)}}}),
       setNewName:e=>this.setState({newName:e.target.value.slice(0,12)}),
-      addPerson:()=>{const n=(this.state.newName||'').trim();if(!n)return;const l=this.state.people,used=l.map(x=>x.hu),hu=HUES.find(h=>!used.includes(h));
-        this.setPeople([...l,{id:'p'+Date.now().toString(36),n,hu:hu!=null?hu:(l.length*47)%360}]);this.setState({newName:''});this.flash('已新增 '+n)},
+      addPerson:()=>{const n=(this.state.newName||'').trim();if(!n)return;askAdmin('新增成員要先輸入管理密碼。',()=>{const l=this.state.people,used=l.map(x=>x.hu),hu=HUES.find(h=>!used.includes(h));
+        this.setPeople([...l,{id:'p'+Date.now().toString(36),n,hu:hu!=null?hu:(l.length*47)%360}]);this.setState({newName:''});this.flash('已新增 '+n)})},
       newKey:e=>{if(e.key==='Enter')e.target.blur()},
       modeBtns:[[null,'實際時間'],['plan','出發前 · 10/18'],['trip','旅途中 · 11/12']].map(([k,l])=>({label:l,onClick:setMode(k),bg:s.sim===k?'#fffdf9':'transparent',shadow:s.sim===k?'0 1px 3px rgba(0,0,0,.12)':'none'})),
       modeNote:s.sim==='trip'?'模擬 11/12 13:30 在澀谷神南：下一站倒數即時跑，可試「延後 30 分」與切換交通方式。':s.sim==='plan'?'模擬出發前：首頁是行程規劃，「今日」分頁尚未出現。':trip?'依東京時間，現在是旅途第 '+(TODAY+1)+' 天，首頁自動切到「今日」。':C.after?'旅程已結束，行程和帳目都還留著。':'依東京時間：出發前首頁是行程規劃，11/11 當天起自動出現「今日」分頁。',
@@ -1276,8 +1289,9 @@ class Component extends DCLogic {
       noExp:!s.exps.length,expList:s.exps.map(e=>{const w=e.with||ALL,armed=s.delArm===e.id;return{...e,amt:M(e.amt),twd:M2(e.amt),color:CAT[e.cat]||MUTED,fresh:!!e.fresh,bg:armed?'oklch(0.95 0.04 30)':e.fresh?'oklch(0.96 0.035 165)':'transparent',meta:armed?'再點一次就刪除這筆':e.day+' · '+NM(e.payer)+' 付 · '+(w.length===ALL.length&&ALL.every(id=>w.includes(id))?ALL.length+' 人均分':w.map(NM).join('、')+' 分'),onDel:()=>this.tapExp(e.id)}}),
       openExp:()=>this.setState(st=>({sheet:'exp',errs:{},form:{...st.form,cur:st.cur}})),
       packCount:doneN+' / '+allPack.length,packPct:(doneN/allPack.length*100)+'%',
-      packCats:pack.map((c,ci)=>({name:c.name,items:c.items.map((p,pi)=>({label:p.l,who:p.w,mark:p.d?'✓':'',boxBg:p.d?INK:'transparent',boxBorder:p.d?INK:'rgba(34,31,26,.3)',color:p.d?MUTED:INK,deco:p.d?'line-through':'none',
-        onClick:()=>this.togglePack(ci+'-'+pi)}))})),
+      packCats:pack.map((c,ci)=>({name:c.name,newVal:(s.packNew||{})[ci]||'',setNew:e=>{const v=e.target.value;this.setState(st=>({packNew:{...st.packNew,[ci]:v}}))},newKey:e=>{if(e.key==='Enter')this.addPackItem(ci,e.target.value)},add:()=>this.addPackItem(ci),
+        items:c.items.map((p,pi)=>({label:p.l,who:p.w,isX:!!p.xid,onDel:e=>{e.stopPropagation();this.delPackItem(p.xid,p.l)},mark:p.d?'✓':'',boxBg:p.d?INK:'transparent',boxBorder:p.d?INK:'rgba(34,31,26,.3)',color:p.d?MUTED:INK,deco:p.d?'line-through':'none',
+        onClick:()=>this.togglePack(p.k)}))})),
       toast:s.toast,hasToast:!!s.toast,
       hasSheet:!!sheet,closeSheet:()=>this.setState({sheet:null}),stop:e=>e.stopPropagation(),
       sh:{stop:sheet==='stop'&&!!selV.title,add:sheet==='add',translate:sheet==='translate',food:sheet==='food',ticket:sheet==='ticket',exp:sheet==='exp',people:sheet==='people'},
