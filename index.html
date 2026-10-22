@@ -937,6 +937,22 @@ const dayMapUrl=sch=>{const pts=[];sch.forEach(it=>{const q=it.addr||it.title;if
 const LSK='travel-app-v6';
 const lsGet=()=>{try{return JSON.parse(localStorage.getItem(LSK)||'{}')||{}}catch(e){return {}}};
 const lsSet=o=>{try{localStorage.setItem(LSK,JSON.stringify({...lsGet(),...o}))}catch(e){}};
+const ADMIN_H='21a450ca63e673188f62d47608211457ed9f61dc8184b39c38d8fdf4b9cbaa71';
+let ADMIN_OK=(()=>{try{return sessionStorage.getItem('trip-admin')===ADMIN_H}catch(e){return false}})();
+const sha256=async s=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)))).map(b=>b.toString(16).padStart(2,'0')).join('');
+const askAdmin=(why,fn)=>{if(ADMIN_OK)return fn();const w=document.createElement('div');w.id='admin-gate';
+  w.style.cssText='position:fixed;inset:0;z-index:9999;background:rgba(20,18,15,.45);display:flex;align-items:center;justify-content:center;padding:24px';
+  w.innerHTML='<div style="background:#fffdf9;border-radius:18px;padding:20px;width:100%;max-width:320px;display:flex;flex-direction:column;gap:10px;font-family:\'Noto Sans TC\',sans-serif;color:#221f1a">'
+   +'<div style="font-weight:700;font-size:17px">請輸入管理密碼</div><div style="font-size:13px;line-height:1.5;color:#6f685e">'+why+'</div>'
+   +'<input id="adm-in" type="password" inputmode="numeric" autocomplete="off" style="height:44px;border-radius:12px;border:1.5px solid rgba(34,31,26,.2);padding:0 12px;font-size:16px;outline:none">'
+   +'<div id="adm-err" style="font-size:12px;color:#b5462f;min-height:16px"></div>'
+   +'<div style="display:flex;gap:8px"><button id="adm-ok" style="flex:1;height:42px;border:0;border-radius:12px;background:#221f1a;color:#fff;font-size:14px">確定</button>'
+   +'<button id="adm-no" style="height:42px;padding:0 16px;border:1px solid rgba(34,31,26,.18);border-radius:12px;background:transparent;color:#221f1a;font-size:14px">取消</button></div></div>';
+  document.body.appendChild(w);const inp=w.querySelector('#adm-in'),err=w.querySelector('#adm-err');setTimeout(()=>inp.focus(),50);
+  const ok=async()=>{let h='';try{h=await sha256(inp.value.trim())}catch(e){}
+    if(h===ADMIN_H){ADMIN_OK=true;try{sessionStorage.setItem('trip-admin',h)}catch(e){}w.remove();fn()}else{err.textContent='密碼不對，請再試一次';inp.value='';inp.focus()}};
+  w.querySelector('#adm-ok').onclick=ok;inp.onkeydown=e=>{if(e.key==='Enter')ok()};w.querySelector('#adm-no').onclick=()=>w.remove();
+  w.onclick=e=>{if(e.target===w)w.remove()}};
 const getLoc=()=>new Promise(res=>{try{if(!navigator.geolocation)return res({err:'none'});navigator.geolocation.getCurrentPosition(p=>res({lat:p.coords.latitude,lng:p.coords.longitude,acc:p.coords.accuracy}),e=>res({err:e&&e.code===1?'denied':'fail'}),{enableHighAccuracy:true,timeout:10000,maximumAge:120000})}catch(e){res({err:'none'})}});
 let PLDATA=null;
 const getPlData=async()=>{if(PLDATA)return PLDATA;try{const r=await fetch('places.json',{cache:'no-cache'});PLDATA=await r.json()}catch(e){PLDATA={places:[],stops:{}}}return PLDATA};
@@ -992,8 +1008,8 @@ class Component extends DCLogic {
     if(this.db){const ref=this.db.collection('expenses').doc();this.mine.add(ref.id);this.setState(st=>({exps:[{...x,id:ref.id},...st.exps]}));this.write(()=>ref.set(x))}
     else{this.setState(st=>({exps:[{...x,id:'l'+x.ts},...st.exps]}));lsSet({exps:this.state.exps})}}
   tapExp(id){if(this.state.delArm!==id){clearTimeout(this.dt);this.setState({delArm:id});this.dt=setTimeout(()=>this.setState({delArm:null}),3000);return}
-    clearTimeout(this.dt);this.setState(st=>({delArm:null,exps:st.exps.filter(e=>e.id!==id)}));
-    if(this.db)this.write(()=>this.db.collection('expenses').doc(id).delete());else lsSet({exps:this.state.exps});this.flash('已刪除這筆')}
+    clearTimeout(this.dt);this.setState({delArm:null});askAdmin('刪除記帳要先輸入管理密碼。',()=>{this.setState(st=>({exps:st.exps.filter(e=>e.id!==id)}));
+    if(this.db)this.write(()=>this.db.collection('expenses').doc(id).delete());else lsSet({exps:this.state.exps});this.flash('已刪除這筆')})}
   applyPeople(l){setPeopleG(l);this.setState(st=>{const wasAll=st.people.every(p=>st.form.with.includes(p.id));const w=wasAll?ALL.slice():st.form.with.filter(id=>ALL.includes(id));
     return{people:l,form:{...st.form,with:w,payer:ALL.includes(st.form.payer)?st.form.payer:ALL[0]}}})}
   setPeople(l){this.applyPeople(l);this.pplBusy=true;clearTimeout(this.pplT);
@@ -1193,7 +1209,7 @@ class Component extends DCLogic {
       clock:ft(NOW),
       plOpen:!!s.pl,pl:this.plVals(),isDraft:s.draft,
       openPlanner:()=>this.setState({pl:{step:1,cities:['東京','河口湖','鎌倉'],start:'2026-11-11',days:7,people:6,out:0,ret:0,shop:['男裝選品','Outlet','動漫電玩','伴手禮']}}),
-      restoreTrip:()=>{this.setState({days:clone(DAYS),draft:false,day:0,aiDone:{}});this.savePlan();this.flash('已還原匯入的行程')},noCtx:e=>e.preventDefault(),stopClick:e=>e.stopPropagation(),nPeople:ALL.length,openPeople:()=>this.setState({sheet:'people'}),
+      restoreTrip:()=>{this.setState({days:clone(DAYS),draft:false,day:0,aiDone:{}});this.savePlan();this.flash('已還原匯入的行程')},noCtx:e=>e.preventDefault(),stopClick:e=>e.stopPropagation(),nPeople:ALL.length,openPeople:()=>askAdmin('編輯成員要先輸入管理密碼。',()=>this.setState({sheet:'people'})),
       peopleRows:s.people.map((p,k)=>{const used=s.exps.some(e=>e.payer===p.id||(e.with||[]).includes(p.id))||s.settled.some(x=>x.from===p.id||x.to===p.id);
         return{n:p.n,bg:PEOPLE[k]?PEOPLE[k].bg:'#999',delLabel:used?'有帳目':'刪除',delOp:used||s.people.length<=1?.35:1,
           onName:e=>{const v=e.target.value.slice(0,12);this.setPeople(this.state.people.map(x=>x.id===p.id?{...x,n:v}:x))},
@@ -1249,7 +1265,7 @@ class Component extends DCLogic {
       isList:s.moneyView==='list',isSettle:s.moneyView==='settle',notClear:tr.length>0,allClear:tr.length===0,
       transferCount:'依目前帳目，最少 '+tr.length+' 筆轉帳就能讓 '+ALL.length+' 人打平（以'+(s.cur==='JPY'?'日幣':'台幣')+'顯示）。',
       transfers:tr.map(x=>({...x,from:NM(x.from),to:NM(x.to),fromI:NM(x.from).slice(0,1),toI:NM(x.to).slice(0,1),fromBg:bgOf(x.from),toBg:bgOf(x.to),amt:M(x.amt),twd:M2(x.amt),
-        onPaid:()=>{this.addSettled(x);this.flash('已標記：'+NM(x.from)+' → '+NM(x.to)+' '+M(x.amt))},
+        onPaid:()=>askAdmin('標記已付要先輸入管理密碼。',()=>{this.addSettled(x);this.flash('已標記：'+NM(x.from)+' → '+NM(x.to)+' '+M(x.amt))}),
         onRemind:()=>this.remind(NM(x.from)+' 請付 '+M(x.amt)+' 給 '+NM(x.to)+'（東京河口湖旅費分帳）')})),
       settledList:s.settled.map(x=>({...x,from:NM(x.from),to:NM(x.to),amt:M(x.amt)})),hasSettled:s.settled.length>0,
       noExp:!s.exps.length,expList:s.exps.map(e=>{const w=e.with||ALL,armed=s.delArm===e.id;return{...e,amt:M(e.amt),twd:M2(e.amt),color:CAT[e.cat]||MUTED,fresh:!!e.fresh,bg:armed?'oklch(0.95 0.04 30)':e.fresh?'oklch(0.96 0.035 165)':'transparent',meta:armed?'再點一次就刪除這筆':e.day+' · '+NM(e.payer)+' 付 · '+(w.length===ALL.length&&ALL.every(id=>w.includes(id))?ALL.length+' 人均分':w.map(NM).join('、')+' 分'),onDel:()=>this.tapExp(e.id)}}),
