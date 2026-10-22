@@ -10,10 +10,15 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-192.png">
-<script src="config.js"></script>
+<script src="config.js?v=981164426b"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="shim.js"></script>
+<script src="shim.js?v=981164426b"></script>
+<script>window.APP_V='981164426b';
+// Pages that stay open pick up a new version on their own: check every minute and whenever the app comes back to the screen.
+(function(){let busy=false;const check=()=>{if(busy||document.hidden)return;busy=true;
+  fetch('version.json?ts='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j&&j.v&&j.v!==window.APP_V)location.replace(location.pathname+'?v='+j.v)}).catch(()=>{}).finally(()=>{busy=false})};
+  setInterval(check,60000);document.addEventListener('visibilitychange',check);window.addEventListener('focus',check)})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Travel App 東京河口湖</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1008,14 +1013,14 @@ class Component extends DCLogic {
     if(this.db){const ref=this.db.collection('expenses').doc();this.mine.add(ref.id);this.setState(st=>({exps:[{...x,id:ref.id},...st.exps]}));this.write(()=>ref.set(x))}
     else{this.setState(st=>({exps:[{...x,id:'l'+x.ts},...st.exps]}));lsSet({exps:this.state.exps})}}
   tapExp(id){if(this.state.delArm!==id){clearTimeout(this.dt);this.setState({delArm:id});this.dt=setTimeout(()=>this.setState({delArm:null}),3000);return}
-    clearTimeout(this.dt);this.setState({delArm:null});askAdmin('刪除記帳要先輸入管理密碼。',()=>{this.setState(st=>({exps:st.exps.filter(e=>e.id!==id)}));
-    if(this.db)this.write(()=>this.db.collection('expenses').doc(id).delete());else lsSet({exps:this.state.exps});this.flash('已刪除這筆')})}
+    clearTimeout(this.dt);this.setState({delArm:null});askAdmin('刪除記帳要先輸入管理密碼。',()=>{const ex=(this.state.exps||[]).find(e=>e.id===id)||{};this.setState(st=>({exps:st.exps.filter(e=>e.id!==id)}));
+    if(this.db){const {fresh,id:_i,...data}=ex;this.write(()=>this.db.collection('expenses').doc(id).set({...data,del:true,v:2}))}else lsSet({exps:this.state.exps});this.flash('已刪除這筆')})}
   applyPeople(l){setPeopleG(l);this.setState(st=>{const wasAll=st.people.every(p=>st.form.with.includes(p.id));const w=wasAll?ALL.slice():st.form.with.filter(id=>ALL.includes(id));
     return{people:l,form:{...st.form,with:w,payer:ALL.includes(st.form.payer)?st.form.payer:ALL[0]}}})}
   setPeople(l){this.applyPeople(l);this.pplBusy=true;clearTimeout(this.pplT);
-    this.pplT=setTimeout(()=>{if(this.db)this.write(()=>this.db.doc('shared/people').set({list:l}).finally(()=>{this.pplBusy=false}));else{lsSet({people:l});this.pplBusy=false}},500)}
+    this.pplT=setTimeout(()=>{if(this.db)this.write(()=>this.db.doc('shared/people').set({list:l,v:2}).finally(()=>{this.pplBusy=false}));else{lsSet({people:l});this.pplBusy=false}},500)}
   addSettled(x){const y={from:x.from,to:x.to,amt:x.amt,ts:Date.now()};this.setState(st=>({settled:[...st.settled,y]}));
-    if(this.db)this.write(()=>this.db.collection('settled').add(y));else lsSet({settled:this.state.settled})}
+    if(this.db)this.write(()=>this.db.collection('settled').add({...y,v:2}));else lsSet({settled:this.state.settled})}
   remind(t){const done=()=>this.flash('已複製提醒文字，可以貼到群組');try{navigator.clipboard.writeText(t).then(done,()=>this.flash(t))}catch(e){this.flash(t)}}
   async initStore(){let db=null;try{db=window.claude&&window.claude.use?await window.claude.use('db'):null}catch(e){}
     if(!db)return;this.db=db;let first=true;const warn=e=>console.warn('db',e);
@@ -1024,7 +1029,7 @@ class Component extends DCLogic {
       this.setState({sync:'shared',days,draft:d?d.draft||false:false});if(d&&JSON.stringify(days)!==before)this.savePlan()},warn);
     db.doc('shared/pack').onSnapshot(snap=>{const d=snap.exists?snap.data():null;this.setState({checked:d&&d.checked?{...d.checked}:{}})},warn);
     db.collection('expenses').onSnapshot(qs=>{const added=first?[]:qs.docChanges().filter(c=>c.type==='added'&&!this.mine.has(c.doc.id)).map(c=>c.doc.id);
-      const exps=qs.docs.map(d=>({...d.data(),id:d.id,fresh:added.includes(d.id)})).sort((a,b)=>(b.ts||0)-(a.ts||0));
+      const exps=qs.docs.filter(d=>!d.data().del).map(d=>({...d.data(),id:d.id,fresh:added.includes(d.id)})).sort((a,b)=>(b.ts||0)-(a.ts||0));
       this.setState({exps,sync:'shared'});
       if(added.length){const e=exps.find(x=>x.id===added[0]);if(e)this.flash(NM(e.payer)+' 剛記了一筆：'+e.t+' '+fJ(e.amt));clearTimeout(this.ft);this.ft=setTimeout(()=>this.setState(st=>({exps:st.exps.map(x=>({...x,fresh:false}))})),5000)}
       if(!qs.metadata.fromCache)first=false},warn);

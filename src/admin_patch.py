@@ -17,6 +17,11 @@ const askAdmin=(why,fn)=>{if(ADMIN_OK)return fn();const w=document.createElement
   w.onclick=e=>{if(e.target===w)w.remove()}};
 const getLoc=()=>""")
 S = rep(S, "clearTimeout(this.dt);this.setState(st=>({delArm:null,exps:st.exps.filter(e=>e.id!==id)}));\n    if(this.db)this.write(()=>this.db.collection('expenses').doc(id).delete());else lsSet({exps:this.state.exps});this.flash('已刪除這筆')}",
-  "clearTimeout(this.dt);this.setState({delArm:null});askAdmin('刪除記帳要先輸入管理密碼。',()=>{this.setState(st=>({exps:st.exps.filter(e=>e.id!==id)}));\n    if(this.db)this.write(()=>this.db.collection('expenses').doc(id).delete());else lsSet({exps:this.state.exps});this.flash('已刪除這筆')})}")
+  "clearTimeout(this.dt);this.setState({delArm:null});askAdmin('刪除記帳要先輸入管理密碼。',()=>{const ex=(this.state.exps||[]).find(e=>e.id===id)||{};this.setState(st=>({exps:st.exps.filter(e=>e.id!==id)}));\n    if(this.db){const {fresh,id:_i,...data}=ex;this.write(()=>this.db.collection('expenses').doc(id).set({...data,del:true,v:2}))}else lsSet({exps:this.state.exps});this.flash('已刪除這筆')})}")
 S = rep(S, "onPaid:()=>{this.addSettled(x);this.flash('已標記：'+NM(x.from)+' → '+NM(x.to)+' '+M(x.amt))},", "onPaid:()=>askAdmin('標記已付要先輸入管理密碼。',()=>{this.addSettled(x);this.flash('已標記：'+NM(x.from)+' → '+NM(x.to)+' '+M(x.amt))}),")
 S = rep(S, "openPeople:()=>this.setState({sheet:'people'})", "openPeople:()=>askAdmin('編輯成員要先輸入管理密碼。',()=>this.setState({sheet:'people'}))")
+# Protected writes carry v:2 so Firestore rules can refuse the same writes from old copies of the app that never ask for the password.
+# Deleting an expense is a soft delete (del:true), because the rules forbid real deletes.
+S = rep(S, "this.db.doc('shared/people').set({list:l})", "this.db.doc('shared/people').set({list:l,v:2})")
+S = rep(S, "this.write(()=>this.db.collection('settled').add(y))", "this.write(()=>this.db.collection('settled').add({...y,v:2}))")
+S = rep(S, "const exps=qs.docs.map(d=>({...d.data(),id:d.id,fresh:added.includes(d.id)}))", "const exps=qs.docs.filter(d=>!d.data().del).map(d=>({...d.data(),id:d.id,fresh:added.includes(d.id)}))")

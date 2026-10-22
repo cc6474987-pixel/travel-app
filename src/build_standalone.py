@@ -28,12 +28,21 @@ head_extra = """<meta charset="utf-8">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-192.png">
-<script src="config.js"></script>
+<script src="config.js?v=__V__"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="shim.js"></script>
+<script src="shim.js?v=__V__"></script>
+<script>window.APP_V='__V__';
+// Pages that stay open pick up a new version on their own: check every minute and whenever the app comes back to the screen.
+(function(){let busy=false;const check=()=>{if(busy||document.hidden)return;busy=true;
+  fetch('version.json?ts='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j&&j.v&&j.v!==window.APP_V)location.replace(location.pathname+'?v='+j.v)}).catch(()=>{}).finally(()=>{busy=false})};
+  setInterval(check,60000);document.addEventListener('visibilitychange',check);window.addEventListener('focus',check)})();</script>
 """
 out_html = "<!doctype html>\n<html lang=\"zh-Hant\">\n<head>\n" + head_extra + page.replace("<template id=\"tpl\">", "</head>\n<body>\n<template id=\"tpl\">", 1) + "</body>\n</html>\n"
+import hashlib
+ver = hashlib.sha1(out_html.encode("utf-8")).hexdigest()[:10]
+out_html = out_html.replace("__V__", ver)
 os.makedirs(out, exist_ok=True)
+open(os.path.join(out, "version.json"), "w").write(json.dumps({"v": ver}) + "\n")
 open(os.path.join(out, "index.html"), "w", encoding="utf-8").write(out_html)
 print("ok", len(out_html))
