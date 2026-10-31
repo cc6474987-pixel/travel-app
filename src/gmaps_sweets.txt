@@ -1,0 +1,429 @@
+0|THE CITY BAKERY 銀座Novo店|35.67223,139.76266|Tokyo, Chuo City, Ginza, 5 Chome−2−1 GinzaNovo B2F
+1|Viennoiserie JEAN FRANÇOIS|35.66992,139.76408|Tokyo, Chuo City, Ginza, 6 Chome−10−1 B2F
+2|Harry Potter Cafe|35.67308,139.73628|
+3|Harbs 澀谷Hikarie ShinQs店|35.65949,139.70447|
+4|Cafe Missponne|35.67328,139.65572|Tokyo, Suginami City, Izumi, 2 Chome−27−27 マインド和亜ビル 1F
+5|étéco bread|35.65953,139.67289|2 Chome-42-7 Daizawa, Setagaya City,
+6|年輪家 西武池袋店|35.72859,139.71170|
+7|年輪家 大丸東京店|35.68192,139.76880|
+8|年輪家 銀座本店|35.67118,139.76375|
+9|Jaga Boulde|35.68187,139.76721|
+10|Kunisuke Coffee|35.66385,139.77110|6 Chome-27-5 Tsukiji, Chuo City,
+11|高尾山 天狗屋|35.63108,139.25598|2181 Takaomachi, Hachioji,
+12|伯爵 巣鴨店|35.73259,139.73998|
+13|Kissa Nikai|35.72349,139.76870|
+14|Savoul (Sabouru)|35.69559,139.75855|
+15|Streamer Coffee Company Harajuku|35.67219,139.70972|3 Chome-28-10 Jingumae, Shibuya,
+16|GRANNY SMITH APPLE PIE & COFFEE Aoyamaten|35.66244,139.71216|5 Chome-8-9 Minamiaoyama, Minato City,
+17|Kenyan Shibuya|35.66381,139.69992|Tokyo, Shibuya, Jinnan, 1 Chome−14−8 南部ビル 1F
+18|dotcom space|35.67187,139.70367|Tokyo, Shibuya, Jingumae, 1 Chome−19−19 エリンデール神宮前 B1F
+19|Marion Crêpes Takeshita Street|35.67126,139.70490|Tokyo, Shibuya, Jingumae, 1 Chome−6−15 ジュネスビル 1F
+20|Streamer Coffee Company Shibuya|35.66346,139.70391|1 Chome-20-28 Shibuya,
+21|CHOP COFFEE OMOTESANDO & Roasters|35.66416,139.70726|5 Chome-44-12 Jingumae, Shibuya,
+22|伊良可樂 渋谷神宮前|35.66447,139.70324|Tokyo, Shibuya, Jingumae, 5 Chome−29−12 武居ビル
+23|THE ROASTERY by NOZY COFFEE|35.66557,139.70477|Reveur Jingumae, 5 Chome-17-13 Jingumae, Shibuya,
+24|COCO-agepan|35.66551,139.70468|5 Chome-17-16 Jingumae, Shibuya,
+25|天之屋|35.65325,139.73638|Tokyo, Azabujuban, 3 Chome−1−9 1F
+26|舟和 雷門店|35.71110,139.79572|Tokyo, Taito City, Asakusa, 1 Chome−3−5 ＡＲＭビル
+27|HARBS COREDO日本橋店|35.68260,139.77457|Tokyo, Chuo City, Nihonbashi, 1 Chome−4−1 コレド日本橋 3F
+28|二木的菓子 BIG館|35.70831,139.77459|4 Chome-1-9 Ueno, Taito City,
+29|松露玉子燒 本店|35.66507,139.77022|
+30|Tsukiji Peppers Cafe|35.66526,139.77015|
+31|Pinedo Denenchofuten|35.59692,139.66689|3 Chome-25-17 Denenchofu, Ota City,
+32|星巴克典藏® 東京晴空塔城30F店|35.71033,139.81244|Tokyo, Sumida City, Oshiage, 1 Chome−1−2 東京スカイツリータウン・ソラマチ 30階
+33|Échiré Pâtisserie Au Beurre Shinjuku Store|35.69183,139.70443|cafe & sucre, 新宿区新宿３丁目１４−１ 伊勢丹新宿店本館地下1階, 3 Chome-14-1 Shinjuku, Shinjuku City,
+34|鎧塚俊彥 東京店|35.67700,139.76997|
+35|5-chōme-1-1 Minamiaoyama|35.66483,139.71283|
+36|KURAMAE CANNELE|35.70214,139.79036|
+37|Cois Espresso Club Shinjuku Gyoemmae|35.68835,139.71056|
+38|BAGGAGE COFFEE|35.66942,139.70996|
+39|KITASANDO COFFEE Lab.|35.66132,139.70009|
+40|上原食堂（かき氷専門店）|35.68927,139.72246|
+41|Azuki to Kouri|35.68226,139.69721|Tokyo, Shibuya, Yoyogi, 1 Chome−46−2 1F
+42|あいぱく® TOKYO 原宿店|35.70044,139.74814|Tokyo, Shibuya, Jingumae, 1 Chome−20−4 Axia原宿 103C
+43|Verve Coffee Roasters NEWoMan Shinjuku Store|35.68838,139.70122|
+44|Crêpe House Circus|35.70536,139.58090|Tokyo, Musashino, Kichijoji Honcho, 1 Chome−12−13 センチュリーホーム吉祥寺ビル
+45|Brulee Merize Tokyo Gift Palette Store|35.68189,139.76856|Tokyo, Chiyoda City, Marunouchi, 1 Chome−9−1 JR Tokyo Station, Yaesu North Exit 「東京ギフトパレット」 内
+46|Kanmi Okame Tokyo Kotsu Kaikan|35.67465,139.76436|
+47|Kanmi-Okame|35.67417,139.76338|
+48|Moyan Curry Toranomon branch|35.66415,139.74585|
+49|Tokyo Juice Azabudai Hills|35.66083,139.74012|
+50|Verve Coffee Roasters|35.66147,139.73624|
+51|STREAMER COFFEE COMPANY AZABU-JUBAN|35.65813,139.73214|
+52|Bricolage bread & co.|35.65919,139.72824|
+53|HARBS atre惠比壽店|35.64641,139.71058|
+54|藍瓶咖啡 惠比壽店|35.64702,139.70965|
+55|breadworks Tennozu|35.62312,139.74765|
+56|Pinede|35.63850,139.79301|
+57|SOW COFFEE ROASTERS|35.63473,139.73938|
+58|MAISON CLASSIC SALON|35.63555,139.74069|
+59|藍瓶咖啡 品川店|35.62900,139.74060|
+60|Higuma Doughnuts|35.62885,139.68817|
+61|Augusta Milk Farm|35.50949,139.47177|
+62|Cat Café MOFF Grandberry Park|35.50923,139.47085|
+63|Shaun Village Shop＆Cafe|35.50991,139.46975|
+64|HARBS Atre Kichijoji|35.70325,139.58015|
+65|I'm donut ? Ikebukuro|35.73176,139.71474|
+66|Qu’il Fait Bon - Tokyo Dome City|35.70712,139.75221|
+67|Canal Cafe|35.70006,139.74274|
+68|Saladday coffee|35.70188,139.77931|
+69|noix de beurre Nihonbashi Mitsukoshi Store|35.68578,139.77378|
+70|鳴門鯛燒本舖 淺草新仲見世通店|35.71214,139.79474|
+71|淺草梅園|35.71241,139.79626|
+72|MERCER BRUNCH TERRACE HOUSE TOKYO|35.66320,139.70991|
+73|自由が丘ロール屋 辻口博啓|35.61138,139.66987|
+74|Mont St.Clair|35.61272,139.66647|
+75|TWG 自由之丘店|35.60729,139.66912|
+76|les joues de BeBe 大井町店|35.60799,139.73407|
+77|LEMONICA／UNI DONUTS 原宿店|35.67138,139.70448|Tokyo, Shibuya, Jingumae, 1 Chome−20−7 ハッピーハーツ １F
+78|スターバックス カフェ & アートギャラリー 谷中御殿坂|35.72786,139.76865|3 Chome-2-5 Nishinippori, Arakawa City,
+79|HARBS 上野店|35.70679,139.77294|Tokyo, Taito City, Ueno, 3 Chome−24−6 パルコヤ上野 ２F
+80|地瓜羊羹 舟和 本店|35.71201,139.79463|1 Chome-22-10 Asakusa, Taito City,
+81|一芳台灣水果茶 淺草店|35.71027,139.79678|Tokyo, Taito City, Kaminarimon, 2 Chome−18−15 ＴＳビル 1F
+82|和泉屋 本店|35.71107,139.79708|1 Chome-1-4 Asakusa, Taito City,
+83|和泉屋 仲見世店|35.71262,139.79661|1 Chome-37-1 Asakusa, Taito City,
+84|FUGLEN ASAKUSA|35.71445,139.79399|2 Chome-6-15 Asakusa, Taito City,
+85|Suzukien Asakusa matcha gelato|35.71633,139.79693|3 Chome-4-3 Asakusa, Taito City,
+86|淺草 花月堂 本店|35.71463,139.79517|2 Chome-7-13 Asakusa, Taito City,
+87|Tenku Lounge TOP of TREE|35.71019,139.81258|Tokyo, Sumida City, Oshiage, 1 Chome−1−2 東京スカイツリータウン ソラマチ31F
+88|cafe capyba (capybara cafe)|35.71999,139.81438|1 Chome-31-3 Higashimukojima, Sumida City,
+89|Kojo|35.71176,139.77899|Tokyo, Taito City, Higashiueno, 3 Chome−39−10 光和ビル B1F
+90|レボン快哉湯|35.72226,139.78482|2 Chome-17-11 Shitaya, Taito City,
+91|最中冰淇淋 井上總本舗|35.30176,139.48077|2 Chome-1-9 Enoshima, Fujisawa, Kanagawa 251-0036
+92|TRASPARENTE L’acqua|35.29940,139.47666|2 Chome-6-7 Enoshima, Fujisawa, Kanagawa 251-0036
+93|Nakamuraya Honten Teahouse|35.29960,139.47779|2 Chome-3-45 Enoshima, Fujisawa, Kanagawa 251-0036
+94|BLOSSOM & BOUQUET TOKYO|35.69071,139.70031|3 Chome-38-2 Shinjuku, Shinjuku City,
+95|EVERYONEs CAFE|35.71564,139.77477|8-4 Uenokoen, Taito City,
+96|L'ibisco Ginza|35.67148,139.76697|
+97|Cafe Hinata-ya|35.69646,139.76145|
+98|Tam Tam|35.69564,139.75874|
+99|Ladrio|35.69564,139.75980|
+100|塩パン屋パン・メゾン新宿店|35.69304,139.70800|Tokyo, Shinjuku City, Shinjuku, 5 Chome−11−23 ＫＴ新宿三番街 1階
+101|pain･maison Sumida Asakusa Dori Street|35.70866,139.80239|2 Chome-4-1 Azumabashi, Sumida City,
+102|Horn|35.66812,139.68730|1 Chome-2-1 Uehara, Shibuya,
+103|Colombin Harajuku|35.66754,139.70445|Tokyo, Shibuya, Jingumae, 6 Chome−29−4 原宿こみやビル 1f
+104|Pâtisserie Les années folles|35.64645,139.70628|Tokyo, Shibuya, Ebisunishi, 1 Chome−21−3 グレイス代官山
+105|équilibre|35.62496,139.71346|5 Chome-11-10 Nishigotanda, Shinagawa City,
+106|Patisserie Double-v|35.62586,139.71363|4 Chome-29-18 Nishigotanda, Shinagawa City,
+107|LES CACAOS|35.62526,139.72921|2 Chome-19-2 Higashigotanda, Shinagawa City,
+108|蛋糕 BOBBY JUCHHEIM|35.62844,139.73920|Tokyo, Minato City, Takanawa, 3 Chome−２６−27 エキュート品川 1F
+109|MAISON CLASSIC FACTORY|35.63555,139.74069|Tokyo, Minato City, Konan, 2 Chome−1 高輪ゲートウェイ駅
+110|where is my chou? 田町タワー店|35.64688,139.74902|Tokyo, Minato City, Shiba, 5 Chome−33−11 田町タワ １－Ｆ
+111|巴裡 小川軒 目黒店|35.62732,139.69277|2 Chome-6-14 Megurohoncho, Meguro City,
+112|Boulangerie Noli et Nori|35.65802,139.75647|Tokyo, Minato City, Hamamatsucho, 1 Chome−16−11 RENATA浜松町Ⅱ １階
+113|神田 近江屋洋菓子店|35.69647,139.76777|2 Chome-4 Kanda Awajicho, Chiyoda City,
+114|ラ・グリッシーヌ|35.70347,139.77341|
+115|ANTÉNOR 大丸東京店|35.68171,139.76873|
+116|ANTÉNOR 上野松坂屋店|35.70732,139.77335|
+117|新宿高野 松坂屋上野店|35.70715,139.77341|Tokyo, Taito City, Ueno, 3 Chome−29−5 1F
+118|Shinjuku Takano|35.69194,139.70194|3 Chome-26-11 Shinjuku, Shinjuku City,
+119|新宿高野本店 高野水果輕食店&水果吧|35.69183,139.70195|Tokyo, Shinjuku City, Shinjuku, 3 Chome−26−11 ５Ｆ
+120|Patisserie Mie Shimamura|35.72130,139.78779|Tokyo, Taito City, Iriya, 2 Chome−26−2 井上ビル
+121|テテ ア テテ洋菓子店|35.73833,139.76889|Tokyo, Kita City, Tabatashinmachi, 1 Chome−22−14 1階
+122|Gayoushi|35.72864,139.76452|Tokyo, Taito City, Yanaka, 3 Chome−14−5 ＬＥＧＡＲＥ ＹＡＮＡＫＡ
+123|Maison Heureux|35.68264,139.80228|Tokyo, Koto City, Shirakawa, 2 Chome−14−2 レーベル 1F
+124|星巴克 富士吉田店|35.47520,138.80769|4-chome-14-22 Kamiyoshidahigashi, Fujiyoshida, Yamanashi 403-0032
+125|Hearth Ikebukuro|35.72826,139.71278|1 Chome-20-8 Minamiikebukuro, Toshima City,
+126|果実園リーベル エキュートエディション飯田橋店|35.70032,139.74390|Tokyo, Chiyoda City, Iidabashi, 4 Chome−17−27 エキュートエディション飯田橋 2F
+127|I’m donut ? Nakameguro|35.64443,139.69935|1 Chome-22-10 Kamimeguro, Meguro City,
+128|I'm donut? Omotesando|35.66605,139.71303|
+129|I'm donut ? Gluten-free SHIBUYA|35.66094,139.70755|2 Chome-9-1 Shibuya,
+130|I'm donut? Harajuku|35.66983,139.70323|Tokyo, Shibuya, Jingumae, 1 Chome−14−24 1F・2F
+131|PEANUTS Cafe SUNNY SIDE kitchen|35.67113,139.70360|Tokyo, Shibuya, Jingumae, 1 Chome−14−30 WITH HARAJUKU B2F
+132|NEZUCAFE|35.66195,139.71755|6 Chome-5-1 Minamiaoyama, Minato City,
+133|Jura Noire|35.42959,138.85570|1487 Yamanaka, Yamanakako, Minamitsuru District, Yamanashi 401-0501
+134|Noah|35.42693,138.87295|3213-2 Hirano, Yamanakako, Minamitsuru District, Yamanashi 401-0502
+135|カセットテープカフェCASSE渋谷|35.65743,139.70765|
+136|かぐや岩本山cafe|35.17738,138.62830|
+137|Lake Bake Cafe|35.52396,138.74747|
+138|八十八良葉舍 淺草|35.71451,139.80149|2 Chome-14-3 Hanakawado, Taito City,
+139|Kurogi|35.70681,139.77292|Tokyo, Taito City, Ueno, 3 Chome−24−6 パルコヤ上野 1F
+140|ONIBUS COFFEE 中目黑|35.64318,139.69803|2 Chome-14-1 Kamimeguro, Meguro City,
+141|ONIBUS COFFEE Nakameguro 3 Chome|35.63862,139.69799|Tokyo, Meguro City, Nakameguro, 3 Chome−23−16 SANU NOWHERE 1階
+142|Bridge COFFEE & ICECREAM|35.69476,139.78392|Tokyo, Chuo City, Nihonbashibakurocho, 1 Chome−13−9 イーグルビル 1F
+143|ジェラテリア ラッフィナート 六本木ヒルズ店|35.66176,139.73014|Tokyo, Minato City, Roppongi, 6 Chome−2−31 Roppongi Hills North Tower, B１F
+144|HARBS|35.65984,139.72951|Tokyo, Minato City, Roppongi, 6 Chome−10−2 ヒルサイド 1F
+145|KITASANDO COFFEE|35.67894,139.70643|Tokyo, Shibuya, Sendagaya, 4 Chome−12−8 Sunny Side Up Bldg, 1F
+146|Confectionery Lemon Pie|35.70917,139.78971|2 Chome-4-6 Kotobuki, Taito City,
+147|Bicerin NEWOMAN TAKANAWA|35.63616,139.74008|Tokyo, Minato City, Takanawa, 2 Chome−21−1 NEWoMan高輪 North 4F
+148|Flipper's 澀谷|35.66355,139.69955|〒150-0041 Tokyo, Shibuya, Jinnan, 1 Chome−15−5 1F
+149|AKOMEYA TOKYO NEWoMan高輪店|35.63650,139.74018|〒108-0074 Tokyo, Minato City, Takanawa, 2 Chome−21−1 ＮＥＷｏＭａｎ高輪 Ｎｏｒｔｈ ２階
+150|AKOMEYA TOKYO 東急廣場澀谷店|35.65765,139.70031|東急プラザ渋谷, ２階, 1 Chome-2-3 Dogenzaka, Shibuya,
+151|AKOMEYA TOKYO 神樂坂La kagu店|35.70359,139.73321|67 Yaraicho, Shinjuku City,
+152|AKOMEYA TOKYO NEWoMan新宿店|35.68888,139.70178|〒160-0022 Tokyo, 新宿区Shinjuku, 4 Chome−1−6 ＮＥＷｏＭａｎ新宿 １階
+153|AKOMEYA TOKYO 東京巨蛋城市LaQua店|35.70712,139.75311|〒112-0003 Tokyo, Bunkyo City, Kasuga, 1 Chome−1−1 東京ドームシティ ラクーア 2階
+154|AKOMEYA TOKYO 日本橋高島屋S.C.店|35.68124,139.77358|〒103-6199 Tokyo, Chuo City, Nihonbashi, 2 Chome−5−1 髙島屋Ｓ．Ｃ．新館 Ｂ１階
+155|AKOMEYA TOKYO ルミネ有楽町|35.67450,139.76256|〒100-0006 Tokyo, Chiyoda City, Yurakucho, 2 Chome−１７−1 ルミネストリート
+156|Hills House Sky Room Café&Bar|35.66124,139.74062|Tokyo, Minato City, Azabudai, 1 Chome−3−1 ヒルズ森JPタワ 34F
+157|淺草絲滑布丁|35.71124,139.79543|1 Chome-4-11 Asakusa, Taito City,
+158|Kameya|35.71376,139.81216|
+159|松竹圓カフェ|35.71304,139.78919|
+160|Café de Crié - Keio Presso Inn Ikebukuro|35.72791,139.71558|
+161|Tully’s Coffee Hareza Ikebukuro|35.73242,139.71592|
+162|Kissa Hangetsu|35.70376,139.78995|
+163|Patisserie SATSUKI|35.68091,139.73404|
+164|neel神宮前|35.67367,139.71072|
+165|Age.3 ASAKUSA|35.71516,139.79446|
+166|Age.3×Q HARAJUKU|35.67365,139.70972|
+167|KURAMAE CANNELE エキュート上野店|35.71390,139.77733|
+168|Oshiage Senbei|35.73824,139.73119|
+169|藍瓶咖啡 六本木店|35.66484,139.72916|7 Chome-7-7 Roppongi, Minato City,
+170|HUMAN MADE 咖啡 by 藍瓶咖啡|35.67270,139.71232|Tokyo, Shibuya, Jingumae, 2 Chome−6−6 秀和外苑レジデンス 1F
+171|藍瓶咖啡 澀谷|35.66409,139.69952|1 Chome-7-3 Jinnan, Shibuya,
+172|藍瓶咖啡 新宿店|35.68879,139.70211|Tokyo, Shinjuku City, Shinjuku, 4 Chome−1−6 NEWoMan SHINJUKU 1F
+173|藍瓶咖啡 青山店|35.66525,139.71388|3 Chome-13-14 Minamiaoyama, Minato City,
+174|Cream or Cruller|35.66419,139.69997|1 Chome-8-11 Jinnan, Shibuya,
+175|PISTA&tokyo 日本橋高島屋S.C.店|35.68084,139.77310|
+176|THE BELCOMO｜贝尔科莫酒店|35.66953,139.71595|Tokyo, Minato City, Kita-Aoyama, 2 Chome−14−4 The Argyle Aoyama, 4F GRAND HOTEL
+177|Princess Tart 中目黒|35.64421,139.70003|Tokyo, Meguro City, Kamimeguro, 1 Chome−26−1 アトラスタワ １１９号
+178|FUJIYA Sukiyabashi Store|35.67253,139.76362|
+179|I'm donut? • Gluten Free Donuts|35.66154,139.70771|
+180|PREMIER MAI|35.66911,139.68952|
+181|MERCER BRUNCH ROPPONGI|35.66480,139.73337|
+182|THE MATCHA TOKYO 宮下公園店|35.66087,139.70172|Tokyo, Shibuya, Jingumae, 6 Chome−20−10 MIYASHITA PARK North, South 2F
+183|The Matcha Tokyo Shinjuku|35.68877,139.70184|Tokyo, Shinjuku City, Shinjuku, 4 Chome−1−6 NEWoMan新宿 1F
+184|Échiré L'Atelier du Beurre|35.66184,139.74374|Azabudai Hills Garden Plaza B, 1F, 5 Chome-9-1 Toranomon, Minato City,
+185|藍瓶咖啡 竹芝店|35.65506,139.76090|Tokyo, Minato City, Kaigan, 1 Chome−7−1 Tokyo Portcity Takeshiba Office Tower, 3階
+186|LATTE ART MANIA TOKYO / ラテアートマニア東京店|35.67120,139.71648|Tokyo, Minato City, Kita-Aoyama, 2 Chome−9−13 斉藤ビル 1F
+187|iki Espresso|35.68447,139.79656|
+188|iki Roastery & Eatery|35.68451,139.79394|
+189|Monmouth Tea Shizuoka|34.98001,138.38881|
+190|Monmouth Tea|35.66787,139.49429|
+191|Monmouth Tea|35.67856,139.70975|
+192|葉子派.布丁 銀座WEST專櫃|35.67280,139.73634|
+193|銀座ウエスト 渋谷ヒカリエShinQs店|35.65886,139.70341|
+194|甜點 銀座WEST 本店|35.67040,139.76080|
+195|銀座西 青山花園店|35.66687,139.72468|
+196|Bread, Espresso &|35.66891,139.71262|3 Chome-4-9 Jingumae, Shibuya,
+197|BREAD, ESPRESSO & TOKYO|35.68104,139.76380|Marunouchi Building, 2 Chome-4-1 Marunouchi, Chiyoda City,
+198|PUDDING LAB|35.67070,139.76393|
+199|ROAR COFFEE Parkside Ginza Tokyo|35.67432,139.77013|
+200|ROAR COFFEE Tokyo Ginza|35.67077,139.76926|
+201|油炸三明治專賣店 Age.3|35.67276,139.77129|
+202|Kougnane no Mise|35.67447,139.76300|
+203|Ginza Bakery Since 1945|35.67493,139.76755|
+204|BOUL'ANGE Azamino Gardens|35.57249,139.53462|
+205|BOUL'ANGE Ikebukuro Tobu|35.72921,139.70981|
+206|BOUL’ANGE Shibuya Tokyu Food Show|35.65838,139.69900|
+207|BOUL'ANGE NIHONBASHI|35.68602,139.77433|
+208|BOUL'ANGE Shinjuku Southern Terrace|35.68866,139.69990|
+209|Monmouth Tea tokyo dome city|35.70513,139.75434|
+210|千疋屋総本店 日本橋本店|35.68726,139.77323|
+211|CAFE DANCE|35.68271,139.77801|
+212|紅鶴|35.71190,139.79188|2 Chome-1-11 Nishiasakusa, Taito City,
+213|木村屋總本店 銀座松屋店|35.67223,139.76647|
+214|銀座木村家 總本店|35.67167,139.76527|
+215|歌帝梵烘焙坊GODIPAN 本店|35.67489,139.76433|
+216|Café 1894|35.67844,139.76331|
+217|CHOCOLATIER PALET D'OR GINZA|35.67065,139.76396|
+218|Chocolatier Palet D'or 東京|35.68273,139.76400|
+219|Starbucks Coffee - Kokyo Gaien Wadakura Fountain Park|35.68304,139.76142|
+220|Patisserie VIRON Boulangerie Shibuya|35.66088,139.69678|
+221|Original Pancake House Shinjuku|35.69108,139.70097|Tokyo, Shinjuku City, Shinjuku, 3 Chome−38−1 ルミネエスト新宿 7F
+222|珈琲王城|35.71003,139.77586|
+223|5 CROSSTIES COFFEE 渋谷スクランブルスクエア|35.65872,139.70230|スクランブルスクエア, 東棟)17F, 2 Chome-24-12 Shibuya,
+224|The Little BAKERY Tokyo|35.66641,139.70505|6 Chome-13-6 Jingumae, Shibuya,
+225|CHOP COFFEE CAT STREET|35.66683,139.70644|5 Chome-11-13 Jingumae, Shibuya,
+226|Rizlabo Kitchen|35.66858,139.71080|4 Chome-15-2 Jingumae, Shibuya,
+227|cafe486|35.66796,139.71135|Tokyo, Shibuya, Jingumae, 4 Chome−8−6 Maple House, BF-1
+228|Higuma Doughnuts × Coffee Wrights Omotesando|35.66776,139.71049|Tokyo, Shibuya, Jingumae, 4 Chome−9−13 ミナガワビレッジ #5
+229|Afternoon Tea • LOVE & TABLE Omotesando|35.66709,139.71100|4 Chome-3-2 Jingumae, Shibuya,
+230|AMAM DACOTAN|35.66451,139.71103|3 Chome-7-6 Kita-Aoyama, Minato City,
+231|GARIGUETTE|35.66487,139.71081|Tokyo, Minato City, Kita-Aoyama, 3 Chome−7−2 FPG links OMOTESANDO2 1F
+232|Café de Crié 大陽光街商店(カフェ・ド・クリエグラン サンシャイン通り店)|35.73052,139.71451|Tokyo, Toshima City, Higashiikebukuro, 1 Chome−10−1 Sumitomo Ikebukuro Ekimae Building, １Ｆ
+233|Coffee Hall Kugutsusō|35.70420,139.57828|
+234|Manneken|35.67131,139.76451|
+235|The Matcha Tokyo Omotesandō|35.66693,139.70637|
+236|Ginza Hananoren Corporation|35.59088,139.73359|
+237|Pista & Tokyo - Tokyo Gift Palette|35.68206,139.76863|
+238|PRESS BUTTER SAND 池袋站店|35.73024,139.71175|
+239|Harbs LUMINE Ikebukuro|35.72899,139.70925|
+240|手工牛奶糖 NUMBER SUGAR|35.66649,139.70617|
+241|銀座千疋屋 銀座本店 (甜品店)|35.67175,139.76391|Tokyo, Chuo City, Ginza, 5 Chome−5−1 2F
+242|銀座千疋屋 銀座本店 (水果店)|35.67175,139.76391|
+243|銀座フルーツ|35.67003,139.76038|
+244|Echiré Maison du Beurre Marunouchi Store|35.67857,139.76253|
+245|Think|35.72228,139.77103|
+246|Ueno-Sakuragi atari|35.72238,139.77103|
+247|Le Coussinet|35.72059,139.76385|
+248|Qu'il fait bon|35.71013,139.81145|
+249|Quil Fait Bon銀座|35.67406,139.76720|
+250|水果派 Qu'il fait bon|35.66512,139.71374|
+251|Natural Crepe|35.71081,139.77577|
+252|TRUFFLE mini 御徒町店|35.70772,139.77467|
+253|Komichi|35.72772,139.76623|
+254|Calm Coffee Roasters STAND|35.72764,139.76631|
+255|cannelé de papin|35.72751,139.76730|
+256|宿木咖啡＆餐廳|35.72870,139.76537|
+257|Lecoin|35.72381,139.76749|
+258|AMAZING COFFEE|35.64731,139.69733|Tokyo, Meguro City, Aobadai, 1 Chome−18−7 カスタリア中目黒 211 1F6区画
+259|Dumbo 麻布十番店|35.65396,139.73582|2 Chome-17-6 Azabujuban, Minato City,
+260|te cor gentil - vegan bakes|35.65424,139.73590|2 Chome-18-8 Azabujuban, Minato City,
+261|Disney HARVEST MARKET By CAFE COMPANY|35.65913,139.70383|Tokyo, Shibuya, 2 Chome−21−1 渋谷ヒカリエ7F TABLE 7
+262|Daikanyama Concept Shop|35.64880,139.70252|20-23 Daikanyamacho, Shibuya,
+263|Blue Bottle Coffee Daikanyama Cafe|35.64876,139.70240|Tokyo, Shibuya, Daikanyamacho, 20−23 フォレストゲート代官山 Main棟 1階
+264|NUMBER SUGAR Daikanyama|35.64894,139.70143|20-9 Sarugakucho, Shibuya,
+265|法式料理 小川軒|35.65132,139.70411|10-13 Daikanyamacho, Shibuya,
+266|治一郎 KITTE 丸の内店|35.67979,139.76484|2 Chome-7-2 Marunouchi, Chiyoda City,
+267|bricolage bread & co.|35.65922,139.70069|Tokyo, Shibuya, Dogenzaka, 1 Chome−12−1 フードショー内 地下一階
+268|neel|35.64740,139.69548|1 Chome-25-9 Aobadai, Meguro City,
+269|福砂屋 中目黑店|35.64795,139.69483|1 Chome-26-7 Aobadai, Meguro City,
+270|Pâtisserie ease|35.68196,139.77779|9-1 Nihonbashikabutocho, Chuo City,
+271|Nekomaru Cafe|35.71253,139.77739|Tokyo, Taito City, Ueno, 7 Chome−2−2 東叡堂ビル
+272|鯛魚燒 浪花家本店|35.69849,139.79745|1 Chome-24-2 Kamezawa, Sumida City,
+273|茶香|35.75339,139.79967|31-7 Senjukotobukicho, Adachi City,
+274|咖啡館 chai break|35.70178,139.57644|1 Chome-3-2 Gotenyama, Musashino,
+275|Hara Donuts Kichijōji Shop|35.70538,139.57258|4 Chome-13-15 Kichijoji Honcho, Musashino,
+276|いせ桜製菓売店|35.70362,139.57902|1 Chome-1-4 Kichijoji Honcho, Musashino,
+277|鯛魚燒 くりこ庵|35.70392,139.57900|1 Chome-1-7 Kichijoji Honcho, Musashino,
+278|鯛魚燒 天音|35.70384,139.57924|1 Chome-1-9 Kichijoji Honcho, Musashino,
+279|白髭泡芙工房|35.65897,139.66273|5 Chome-3-1 Daita, Setagaya City,
+280|AUX BACCHANALES 原宿店|35.67084,139.70325|Tokyo, Shibuya, Jingumae, 1 Chome−14−30 WITH HARAJUKU ３F
+281|オーバカナル 渋谷ヒカリエ店|35.65893,139.70324|Tokyo, Shibuya, 2 Chome−21−1 ７F
+282|AUX BACCHANALES Yaesu|35.68030,139.76939|Tokyo, Chuo City, Yaesu, 2 Chome−1 八重洲地下街 B1階
+283|Aux Bacchanales Ginza|35.67177,139.76149|Tokyo, Chuo City, Ginza, 6 Chome−3−2 Gallery Center Building, 1F
+284|Sucre-rie|35.68526,139.78153|
+285|bakery_bank|35.68175,139.77879|
+286|The Front Room Deli Restaurant Marunouchi|35.68127,139.76389|
+287|Tas Yard|35.67560,139.70581|
+288|Penny Lane|35.70998,139.81168|
+289|Échiré Pâtisserie Au Beurre|35.65846,139.70226|
+290|Jiichiro|35.65832,139.70223|
+291|Hatoya’s Vegan Fruit Sandwiches|35.71290,139.79616|
+292|藍瓶咖啡 清澄白河店|35.67776,139.80059|
+293|Mūya|35.71098,139.80401|
+294|EGG BABY CAFE|35.70536,139.77433|5 Chome-10-9 Ueno, Taito City,
+295|Hekkelun|35.66786,139.75217|
+296|鳴門金時本舗 栗尾商店|35.68147,139.76578|
+297|ESPRIT C. KEI 銀座|35.66925,139.76238|
+298|breadworks Omotesando|35.66302,139.71238|
+299|MAISON DU CREER|35.64206,139.72181|
+300|THE STAND 有楽町|35.67481,139.76266|
+301|茶珈堂|35.66143,139.71160|
+302|藍瓶咖啡 豐洲公園店|35.65364,139.79331|
+303|RINGO LaLaport Toyosu 3|35.65467,139.79513|
+304|Pelican CAFE|35.70701,139.79110|
+305|Boulangerie Seiji Asakura|35.63600,139.73332|
+306|Pointage|35.65363,139.73563|
+307|Nata de Cristiano|35.66725,139.69129|
+308|侯布雄LE PAIN 澀谷Hikarie ShinQ’s店|35.65906,139.70332|
+309|Haritts Donuts & Coffee 上原店|35.66933,139.68202|
+310|鯛魚燒本舖 柳屋|35.68537,139.78403|
+311|鯛魚燒 浪花家總本店|35.65619,139.73511|
+312|東京豆大福三傑 瑞穗|35.66698,139.70559|
+313|空也|35.67085,139.76278|
+314|脆皮鯛魚燒 ひいらぎ|35.64768,139.71166|
+315|鵜鶘麵包店（パンのペリカン）|35.70855,139.79135|
+316|鎧塚俊彥 東京中城店|35.66543,139.73138|
+317|雅庵|35.64756,139.69214|
+318|拔絲地瓜大學芋 千葉屋|35.71687,139.79489|
+319|Brasserie Viron Marunouchi|35.67866,139.76517|
+320|蛋糕老店 Shirotae|35.67666,139.73541|
+321|銅鑼燒 龜十|35.71069,139.79675|
+322|菓匠 菊家|35.66128,139.71389|
+323|和光 銀座別館茶沙龍|35.67182,139.76477|
+324|Usagiya|35.68295,139.77371|
+325|365 Days & Nihonbashi|35.68137,139.77340|
+326|Centre The Bakery|35.67553,139.76659|
+327|IL PLEUT SUR LA SEINE|35.64954,139.69876|
+328|Shizuka Natural Sweets Laboratory|35.67079,139.76392|
+329|Shizuka Patisserie Natural Sweets Laboratory|35.64753,139.73881|
+330|Chirimulo|35.65364,139.70518|
+331|STYLE'S CAKES & CO.|35.69673,139.76047|
+332|TORAYA TOKYO (虎屋 東京車站店)|35.68098,139.76590|
+333|巧克力 Chocolatier Inamura Shozo|35.72739,139.76937|
+334|皮耶艾曼 青山店|35.66278,139.70968|
+335|Boulangerie Bonnet D'ane|35.65010,139.67440|
+336|半島精品店與咖啡廳 伊勢丹新宿店|35.69201,139.70427|
+337|半島精品店及咖啡 新丸大樓店|35.68264,139.76404|
+338|半島精品店與咖啡廳 東京|35.67472,139.76068|
+339|GAZTA 伊勢丹新宿店|35.69157,139.70465|
+340|GAZTA|35.64527,139.73348|
+341|Gelateria SINCERITA|35.70932,139.63466|
+342|Brasserie VIRON|35.66090,139.69682|
+343|Le Petit Mec Hibiya|35.67332,139.76011|
+344|銅鑼燒 兔屋|35.70615,139.77182|
+345|Frédéric Cassel 銀座三越店|35.67127,139.76594|
+346|Pâtisserie Ryoco|35.63501,139.73280|
+347|塩麵包屋 pain･maison 銀座店|35.67156,139.77053|
+348|BONGEN COFFEE Tokyo Ginza|35.67107,139.77080|
+349|Fruit Parlor Kajitsuen Tokyo|35.68223,139.76797|
+350|茶寮都路里 大丸東京店|35.68142,139.76924|
+351|デリーモ東京カフェ【デリーモ大丸東京店】|35.68176,139.76906|
+352|大福 銀座あけぼの|35.68165,139.76900|
+353|Castella Fukusaya|35.68166,139.76900|
+354|Morinagano Okashina Okashiyasan|35.68098,139.76819|
+355|BUG Cafe|35.67857,139.76728|
+356|HARBS LUMINE有樂町店|35.67360,139.76284|
+357|PATISSERIE TEN&|35.67142,139.75978|
+358|葡萄乾派餅 小川軒|35.66626,139.75975|
+359|Cafe de l'ambre|35.66792,139.76230|
+360|藍瓶咖啡 銀座店|35.66976,139.76436|
+361|古馳酒館 東京／Gucci Osteria da Massimo Bottura Tokyo|35.67047,139.76210|
+362|銀座Akebono 銀座本店|35.67141,139.76452|
+363|noix de beurre Ginza Mitsukoshi Store|35.67145,139.76559|
+364|福砂屋 三越銀座店|35.67145,139.76568|
+365|幸福班戟 銀座店|35.67062,139.76522|
+366|Turret Coffee Tsukiji|35.66804,139.77200|
+367|Glitch Coffee and Roasters GINZA|35.66888,139.76868|
+368|喫茶You|35.66946,139.76866|
+369|Henri Charpentier 銀座店|35.67333,139.76829|
+370|Cafe pastry Louange Tokyo - Le Musée|35.67412,139.76916|
+371|TruffleBAKERY 三軒茶屋店|35.64618,139.67002|
+372|TRUFFLE Bakery 本店|35.67400,139.79438|
+373|藍瓶咖啡 廣尾店|35.65074,139.72195|
+374|TruffleBAKERY 廣尾店|35.65091,139.72248|
+375|Naruto Taiyaki Honpo (Shinjuku)|35.69231,139.70552|
+376|noix de beurre 新宿伊勢丹店|35.69174,139.70454|
+377|追分團子本鋪 新宿本店|35.69049,139.70535|
+378|Cafe Aaliya|35.69050,139.70477|
+379|FUGLEN SANGŪBASHI|35.67987,139.69147|
+380|Afternoon Tea Love & Table Shinjuku Lumine 1|35.68915,139.69927|
+381|GRANNY SMITH 新宿店|35.68991,139.69899|
+382|GAP咖啡 新宿Flags店|35.68984,139.70174|
+383|EATo LUMINE|35.69071,139.70028|
+384|HARBS LUMINE EST新宿店|35.69125,139.70114|
+385|オヨッピコーヒー|35.70152,139.70355|
+386|Cois Espresso Club 新大久保店|35.70125,139.70101|
+387|藍瓶咖啡 池袋店|35.72763,139.71379|
+388|Suzumeya|35.72671,139.71343|
+389|RINGO 池袋店|35.73118,139.71265|
+390|Échiré Pâtisserie Au Beurre Seibu Ikebukuro Store|35.72888,139.71151|
+391|和栗屋|35.72761,139.76529|
+392|French Pound House|35.73293,139.74187|
+393|bills Odaiba|35.62958,139.77651|
+394|bills 表參道|35.66858,139.70578|
+395|bills Ginza|35.67324,139.76671|
+396|幸福的鬆餅 吉祥寺店|35.70426,139.57872|
+397|A Happy Pancake Ikebukuro|35.72952,139.71467|
+398|舒芙蕾鬆餅 幸福Pancake|35.66754,139.71105|
+399|幸福班戟 澀谷店|35.65740,139.69642|
+400|RusaRuka 自由之丘店|35.61365,139.66899|
+401|Jinnan Cafe 澀谷|35.66304,139.69993|
+402|J.S. Pancake Cafe Machida Modi|35.54320,139.44525|
+403|J.S. Pancake Cafe|35.45702,139.63258|
+404|Balcony by 6th Roppongi Branch|35.66124,139.74062|
+405|Giraffa enoshimaジラッファ江ノ島|35.30869,139.48580|
+406|Windera Cafe 七里ヶ浜店|35.30590,139.50733|
+407|bills 七里ヶ浜|35.30567,139.51026|
+408|鎌倉小川軒 鎌倉本店|35.31739,139.54934|
+409|鎌倉小川軒 CIAL鎌倉店|35.31886,139.55070|
+410|Giraffa Curry Pan|35.32059,139.55182|
+411|Tomoya Kamakurakomachi|35.32276,139.55303|
+412|Echire Patisserie Au Beurre, Yokohama Takashimaya|35.46588,139.62119|
+413|HARBS LUMINE Yokohama|35.46536,139.62289|
+414|Afternoon Tea LOVE&TABLE Lumine Yokohama|35.46525,139.62286|
+415|藍瓶咖啡 港未來店|35.45836,139.63092|
+416|HARBS 橫濱 LANDMARK PLAZA店|35.45453,139.63072|
+417|Mrs.Elizabeth 馬芬蛋糕|35.45514,139.63162|
+418|Kurumicco Factory|35.45633,139.64226|
+419|bills 橫濱紅磚倉庫|35.45276,139.64357|
+420|Eggs ’n Things 横浜マリンタワー店|35.44407,139.65098|
+421|夏威夷早餐 Eggs 'n Things|35.62845,139.77428|
+422|Eggs’n Things 銀座店|35.67431,139.76864|
+423|夏威夷早餐 Egg 'n Things|35.66859,139.70623|
+424|3 STARS PANCAKE|35.57230,139.65976|
+425|Matsunosuke|35.64821,139.70028|
+426|夏威夷果鬆餅 crisscross|35.66294,139.71260|
+427|Micasadeco & Cafe Jingumae|35.66655,139.70543|
+428|512 Cafe & Grill|35.66746,139.72970|

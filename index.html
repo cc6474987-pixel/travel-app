@@ -10,11 +10,11 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-192.png">
-<script src="config.js?v=be8a401431"></script>
+<script src="config.js?v=963d358f26"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="shim.js?v=be8a401431"></script>
-<script>window.APP_V='be8a401431';
+<script src="shim.js?v=963d358f26"></script>
+<script>window.APP_V='963d358f26';
 // Pages that stay open pick up a new version on their own: check every minute and whenever the app comes back to the screen.
 (function(){let busy=false;const check=()=>{if(busy||document.hidden)return;busy=true;
   fetch('version.json?ts='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j&&j.v&&j.v!==window.APP_V)location.replace(location.pathname+'?v='+j.v)}).catch(()=>{}).finally(()=>{busy=false})};
@@ -973,16 +973,18 @@ const plNorm=t=>(t||'').replace(/淺/g,'浅').replace(/榮/g,'栄').replace(/豐
 const plHead=t=>plNorm((t||'').split(/[ （(]/)[0]);
 const PL_ANY=/^(美食|吃的?|餐廳|食物|好吃的?|午餐|晚餐|早餐|宵夜|吃飯)?$/;
 const plText=p=>[p.name,p.jp,p.cat,p.area,p.note].join(' ');
-const plMatch=(p,q)=>{if(PL_ANY.test(q))return true;const t=plText(p);if(t.includes(q))return true;
+const PL_MEAL=/^(美食|吃的?|餐廳|食物|午餐|晚餐|宵夜|吃飯)$/,PL_SNACK=/^(甜點|咖啡|麵包)$/;
+const plPick=(l,q)=>{if(q)return l.slice(0,8);const a=[],b=[];l.forEach(x=>(x.p.from?b:a).push(x));const r=[...a.slice(0,5),...b.slice(0,3)];return [...r,...l.filter(x=>!r.includes(x))].slice(0,8).sort((x,y)=>x.d-y.d)};
+const plMatch=(p,q)=>{if(PL_MEAL.test(q)&&PL_SNACK.test(p.cat||''))return false;if(PL_ANY.test(q))return true;const t=plText(p);if(t.includes(q))return true;
   for(const k in PL_SYN){if(q.includes(k)||k.includes(q)){if(t.includes(k)||PL_SYN[k].split(' ').some(w=>t.includes(w)))return true}}return false};
 const stopGeo=(it,G)=>{const a=it.addr||'';let g=G[a]||G[it.title];if(!g&&a){const k=Object.keys(G).find(k=>a.startsWith(k)&&a[k.length]===' ');if(k)g=G[k]}return g?{lat:g[0],lng:g[1]}:null};
 function findPlaces(all,G,o){const q=(o.q||'').trim(),have=o.stops.map(it=>plNorm(it.title)),cand=all.filter(p=>plMatch(p,q)&&![plHead(p.name),plHead(p.jp)].some(h=>h.length>1&&have.some(t=>t.includes(h)))),out=[];
   if(o.loc){cand.forEach(p=>{if(p.lat!=null)out.push({p,d:distM(o.loc,p)})});out.sort((a,b)=>a.d-b.d);
-    const near=out.filter(x=>x.d<=800);return{list:(near.length?near:out.filter(x=>x.d<=3000)).slice(0,8),wide:!near.length}}
+    const near=out.filter(x=>x.d<=800);return{list:plPick(near.length?near:out.filter(x=>x.d<=3000),q),wide:!near.length}}
   const anchors=o.stops.map(it=>({it,g:stopGeo(it,G)})).filter(a=>a.g);
   cand.forEach(p=>{if(p.lat==null)return;let best=null;anchors.forEach(a=>{const d=distM(a.g,p);if(!best||d<best.d)best={d,after:a.it.title}});if(best)out.push({p,...best})});
   out.sort((a,b)=>a.d-b.d);let list=out.filter(x=>x.d<=1500);const wide=!list.length;if(wide)list=out.filter(x=>x.d<=6000);
-  return{list:list.slice(0,8),wide}}
+  return{list:plPick(list,q),wide}}
 const gsiGeo=async addr=>{try{const r=await fetch('https://msearch.gsi.go.jp/address-search/AddressSearch?q='+encodeURIComponent(addr));const j=await r.json();const c=j&&j[0]&&j[0].geometry&&j[0].geometry.coordinates;return c?{lat:+c[1],lng:+c[0]}:null}catch(e){return null}};
 const getSample=async()=>{try{return window.claude&&window.claude.use?await window.claude.use('sample'):null}catch(e){return null}};
 
