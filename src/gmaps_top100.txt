@@ -1,0 +1,323 @@
+##亞洲異國|東京「亞洲異國料理」百名店
+0|Chungsol|35.67213,139.73844||很便宜份量很大，小菜五種可以續一次
+1|Santosham|35.69478,139.76268||米其林指南「必比登推薦」
+2|Biryani Osawa|35.69222,139.76606||米其林指南「必比登推薦」
+3|Hoppers|35.68121,139.77815||米其林指南「必比登推薦」
+4|Night Market|35.65971,139.70803||米其林指南「必比登推薦」
+5|Katchar Batchar|35.72727,139.72945||米其林指南「必比登推薦」
+6|Bandara Lanka|35.68436,139.71792||《米其林指南》「必比登推薦」餐廳
+7|Suna-no-Misaki|35.63112,139.65039||
+8|Okudo Tokyo|35.68991,139.71060||
+9|Nandri - Ina's Indian Kitchen|35.75065,139.75559||
+10|Garam Masala|35.65077,139.63584||
+11|Cochin Nivas|35.69174,139.68591||
+12|Spice Box|35.69223,139.76589||
+13|Sri Mangalam A/C|35.64377,139.60846||
+14|Rahi Punjabi Kitchen|35.70316,139.60164||
+15|Johnny's Biryani Kanda|35.69085,139.76987||
+16|Izmir|35.70565,139.63609||
+17|松記雞飯 （海南雞飯）|35.69386,139.76683||
+18|Necoroku|35.71762,139.81599||
+19|MOMO Stand Tokyo|35.64902,139.72050||
+20|Kerala no Kaze Morning|35.58544,139.72558||
+21|Vietnam Chan|35.70150,139.69638||
+22|NEPALICO Shibuya|35.65584,139.69839||
+23|SERENDIB|35.70636,139.79100||
+24|Andhra Dhaba|35.69074,139.77019||
+25|Modern Thai CIEL|35.68023,139.70589||
+26|Wakasa|35.64655,139.69820||
+27|Indian Street Food & Bar Gond|35.69609,139.76395||
+28|Curry & Spice Bar 咖喱人|35.70082,139.74827||
+29|Tandoor Bar KAMAL 2nd|35.69563,139.82650||
+30|Halu|35.66761,139.71774||
+31|印度料理屋 四次元食堂|35.71070,139.71239||
+32|Andhra Dining GINZA|35.67452,139.76902||
+33|Fukumen|35.71551,139.79352||
+34|Khan Kebab Biryani|35.66788,139.76100||
+35|Thanjai Meals Hatagaya|35.67791,139.67760||
+36|Ăn Đi|35.67191,139.71390||
+37|Anjuna|35.66222,139.41233||
+38|Erick South Yaesu|35.67949,139.77084||
+39|マロロガバワン indo&more MAROLOGABhavan|35.71303,139.66806||
+40|Linamha Korean Dining Daikanyama|35.64806,139.70228||
+41|Aromas Of India|35.69681,139.76937||
+42|ARALE|35.65410,139.70207||
+43|GAYABHAJI INDIAN CAFE|35.71081,139.79042||
+44|Zero One Curry A.o.D.|35.64743,139.74337||
+45|Arabic Cafe & Deli Abu Essam|35.70419,139.73230||
+46|初台スパイス食堂 和魂印才たんどーる|35.68461,139.68550||
+47|myaomyao Thai Restaurant|35.67797,139.67856||
+48|Kamarupool|35.66888,139.81086||
+49|Erick South Curry and Biryani Centre|35.70532,139.65157||
+50|mango tree tokyo|35.68093,139.76399||
+51|Aoitori|35.67922,139.67709||
+52|SHE meguro|35.62906,139.71616||
+53|Gurgaon|35.67453,139.76734||
+54|Ōiwa Shokudō|35.70386,139.60221||
+55|Korean Cuisine 〜NoruraDa〜 Roppongi Branch|35.66806,139.73908||
+56|Shiva Curry Wara|35.64598,139.66982||
+57|思想之木（Omoinoki）|35.70230,139.73781||
+58|Andhra Kitchen|35.70573,139.77392||
+59|SUNVALLEY HOTEL|35.63837,139.66741||
+60|Spice Bar Kozaburo|35.72403,139.75632||
+61|Nandhini Toranomon|35.66568,139.75268||
+62|Sansarukoiwaten|35.72602,139.88263||
+63|New Korean HASUO|35.64954,139.72103||
+64|MalaysiaMalay|35.64824,139.60647||
+65|KHAO|35.69655,139.75699||
+66|Shitenkeihan Hanare|35.66058,139.70200||
+67|SPICIA Iidabashi|35.69988,139.74731||
+68|BIANCHI / BIANCHI Mini Me|35.66246,139.72905||
+69|ADI|35.64175,139.69561||
+70|Spice Bazaar アチャカナ|35.69387,139.69701||
+71|Phở Thìn Tokyo|35.72940,139.71461||
+72|Puja Bengali Restaurant|35.74602,139.78216||
+73|MY-LE|35.56418,139.71711||
+74|Bépocah Peruvian Restaurant|35.67253,139.71013||
+75|すぱいす暮らし|35.62946,139.68621||
+76|Yoyonam|35.67136,139.69057||
+77|Yappari India|35.73023,139.72807||
+78|thalee ling|35.67104,139.68395||
+79|TOKYO BHAVAN|35.69893,139.74855||
+80|Los Tacos Azules|35.63835,139.66812||
+81|プロカンジャンケジャン赤坂店|35.67457,139.73754||
+82|雞脾飯Ginza Nair's Restaurant|35.67010,139.76719||
+83|Aangan|35.70147,139.70247||
+84|Ajanta|35.68614,139.73691||
+85|土耳其料理 Burgaz Ada|35.65373,139.73502||
+86|Soaltee Mode|35.64922,139.70758||
+87|DESTINO51 ペルー料理|35.66167,139.71419||
+88|Shitenkeihan|35.65698,139.70400||
+89|Simon|35.65734,139.73290||
+90|Suyorito Sōgen no Ryōri|35.70100,139.73290||
+91|Handung|35.66334,139.78469||
+92|Delhi Restaurant|35.67114,139.76083||
+93|Spice Cafe|35.70980,139.82007||
+94|Ăn Cơm|35.65077,139.72192||
+95|Los Tacos Azules - Ebisu|35.65041,139.70715||
+96|Mymot 泰國料理|35.63512,139.70999||
+97|Pao Caravansarai|35.70585,139.68241||
+98|韓流安歡|35.67109,139.76144||
+##豬排|東京「炸豬排」百名店
+0|Tonkatsu Tonpachitei|35.70841,139.77374||
+1|東京とんかつ がぶう 上野御徒町店|35.70861,139.77412||
+2|Tonkatsu Narikura|35.69766,139.63872||這家是全東京炸豬排分數最高的
+3|Katsuyoshi Nihonbashi Ningyōchō|35.68623,139.78120||米其林指南「必比登推薦」
+4|Tonkatsu Nanaido|35.67182,139.71394||米其林指南「必比登推薦」
+5|Tonkatsu Hinata|35.71297,139.70749||米其林指南「必比登推薦」
+6|Mochi Buta Tonkatsu Taiyo|35.61881,139.70643||米其林指南「必比登推薦」
+7|Tonkatsu Aoki Ginza 8-chome branch|35.66822,139.76148||
+8|Tonkatsu Sugita|35.70644,139.79101||
+9|Tonkatsu Meguro Kogane|35.63395,139.71804||
+10|Tonkatsu Hasegawa Higashi Ginza|35.66773,139.76982||
+11|Ginza Katsukami|35.67071,139.76363||
+12|Fry家|35.71081,139.70379||
+13|燕楽炸豬排|35.57294,139.70418||
+14|丸五 豬排|35.69914,139.76973||
+15|Katsu Pulipo|35.69477,139.70298||
+16|Tonkatsu Yutaka|35.71177,139.79410||
+17|豚太|35.71547,139.70661||
+18|Maruyama|35.58574,139.72673||
+19|Tonkatsu Aoki Daimon|35.65880,139.75576||
+20|炸猪排憲進|35.70224,139.74089||
+21|Tonkatsu Enraku|35.57238,139.69486||
+22|炸豬排 武信|35.67030,139.68277||
+23|Nishimura|35.67067,139.76920||
+24|Tonkatsu Hasegawa|35.69503,139.79394||
+25|炸豬排 山一|35.69536,139.76857||
+26|炸豬排 鐵|35.59046,139.73207||
+27|Ponchi軒|35.69491,139.76397||
+28|炸豬排：他們要走這麼遠嗎？|35.66782,139.71723||
+29|Butagumi|35.66096,139.72214||
+30|Horiichi|35.66536,139.75563||
+31|豬排 あげづき|35.70132,139.74077||
+32|TONKATSU KEITA|35.70365,139.59579||
+33|tonkatsu.jp Omotesando|35.66442,139.70999||
+34|豬排 王龍|35.64487,139.72800||
+35|とんかつ 幻水豚(げんすいとん)|35.64335,139.67283||
+36|Tonpei|35.72126,139.78031||
+37|Agefuku|35.62602,139.72056||
+38|丸一 炸豬排餐廳|35.56153,139.72023||
+39|とんかつ檍 蒲田店|35.56045,139.71703||
+40|Masamune|35.67209,139.73998||
+41|Tonkatsu Iwai|35.65679,139.75273||
+42|Tonkatsu Jinenbo|35.57943,139.68948||
+##西班牙|東京「西班牙料理」百名店
+0|Arrocería La Panza|35.67341,139.77005||米其林指南「必比登推薦」
+1|Los Reyes Magos|35.67785,139.69237||米其林指南「必比登推薦」
+2|Arrocería Sal y Amor|35.65082,139.70348||米其林指南「必比登推薦」
+3|Zurriola|35.67013,139.76286||
+4|Pablo|35.64584,139.69640||
+5|ENEKO Tokyo|35.65831,139.72582||
+6|Bar Portillo de sal y amor|35.64720,139.69766||
+7|Girona|35.62292,139.72081||
+8|El Pescador|35.60804,139.67044||
+9|eman|35.68151,139.79942||
+10|Congusto|35.68459,139.78044||
+11|El Castellano|35.66083,139.70748||
+12|食堂aca|35.66232,139.74392||
+13|TINC GANA|35.68916,139.73525||
+14|la cocina de acá 1°|35.68685,139.77234||
+15|TOKi|35.66708,139.76052||
+16|Fonda Sant Jordi|35.64675,139.71214||
+17|Ginza Espero|35.67079,139.76357||
+18|Flowers & Spanish Sonrisa|35.56288,139.72269||
+19|Fermintxo|35.66081,139.72479||
+20|Casa Bella|35.69791,139.70131||
+21|Gracia|35.65073,139.72189||
+22|Tio Danjo|35.65117,139.54715||
+23|Estación|35.70064,139.74056||
+24|Mon-Rico|35.64838,139.74641||
+25|GinaGina|35.65980,139.72060||
+26|sardexka|35.71955,139.78106||
+27|MASIA|35.67401,139.76645||
+28|Bar Porteno|35.69542,139.81719||
+29|小笠原伯爵邸|35.69833,139.71751||
+30|エル ブエイ|35.70075,139.74100||
+31|Shirogane Bar|35.64461,139.72200||
+##漢堡|東京「漢堡」百名店
+0|Burger Mania - Shirokane|35.64437,139.72540||
+1|No.18 漢堡|35.73318,139.71794||
+2|Hide Mode|35.70531,139.75884||
+3|Shogun Burger Shinjuku|35.69408,139.70247||
+4|TEDDY BROWN|35.65024,139.71995||
+5|Authentic|35.66933,139.73871||
+6|Cannonball Diner|35.72203,139.78026||
+7|BROZERS’ Takeout Ningyocho|35.68654,139.78436||
+8|BROZERS’ Ningyocho|35.68720,139.78503||
+9|Old New Diner|35.69567,139.41907||
+10|CRUZ BURGERS & CRAFT BEERS|35.68810,139.72640||
+11|Burger Mania Ebisu|35.64599,139.71307||
+12|BLACOWS|35.64946,139.70713||
+13|WAGYU BURGER HIROKIYA|35.66171,139.73541||
+14|7025 Franklin Avenue|35.62590,139.72956||
+15|Martiniburger|35.70558,139.73109||
+16|Shake Tree|35.69721,139.80515||
+17|THE GRABBER|35.69536,139.76969||
+18|BROZERS’ Nihombashi Takashimaya|35.68139,139.77369||
+19|Jack 37 Burger|35.69215,139.77991||
+20|OVERWHELM HAMBURGER and BAR STAND|35.62954,139.69043||
+21|Crane Burgers & Milkshakes|35.70498,139.77143||
+22|The Great Burger|35.66622,139.70469||
+23|SHIOMI SKIPPERS'|35.66011,139.81585||
+24|burger kitchen CHATTY CHATTY|35.68881,139.71285||
+25|BROZERS’ Shintomi|35.67146,139.77238||
+26|Aldebaran|35.65381,139.73530||
+27|Fire House|35.70759,139.75816||
+28|魔女のちいさな森のハンバーガー / Witch's Burger|35.60846,139.67069||
+29|Juicy All Starz|35.74714,139.70427||
+30|Chillmatic|35.66300,139.69464||
+31|Munch's Burger Shack|35.65101,139.75183||
+32|Butcher's Table|35.75175,139.59379||
+33|AS CLASSICS DINER|35.62508,139.66748||
+34|atami|35.67739,139.73636||
+35|McLean|35.70501,139.79417||
+36|BOSSA BURGER|35.74769,139.80367||
+37|Reg-On Diner 渋谷本店|35.65555,139.70985||
+38|Burger POLICE|35.62066,139.68097||
+39|folk burgers & beers|35.69684,139.75561||
+40|HENRY'S BURGER Daikanyama|35.64740,139.70213||
+41|Viva la Burger|35.73468,139.70845||
+42|Baker Bounce Sangenjaya|35.64727,139.66740||
+43|JB's TOKYO|35.68280,139.70218||
+##麵包|東京「麵包」百名店
+0|Paris no Soranoshita|35.64217,139.65994||
+1|bricolage bread & co.|35.65922,139.70069||
+2|Shiomi Bakery|35.68358,139.69592||
+3|LE PAIN de Joël Robuchon NEWoMan新宿店|35.68902,139.70190||
+4|Oreno Bakery Ebisu|35.64322,139.71320||
+5|La Boutique de Joël Robuchon Yebisu Garden Place|35.64191,139.71453||
+6|Mon Cher Toyocho factory|35.67153,139.81398||
+7|AMAM DACOTAN|35.66451,139.71103||
+8|gentille|35.63593,139.70602||
+9|Parlour Ekoda|35.73986,139.67100||
+10|Le Grenier à Pain Ebisu|35.64664,139.70958||
+11|Cattlea|35.68705,139.79819||
+12|Liberté Pâtisserie Boulangerie Tokyo Kichijōji|35.70588,139.57732||
+13|Kono-hana|35.71688,139.79777||
+14|Brasserie VIRON|35.66090,139.69682||
+15|BURDIGALA TOKYO|35.68122,139.76701||
+16|M-SIZE|35.62849,139.68876||
+17|Cicoute Bakery|35.60772,139.37890||
+18|濱田家 三軒茶屋本店|35.64294,139.66683||
+19|Komugi-to-Kōbo Mitsuru|35.69278,139.72275||
+20|La Boutique de Joël Robuchon|35.66010,139.72938||
+21|Baguette Rabbit 自由之丘店|35.61152,139.67006||
+22|Boulangerie S.Igarashi|35.67378,139.80531||
+23|侯布雄LE PAIN 澀谷Hikarie ShinQ’s店|35.65906,139.70332||
+24|Bäckerei Brotheim|35.63496,139.64473||
+25|Gian Franco|35.62880,139.63484||
+26|Artisan Boulanger Cupido|35.60346,139.67388||
+27|La Boulangerie Django|35.68431,139.78955||
+28|Schomaker|35.61108,139.68457||
+29|Minna no Panya|35.67877,139.76505||
+30|Maison Landemaine Azabudai|35.66085,139.73836||
+31|Nezu no Pan|35.71828,139.76541||
+32|Boulangerie Ken|35.77118,139.64562||
+33|Bakery Bank|35.68175,139.77879||
+34|TOLO PAN TOKYO|35.65012,139.68552||
+35|365日|35.66977,139.68956||
+36|Beaver Bread|35.69093,139.78238||
+37|鵜鶘麵包店（パンのペリカン）|35.70855,139.79135||
+38|365 Days & Nihonbashi|35.68137,139.77340||
+39|Comme'N 東京|35.60578,139.66187||
+40|Pain des Philosophes|35.70513,139.73787||
+41|Boulangerie Sooseeji|35.70360,139.60685||
+42|Kougnane no Mise|35.67447,139.76300||
+43|L'atelier de Plaisir|35.64167,139.60570||
+44|griotte|35.62873,139.66332||
+45|ianak|35.73156,139.76454||
+46|BAKERY SASA|35.67512,139.66897||
+47|nemo bakery & café|35.61925,139.70286||
+48|Hillside Pantry 代官山|35.64872,139.70011||
+49|AOSAN|35.66060,139.58298||
+50|Gontran Cherrier 東京青山店|35.66279,139.70948||
+51|ENTUKO|35.70637,139.59610||
+52|Main Mano|35.67017,139.68135||
+53|侯布雄精品店 丸之內紅磚廣場店|35.67838,139.76258||
+54|Comme’N Tokyo|35.66166,139.74077||
+55|Boulangerie Passage à Niveau|35.70199,139.54657||
+56|可頌 麵包咖啡店IKEDAYAMA|35.62880,139.72521||
+57|TOLO COFFEE AND BAKERY|35.65895,139.66273||
+58|法式麵包 POINT ET LIGNE|35.68233,139.76386||
+59|Levain|35.66774,139.68579||
+60|Dans Dix Ans|35.70648,139.57609||
+61|Le Grenier à Pain 麴町店|35.68564,139.74174||
+62|breadworks Omotesando|35.66302,139.71238||
+63|Zopf Curry Pan Senmonten|35.68183,139.76677||
+64|TRASPARENTE Nakameguro|35.64261,139.69847||
+65|Pointage|35.65363,139.73563||
+66|Bricolage bread & co.|35.65919,139.72824||
+67|tecona bagel works|35.66874,139.68912||
+68|RITUEL LE GRAIN DE BLE Isetan Shinjuku store|35.69157,139.70465||
+69|Mikazuki-dō|35.64523,139.66965||
+70|Pomme de terre|35.70733,139.59546||
+71|FACTORY|35.69317,139.74354||
+72|TRASPARENTE Gakugeidai|35.62979,139.68514||
+73|Bakery Donsuke|35.69841,139.71095||
+74|Brasserie Viron Marunouchi|35.67866,139.76517||
+75|Centre The Bakery|35.66275,139.70925||
+76|Boulangerie Seiji Asakura|35.63600,139.73332||
+77|Shigekuniya 55 Bakery|35.70612,139.64900||
+78|JUNIBUN BAKERY Shinjuku 面包店|35.69078,139.69957||
+79|Du Pain et Des Gâteaux Les Initiés|35.72060,139.76420||
+80|HIMMEL|35.60670,139.68609||
+81|Le Petit Mec Hibiya|35.67332,139.76010||
+82|itokito|35.61016,139.68506||
+83|Think|35.72228,139.77103||
+84|Shikataramukana|35.70021,139.73940||
+85|Jensen|35.66998,139.68729||
+86|L'Atelier du Pain Roppongi|35.66232,139.73152||
+87|麵包 BOULANGERIE BURDIGALA|35.65108,139.72371||
+88|Shimodaryu|35.79111,139.65806||
+89|Le Ressort|35.65918,139.68261||
+90|Boulangerie Bonnet D'ane|35.65010,139.67440||
+91|Boulangerie Sudo|35.64377,139.65488||
+92|Katane 烘焙屋|35.67352,139.68201||
+93|Linde Kichijōji|35.70555,139.58062||
+94|Centre The Bakery|35.67553,139.76660||
+95|Boule Beurre Boulangerie|35.66058,139.33375||
+96|福南梅森 日本橋三越店|35.68497,139.77418||
+97|Machino Parlour|35.74352,139.67528||
+98|pain･maison Sumida Asakusa Dori Street|35.70866,139.80239||
+99|Manufacture|35.71235,139.79947||

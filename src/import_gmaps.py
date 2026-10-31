@@ -26,17 +26,24 @@ def cat(n):
     return '甜點'
 
 added = skipped = 0
+fcat = lst = ''
 for line in open(src, encoding='utf-8'):
     line = line.rstrip('\n')
     if not line: continue
-    _, n, ll, addr = line.split('|', 3)
+    if line.startswith('##'):
+        fcat, lst = line[2:].split('|', 1); label = '來自 Google 地圖清單「' + lst + '」'; url = lst; continue
+    _, n, ll, addr, *rest = line.split('|')
+    note = (rest[0] + '。' if rest and rest[0] else '') + label
     lat, lng = map(float, ll.split(','))
     if re.match(r'^\d+-ch', n): skipped += 1; continue  # bare address pin, not a shop
     key = re.sub(r'\s+', '', n).lower()
     if any((key == re.sub(r'\s+', '', p['name']).lower() and dist(lat, lng, p['lat'], p['lng']) < 300) or (dist(lat, lng, p['lat'], p['lng']) < 25 and key[:4] in re.sub(r'\s+', '', p['name']).lower()) for p in P):
+        for p in P:
+            if p.get('from') and dist(lat, lng, p['lat'], p['lng']) < 300 and re.sub(r'\s+', '', p['name']).lower() == key and lst not in p['note']:
+                p['note'] += '；也在「' + lst + '」'
         print('dup', n); skipped += 1; continue
-    P.append({'name': n, 'jp': '', 'cat': cat(n), 'area': area(lat, lng), 'addr': addr.strip().rstrip(','), 'lat': lat, 'lng': lng,
-              'note': label, 'hours': '', 'src': 'https://www.google.com/maps/search/?api=1&query=' + urllib.parse.quote(n) + f'&center={lat},{lng}', 'from': url})
+    P.append({'name': n, 'jp': '', 'cat': fcat or cat(n), 'area': area(lat, lng), 'addr': addr.strip().rstrip(','), 'lat': lat, 'lng': lng,
+              'note': note, 'hours': '', 'src': 'https://www.google.com/maps/search/?api=1&query=' + urllib.parse.quote(n) + f'&center={lat},{lng}', 'from': url})
     added += 1
 json.dump(d, open('places.json', 'w'), ensure_ascii=False, indent=1)
 print('added', added, 'skipped', skipped, 'total', len(P))
