@@ -32,9 +32,9 @@ for line in open(src, encoding='utf-8'):
     if not line: continue
     if line.startswith('##'):
         fcat, lst = line[2:].split('|', 1); label = '來自 Google 地圖清單「' + lst + '」'; url = lst; continue
-    _, n, ll, addr, *rest = line.split('|')
-    note = (rest[0] + '。' if rest and rest[0] else '') + label
-    lat, lng = map(float, ll.split(','))
+    m = re.match(r'^\d+\|(.*)\|(-?[\d.]+),(-?[\d.]+)\|([^|]*)(?:\|(.*))?$', line)
+    n, lat, lng, addr, extra = m.group(1), float(m.group(2)), float(m.group(3)), m.group(4), m.group(5)
+    note = (extra + '。' if extra else '') + label
     if re.match(r'^\d+-ch', n): skipped += 1; continue  # bare address pin, not a shop
     key = re.sub(r'\s+', '', n).lower()
     if any((key == re.sub(r'\s+', '', p['name']).lower() and dist(lat, lng, p['lat'], p['lng']) < 300) or (dist(lat, lng, p['lat'], p['lng']) < 25 and key[:4] in re.sub(r'\s+', '', p['name']).lower()) for p in P):

@@ -10,11 +10,11 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-192.png">
-<script src="config.js?v=963d358f26"></script>
+<script src="config.js?v=ab5dd4f332"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="shim.js?v=963d358f26"></script>
-<script>window.APP_V='963d358f26';
+<script src="shim.js?v=ab5dd4f332"></script>
+<script>window.APP_V='ab5dd4f332';
 // Pages that stay open pick up a new version on their own: check every minute and whenever the app comes back to the screen.
 (function(){let busy=false;const check=()=>{if(busy||document.hidden)return;busy=true;
   fetch('version.json?ts='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j&&j.v&&j.v!==window.APP_V)location.replace(location.pathname+'?v='+j.v)}).catch(()=>{}).finally(()=>{busy=false})};
@@ -973,7 +973,7 @@ const plNorm=t=>(t||'').replace(/淺/g,'浅').replace(/榮/g,'栄').replace(/豐
 const plHead=t=>plNorm((t||'').split(/[ （(]/)[0]);
 const PL_ANY=/^(美食|吃的?|餐廳|食物|好吃的?|午餐|晚餐|早餐|宵夜|吃飯)?$/;
 const plText=p=>[p.name,p.jp,p.cat,p.area,p.note].join(' ');
-const PL_MEAL=/^(美食|吃的?|餐廳|食物|午餐|晚餐|宵夜|吃飯)$/,PL_SNACK=/^(甜點|咖啡|麵包)$/;
+const PL_MEAL=/^(美食|吃的?|餐廳|食物|午餐|晚餐|宵夜|吃飯)$/,PL_SNACK=/^(甜點|咖啡|麵包|和菓子|冰淇淋)$/;
 const plPick=(l,q)=>{if(q)return l.slice(0,8);const a=[],b=[];l.forEach(x=>(x.p.from?b:a).push(x));const r=[...a.slice(0,5),...b.slice(0,3)];return [...r,...l.filter(x=>!r.includes(x))].slice(0,8).sort((x,y)=>x.d-y.d)};
 const plMatch=(p,q)=>{if(PL_MEAL.test(q)&&PL_SNACK.test(p.cat||''))return false;if(PL_ANY.test(q))return true;const t=plText(p);if(t.includes(q))return true;
   for(const k in PL_SYN){if(q.includes(k)||k.includes(q)){if(t.includes(k)||PL_SYN[k].split(' ').some(w=>t.includes(w)))return true}}return false};

@@ -10,7 +10,7 @@ const plNorm=t=>(t||'').replace(/淺/g,'浅').replace(/榮/g,'栄').replace(/豐
 const plHead=t=>plNorm((t||'').split(/[ （(]/)[0]);
 const PL_ANY=/^(美食|吃的?|餐廳|食物|好吃的?|午餐|晚餐|早餐|宵夜|吃飯)?$/;
 const plText=p=>[p.name,p.jp,p.cat,p.area,p.note].join(' ');
-const PL_MEAL=/^(美食|吃的?|餐廳|食物|午餐|晚餐|宵夜|吃飯)$/,PL_SNACK=/^(甜點|咖啡|麵包)$/;
+const PL_MEAL=/^(美食|吃的?|餐廳|食物|午餐|晚餐|宵夜|吃飯)$/,PL_SNACK=/^(甜點|咖啡|麵包|和菓子|冰淇淋)$/;
 const plPick=(l,q)=>{if(q)return l.slice(0,8);const a=[],b=[];l.forEach(x=>(x.p.from?b:a).push(x));const r=[...a.slice(0,5),...b.slice(0,3)];return [...r,...l.filter(x=>!r.includes(x))].slice(0,8).sort((x,y)=>x.d-y.d)};
 const plMatch=(p,q)=>{if(PL_MEAL.test(q)&&PL_SNACK.test(p.cat||''))return false;if(PL_ANY.test(q))return true;const t=plText(p);if(t.includes(q))return true;
   for(const k in PL_SYN){if(q.includes(k)||k.includes(q)){if(t.includes(k)||PL_SYN[k].split(' ').some(w=>t.includes(w)))return true}}return false};
