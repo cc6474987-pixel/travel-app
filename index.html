@@ -10,15 +10,19 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-192.png">
-<script src="config.js?v=ab5dd4f332"></script>
+<script src="config.js?v=952db54980"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="shim.js?v=ab5dd4f332"></script>
-<script>window.APP_V='ab5dd4f332';
+<script src="shim.js?v=952db54980"></script>
+<script>window.APP_V='952db54980';
 // Pages that stay open pick up a new version on their own: check every minute and whenever the app comes back to the screen.
 (function(){let busy=false;const check=()=>{if(busy||document.hidden)return;busy=true;
-  fetch('version.json?ts='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j&&j.v&&j.v!==window.APP_V)location.replace(location.pathname+'?v='+j.v)}).catch(()=>{}).finally(()=>{busy=false})};
-  setInterval(check,60000);document.addEventListener('visibilitychange',check);window.addEventListener('focus',check)})();</script>
+  fetch('version.json?ts='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j&&j.v&&j.v!==window.APP_V){pend=j.v;tryGo()}}).catch(()=>{}).finally(()=>{busy=false})};
+  // A new version waits until nobody is touching the app (2 minutes idle, or the app is switched away and back), then reloads on the same tab and day.
+  let pend=null,last=Date.now();['pointerdown','keydown','scroll','touchstart'].forEach(t=>window.addEventListener(t,()=>{last=Date.now()},{passive:true,capture:true}));
+  const go=()=>{try{const s=dcComp&&dcComp.state;if(s)sessionStorage.setItem('trip-resume',JSON.stringify({tab:s.tab,day:s.day,mode:s.mode}))}catch(e){}location.replace(location.pathname+'?v='+pend)};
+  const tryGo=()=>{if(!pend)return;let open=false;try{open=!!(dcComp&&dcComp.state&&(dcComp.state.sheet||dcComp.state.drag))||!!document.getElementById('admin-gate')}catch(e){}if(!open&&(document.hidden||Date.now()-last>120000))go()};
+  setInterval(()=>{check();tryGo()},60000);document.addEventListener('visibilitychange',()=>{if(document.hidden)tryGo();else check()});window.addEventListener('focus',check)})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Travel App 東京河口湖</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -569,6 +573,15 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
                   </div>
                 </sc-if>
                 <div style="display:flex;flex-direction:column;gap:10px;background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:16px;padding:14px">
+                  <span style="font:500 12px 'Noto Sans TC';color:#6f685e">抵達時間</span>
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <input id="fix-in" type="time" value="{{ sel.fixVal }}" onChange="{{ sel.setFix }}" style="height:44px;border-radius:12px;border:1.5px solid rgba(34,31,26,.18);background:#fffdf9;padding:0 12px;font:600 17px 'JetBrains Mono',monospace;color:#221f1a;outline:none">
+                    <sc-if value="{{ sel.isFix }}"><button onClick="{{ sel.clrFix }}" style="height:40px;padding:0 12px;border-radius:11px;border:1px solid rgba(34,31,26,.18);background:transparent;font:500 13px 'Noto Sans TC';color:#221f1a;cursor:pointer">取消固定</button></sc-if>
+                    <sc-if value="{{ sel.notFix }}"><button onClick="{{ sel.pinNow }}" style="height:40px;padding:0 12px;border-radius:11px;border:0;background:#221f1a;font:500 13px 'Noto Sans TC';color:#fff;cursor:pointer">固定這個時間</button></sc-if>
+                  </div>
+                  <div style="font:400 12px/1.5 'Noto Sans TC';color:#4d473f">{{ sel.fixNote }}</div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:10px;background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:16px;padding:14px">
                   <div style="display:flex;justify-content:space-between;align-items:center">
                     <span style="font:500 12px 'Noto Sans TC';color:#6f685e">停留時間</span>
                     <span style="font:400 11.5px 'Noto Sans TC';color:oklch(0.45 0.11 255)">{{ sel.recLabel }}</span>
@@ -586,7 +599,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
                   <sc-if value="{{ sel.hasWarn }}">
                     <div style="display:flex;gap:8px;align-items:center;padding:9px 11px;border-radius:11px;background:oklch(0.96 0.03 40)">
                       <span style="flex:1;font:400 12px/1.5 'Noto Sans TC';color:oklch(0.42 0.13 35)">{{ sel.warn }}</span>
-                      <button onClick="{{ sel.fix }}" style="flex:none;height:30px;padding:0 10px;border:0;border-radius:9px;background:oklch(0.5 0.14 35);color:#fff;font:500 12px 'Noto Sans TC';cursor:pointer;white-space:nowrap">自動調整</button>
+                      <sc-if value="{{ sel.hasFixBtn }}"><button onClick="{{ sel.fix }}" style="flex:none;height:30px;padding:0 10px;border:0;border-radius:9px;background:oklch(0.5 0.14 35);color:#fff;font:500 12px 'Noto Sans TC';cursor:pointer;white-space:nowrap">自動調整</button></sc-if>
                     </div>
                   </sc-if>
                 </div>
@@ -963,6 +976,8 @@ const askAdmin=(why,fn,always)=>{if(ADMIN_OK&&!always)return fn();const w=docume
     if(h===ADMIN_H){ADMIN_OK=true;try{sessionStorage.setItem('trip-admin',h)}catch(e){}w.remove();fn()}else{err.textContent='密碼不對，請再試一次';inp.value='';inp.focus()}};
   w.querySelector('#adm-ok').onclick=ok;inp.onkeydown=e=>{if(e.key==='Enter')ok()};w.querySelector('#adm-no').onclick=()=>w.remove();
   w.onclick=e=>{if(e.target===w)w.remove()}};
+const pinWaits=d=>{let t=tm(d.start||'09:00');const n=d.items.length;d.items.forEach((it,i)=>{const fx=it.fix?tm(it.fix):null,at=fx!=null?Math.max(t,fx):t+(it.wait||0);
+  if(!it.fix&&(it.wait||0)>4){it.fix=ft(at);it.wait=0}else if(it.fix&&it.wait)it.wait=0;t=at+it.stay+(i<n-1&&it.leg?mins(it.leg):0)})};
 const getLoc=()=>new Promise(res=>{try{if(!navigator.geolocation)return res({err:'none'});navigator.geolocation.getCurrentPosition(p=>res({lat:p.coords.latitude,lng:p.coords.longitude,acc:p.coords.accuracy}),e=>res({err:e&&e.code===1?'denied':'fail'}),{enableHighAccuracy:true,timeout:10000,maximumAge:120000})}catch(e){res({err:'none'})}});
 let PLDATA=null;
 const getPlData=async()=>{if(PLDATA)return PLDATA;try{const r=await fetch('places.json',{cache:'no-cache'});PLDATA=await r.json()}catch(e){PLDATA={places:[],stops:{}}}return PLDATA};
@@ -992,7 +1007,7 @@ class Component extends DCLogic {
   constructor(p){super(p);const C=clockOf(null,0),m=C.trip?'trip':'plan',L=lsGet();if(Array.isArray(L.people)&&L.people.length)setPeopleG(L.people);
     this.state={people:Array.isArray(L.people)&&L.people.length?L.people:PEOPLE0,newName:'',sim:null,mode:m,tab:m==='trip'?'today':'plan',day:m==='trip'?C.today:0,days:L.plan&&Array.isArray(L.plan.days)?L.plan.days:clone(DAYS),delay:0,elapsed:15,sheet:null,sel:null,drag:null,
       exps:L.exps||EXPS.slice(),checked:L.checked||{},packX:L.packX||[],packNew:{},cur:'JPY',
-      form:{t:'',amt:'',payer:ALL[0],cat:'餐飲',with:ALL.slice(),cur:'JPY'},errs:{},toast:'',phrase:0,ticket:0,moneyView:'list',settled:L.settled||[],aiDone:{},catTouched:false,pl:null,draft:L.plan&&L.plan.draft||false,trText:'',trRes:null,trLoading:false,trErr:'',sync:'local',delArm:null,addQ:'',sr:null,srLoading:false,srErr:'',nearMe:false,myPlaces:[],np:null};
+      form:{t:'',amt:'',payer:ALL[0],cat:'餐飲',with:ALL.slice(),cur:'JPY'},errs:{},toast:'',phrase:0,ticket:0,moneyView:'list',settled:L.settled||[],aiDone:(()=>{try{return JSON.parse(localStorage.getItem('trip-aidone')||'{}')}catch(e){return {}}})(),catTouched:false,pl:null,draft:L.plan&&L.plan.draft||false,trText:'',trRes:null,trLoading:false,trErr:'',sync:'local',delArm:null,addQ:'',sr:null,srLoading:false,srErr:'',nearMe:false,myPlaces:[],np:null};
     this.mine=new Set();this.q=Promise.resolve();}
   componentDidMount(){
     this.iv=setInterval(()=>this.tick(),1000);this.initStore();
@@ -1039,7 +1054,7 @@ class Component extends DCLogic {
   async initStore(){let db=null;try{db=window.claude&&window.claude.use?await window.claude.use('db'):null}catch(e){}
     if(!db)return;this.db=db;let first=true;const warn=e=>console.warn('db',e);
     db.doc('shared/plan').onSnapshot(snap=>{if(this.pt||this.saving||snap.metadata.hasPendingWrites)return;const d=snap.exists?snap.data():null;
-      const days=d&&Array.isArray(d.days)?clone(d.days):clone(DAYS),before=JSON.stringify(days);days.forEach(x=>this.relink(x.items));
+      const days=d&&Array.isArray(d.days)?clone(d.days):clone(DAYS),before=JSON.stringify(days);days.forEach(x=>{this.relink(x.items);pinWaits(x)});
       this.setState({sync:'shared',days,draft:d?d.draft||false:false});if(d&&JSON.stringify(days)!==before)this.savePlan()},warn);
     db.collection('packitems').onSnapshot(qs=>{this.setState({packX:qs.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(a.ts||0)-(b.ts||0))})},warn);
     db.doc('shared/pack').onSnapshot(snap=>{const d=snap.exists?snap.data():null;this.setState({checked:d&&d.checked?{...d.checked}:{}})},warn);
@@ -1069,7 +1084,7 @@ class Component extends DCLogic {
         it.leg=it.p&&nx.p&&!it.pe&&!nx.pe?posLeg(it,nx,dm):estLeg(it,nx,dm);if(keep&&it.leg.mode!=='flight')it.leg.mode=keep}
       const from=pv?pv.title:null;if(it.from!==from){it.wait=0;it.from=from}})}
   sched(di){const s=this.state,d=s.days[di],n=d.items.length;let t=tm(d.start);
-    const out=d.items.map((it,i)=>{const at=t+(it.wait||0),lm=it.leg?mins(it.leg):0;t=at+it.stay+(i<n-1?lm:0);return{...it,at,dep:at+it.stay,lm}});
+    const out=d.items.map((it,i)=>{const fx=it.fix?tm(it.fix):null,at=fx!=null?Math.max(t,fx):t+(it.wait||0),late=fx!=null&&t>fx?t-fx:0,gap=at-t,lm=it.leg?mins(it.leg):0;t=at+it.stay+(i<n-1?lm:0);return{...it,at,dep:at+it.stay,lm,late,gap}});
     if(s.mode==='trip'&&di===TODAY)out.forEach(o=>{if(o.at>NOW){o.at+=s.delay;o.dep+=s.delay}else if(o.dep>NOW)o.dep+=s.delay});
     return out}
   edit(di,fn,extra){this.setState(st=>{const days=clone(st.days);fillPos(days[di].items);fn(days[di].items);return{days,...(extra||{})}});this.savePlan()}
@@ -1165,19 +1180,19 @@ class Component extends DCLogic {
     const leave=next?next.at-(prevT?prevT.lm:0):0;
     const left=Math.max(0,leave*60-NOWSEC);
     const open=(di,i)=>()=>{if(this.dragged)return;this.setState({sheet:'stop',sel:{di,i}})};
-    const warnOf=it=>it.close&&it.dep>tm(it.close)&&it.at<tm(it.close)+60?{short:'會超過 '+it.close+' 打烊／截止',long:'離開時間 '+ft(it.dep)+' 超過 '+it.close+'（依你的備註），建議停留 '+Math.max(5,tm(it.close)-it.at)+' 分以內。',fix:Math.max(5,tm(it.close)-it.at)}:null;
+    const warnOf=it=>it.late>0?{short:'比固定的 '+it.fix+' 晚 '+it.late+' 分',long:'照前面的停留和移動，會在 '+ft(it.at)+' 才到，比固定的 '+it.fix+' 晚 '+it.late+' 分。可以縮短前面的停留，或改這站的固定時間。'}:it.close&&it.dep>tm(it.close)&&it.at<tm(it.close)+60?{short:'會超過 '+it.close+' 打烊／截止',long:'離開時間 '+ft(it.dep)+' 超過 '+it.close+'（依你的備註），建議停留 '+Math.max(5,tm(it.close)-it.at)+' 分以內。',fix:Math.max(5,tm(it.close)-it.at)}:null;
     const d=s.drag;
     const mk=(di,arr,dragList)=>(it,i)=>{const done=trip&&(di<TODAY||(di===TODAY&&it.dep<=NOW)),isNext=trip&&di===TODAY&&i===nextIdx,c=tc(it.type),w=warnOf(it),lg=it.leg;
       let tf='none',z=1,shadow='none';
       if(dragList&&d){if(i===d.i){tf='translateY('+d.dy+'px) scale(1.02)';z=5;shadow='0 14px 32px rgba(40,30,20,.22)'}else if(d.i<d.over&&i>d.i&&i<=d.over)tf='translateY(-'+d.h+'px)';else if(d.i>d.over&&i>=d.over&&i<d.i)tf='translateY('+d.h+'px)'}
       const nxt=arr[i+1];
       return{...it,time:ft(it.at),color:c,dot:done?c:'#f7f4ef',done,isNext,opacity:done?.55:1,
-        stayLabel:[it.rating?'★'+it.rating:'',it.stay?'停留 '+it.stay+' 分':''].filter(Boolean).join(' · '),hasWarn:!!w,warnShort:w?w.short:'',
+        stayLabel:[it.fix?'📌 固定 '+it.fix:'',it.rating?'★'+it.rating:'',it.stay?'停留 '+it.stay+' 分':''].filter(Boolean).join(' · '),hasWarn:!!w,warnShort:w?w.short:'',
         border:w?'oklch(0.6 0.14 35)':isNext?'oklch(0.52 0.14 40)':'rgba(34,31,26,.1)',
         hasMove:!!lg&&lg.mode!=='flight'&&!!nxt,legs:lg&&lg.mode!=='flight'?this.legChips(di,i,lg):[],
         hasFixed:!!lg&&lg.mode==='flight',fixedText:lg?'飛機 '+Math.floor(lg.real/60)+' 小時 '+(lg.real%60)+' 分（含時差）· '+lg.note:'',
         hasLegNote:!!lg&&lg.mode!=='flight'&&(!!lg.note||!!lg.est)&&!!nxt,legNote:lg?(lg.est?'移動後重新估算，出發前請用地圖確認':lg.mode===lg.orig?lg.note:'改為'+(MODES.find(m=>m[0]===lg.mode)||['',''])[1]+'・原本：'+lg.label+(lg.note?'，'+lg.note:'')):'',
-        hasWait:!!(nxt&&nxt.wait>4),wait:nxt?nxt.wait:0,
+        hasWait:!!(nxt&&nxt.gap>4),wait:nxt?nxt.gap:0,
         tf,z,tr:d&&dragList&&i===d.i?'none':'transform .18s ease',shadow,cursor:d?'grabbing':'pointer',
         down:dragList?e=>{if(e.pointerType==='touch'||e.button>0)return;const y=e.clientY;this.press={i,y,x:e.clientX,t:setTimeout(()=>this.startDrag(i,y),380)}}:null,
         tdown:dragList?e=>{const t=e.touches[0];if(!t)return;clearTimeout(this.press&&this.press.t);this.press={i,y:t.clientY,x:t.clientX,t:setTimeout(()=>this.startDrag(i,t.clientY),350)}}:null,
@@ -1212,6 +1227,10 @@ class Component extends DCLogic {
     let selV={};
     if(s.sel&&s.days[s.sel.di]&&s.days[s.sel.di].items[s.sel.i]){const {di,i}=s.sel,ss=this.sched(di),it=ss[i],pv=i>0?ss[i-1]:null,r=it.rec||REC[it.type]||[45,75],w=warnOf(it),nx=ss[i+1];
       selV={...it,color:tc(it.type),span:ft(it.at)+' 抵達 · '+ft(it.dep)+' 離開',stay:it.stay,
+        isFix:!!it.fix,notFix:!it.fix,fixVal:it.fix||ft(it.at),fixNote:it.fix?'固定在 '+it.fix+' 抵達，前面怎麼改都不會推動這站':'目前跟著前一站推算，設定後就固定在這個時間',
+        setFix:e=>{const v=e.target.value;if(!/^\d\d:\d\d$/.test(v))return;this.edit(di,l=>{l[i].fix=v;l[i].wait=0});this.flash('已固定在 '+v+' 抵達')},
+        pinNow:()=>{const v=ft(it.at);this.edit(di,l=>{l[i].fix=v;l[i].wait=0});this.flash('已固定在 '+v+' 抵達')},
+        clrFix:()=>{this.edit(di,l=>{delete l[i].fix;l[i].wait=0});this.flash('已取消固定，改跟著前一站推算')},
         hasAddr:!!it.addr,addrLine:(it.rating?'★ '+it.rating+'　':'')+it.addr,
         hasIn:!!(pv&&pv.leg&&pv.leg.mode!=='flight'),prevTitle:pv?pv.title:'',inLegs:pv&&pv.leg&&pv.leg.mode!=='flight'?this.legChips(di,i-1,pv.leg):[],
         recLabel:'建議 '+r[0]+'–'+r[1]+' 分',
@@ -1219,7 +1238,7 @@ class Component extends DCLogic {
         presets:[30,60,90,120].map(v=>({label:v+'',onClick:()=>this.setStay(di,i,v),bg:it.stay===v?INK:'transparent',color:it.stay===v?'#fff':INK,border:it.stay===v?INK:'rgba(34,31,26,.15)'})),
         applyRec:()=>{this.setStay(di,i,Math.round((r[0]+r[1])/2/5)*5);this.flash('已套用建議停留時間')},
         impact:nx?'下一站「'+nx.title+'」'+ft(nx.at)+' 抵達 · 當天 '+ft(ss[ss.length-1].dep)+' 結束':'當天行程 '+ft(it.dep)+' 結束',
-        hasWarn:!!w,warn:w?w.long:'',fix:()=>{if(w){this.setStay(di,i,w.fix);this.flash('已調整停留為 '+w.fix+' 分')}}};}
+        hasWarn:!!w,warn:w?w.long:'',fix:()=>{if(w&&w.fix){this.setStay(di,i,w.fix);this.flash('已調整停留為 '+w.fix+' 分')}},hasFixBtn:!!(w&&w.fix)};}
     const sheet=s.sheet, ai=AI[s.day];
     const aq=s.addQ.trim(),seen={},sugPool=aq?SUGGEST.flat():(SUGGEST[s.day]||[]);
     const localSug=sugPool.filter(([t,sub])=>!seen[t]&&(seen[t]=1)&&(!aq||t.includes(aq)||sub.includes(aq))).map(([t,sub,type])=>({title:t,sub,type,color:tc(type),
@@ -1314,7 +1333,7 @@ class Component extends DCLogic {
       withChips:[(()=>{const on=f.with.length===ALL.length;return{label:'全部',bg:on?INK:'#fffdf9',color:on?'#fff':INK,border:on?INK:'rgba(34,31,26,.15)',onClick:()=>this.setState(st=>({form:{...st.form,with:st.form.with.length===ALL.length?[]:ALL.slice()},errs:{...st.errs,with:''}}))}})()].concat(PEOPLE.map(p=>{const on=f.with.includes(p.id);return{label:p.n||'?',bg:on?p.bg:'#fffdf9',color:on?'#fff':INK,border:on?p.bg:'rgba(34,31,26,.15)',
         onClick:()=>this.setState(st=>{const w=st.form.with.includes(p.id)?st.form.with.filter(x=>x!==p.id):ALL.filter(x=>x===p.id||st.form.with.includes(x));return{form:{...st.form,with:w},errs:{...st.errs,with:''}}})}})),
       presence:shared?'與旅伴共用：改行程、記帳、勾清單都會即時同步':'目前只存在這台裝置，連上網路後會和旅伴同步',
-      showAi:!!ai&&!s.aiDone[s.day],
+      showAi:(()=>{try{localStorage.setItem('trip-aidone',JSON.stringify(s.aiDone||{}))}catch(e){}return !!ai&&!s.aiDone[s.day]})(),
       ai:ai?{...ai,applyLabel:ai.info?'知道了':'套用',
         apply:()=>{const dd=s.day;if(ai.info)return this.setState(st=>({aiDone:{...st.aiDone,[dd]:true}}));
           this.edit(dd,l=>{const pi=l.findIndex(x=>/PARCO/.test(x.title)),si=l.findIndex(x=>/SHIPS/.test(x.title));if(pi>=0)l[pi].stay+=20;if(si>=0){l.splice(si,1)}this.relink(l)},{aiDone:{...s.aiDone,[dd]:true}});this.flash('已套用：SHIPS 移除、PARCO 40 分')},
@@ -1333,6 +1352,7 @@ dcRoot=kids([...document.getElementById('tpl').content.childNodes]);
  document.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false})}
 
 dcComp=new Component({showTWD:true});dcDraw();dcComp.componentDidMount();
+try{const r=JSON.parse(sessionStorage.getItem('trip-resume')||'null');if(r){sessionStorage.removeItem('trip-resume');dcComp.setState(r)}}catch(e){}
 </script>
 </body>
 </html>

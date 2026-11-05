@@ -35,8 +35,12 @@ head_extra = """<meta charset="utf-8">
 <script>window.APP_V='__V__';
 // Pages that stay open pick up a new version on their own: check every minute and whenever the app comes back to the screen.
 (function(){let busy=false;const check=()=>{if(busy||document.hidden)return;busy=true;
-  fetch('version.json?ts='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j&&j.v&&j.v!==window.APP_V)location.replace(location.pathname+'?v='+j.v)}).catch(()=>{}).finally(()=>{busy=false})};
-  setInterval(check,60000);document.addEventListener('visibilitychange',check);window.addEventListener('focus',check)})();</script>
+  fetch('version.json?ts='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j&&j.v&&j.v!==window.APP_V){pend=j.v;tryGo()}}).catch(()=>{}).finally(()=>{busy=false})};
+  // A new version waits until nobody is touching the app (2 minutes idle, or the app is switched away and back), then reloads on the same tab and day.
+  let pend=null,last=Date.now();['pointerdown','keydown','scroll','touchstart'].forEach(t=>window.addEventListener(t,()=>{last=Date.now()},{passive:true,capture:true}));
+  const go=()=>{try{const s=dcComp&&dcComp.state;if(s)sessionStorage.setItem('trip-resume',JSON.stringify({tab:s.tab,day:s.day,mode:s.mode}))}catch(e){}location.replace(location.pathname+'?v='+pend)};
+  const tryGo=()=>{if(!pend)return;let open=false;try{open=!!(dcComp&&dcComp.state&&(dcComp.state.sheet||dcComp.state.drag))||!!document.getElementById('admin-gate')}catch(e){}if(!open&&(document.hidden||Date.now()-last>120000))go()};
+  setInterval(()=>{check();tryGo()},60000);document.addEventListener('visibilitychange',()=>{if(document.hidden)tryGo();else check()});window.addEventListener('focus',check)})();</script>
 """
 out_html = "<!doctype html>\n<html lang=\"zh-Hant\">\n<head>\n" + head_extra + page.replace("<template id=\"tpl\">", "</head>\n<body>\n<template id=\"tpl\">", 1) + "</body>\n</html>\n"
 import hashlib
