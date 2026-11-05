@@ -10,11 +10,11 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-192.png">
-<script src="config.js?v=952db54980"></script>
+<script src="config.js?v=69cd6be6c1"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="shim.js?v=952db54980"></script>
-<script>window.APP_V='952db54980';
+<script src="shim.js?v=69cd6be6c1"></script>
+<script>window.APP_V='69cd6be6c1';
 // Pages that stay open pick up a new version on their own: check every minute and whenever the app comes back to the screen.
 (function(){let busy=false;const check=()=>{if(busy||document.hidden)return;busy=true;
   fetch('version.json?ts='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j&&j.v&&j.v!==window.APP_V){pend=j.v;tryGo()}}).catch(()=>{}).finally(()=>{busy=false})};
@@ -1333,7 +1333,7 @@ class Component extends DCLogic {
       withChips:[(()=>{const on=f.with.length===ALL.length;return{label:'全部',bg:on?INK:'#fffdf9',color:on?'#fff':INK,border:on?INK:'rgba(34,31,26,.15)',onClick:()=>this.setState(st=>({form:{...st.form,with:st.form.with.length===ALL.length?[]:ALL.slice()},errs:{...st.errs,with:''}}))}})()].concat(PEOPLE.map(p=>{const on=f.with.includes(p.id);return{label:p.n||'?',bg:on?p.bg:'#fffdf9',color:on?'#fff':INK,border:on?p.bg:'rgba(34,31,26,.15)',
         onClick:()=>this.setState(st=>{const w=st.form.with.includes(p.id)?st.form.with.filter(x=>x!==p.id):ALL.filter(x=>x===p.id||st.form.with.includes(x));return{form:{...st.form,with:w},errs:{...st.errs,with:''}}})}})),
       presence:shared?'與旅伴共用：改行程、記帳、勾清單都會即時同步':'目前只存在這台裝置，連上網路後會和旅伴同步',
-      showAi:(()=>{try{localStorage.setItem('trip-aidone',JSON.stringify(s.aiDone||{}))}catch(e){}return !!ai&&!s.aiDone[s.day]})(),
+      showAi:false,
       ai:ai?{...ai,applyLabel:ai.info?'知道了':'套用',
         apply:()=>{const dd=s.day;if(ai.info)return this.setState(st=>({aiDone:{...st.aiDone,[dd]:true}}));
           this.edit(dd,l=>{const pi=l.findIndex(x=>/PARCO/.test(x.title)),si=l.findIndex(x=>/SHIPS/.test(x.title));if(pi>=0)l[pi].stay+=20;if(si>=0){l.splice(si,1)}this.relink(l)},{aiDone:{...s.aiDone,[dd]:true}});this.flash('已套用：SHIPS 移除、PARCO 40 分')},

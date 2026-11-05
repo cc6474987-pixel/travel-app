@@ -34,9 +34,10 @@ tpl = tpl[:_j] + """<div style="display:flex;flex-direction:column;gap:10px;back
                 </div>
                 """ + tpl[_j:]
 
-# --- A dismissed 順路建議 card stays dismissed after the app is reopened ---
+# --- 順路建議 card removed ---
 S = rep(S, "aiDone:{},catTouched", "aiDone:(()=>{try{return JSON.parse(localStorage.getItem('trip-aidone')||'{}')}catch(e){return {}}})(),catTouched")
-S = rep(S, "showAi:!!ai&&!s.aiDone[s.day],", "showAi:(()=>{try{localStorage.setItem('trip-aidone',JSON.stringify(s.aiDone||{}))}catch(e){}return !!ai&&!s.aiDone[s.day]})(),")
+# bang (2026-11-05): the 順路建議 card is not wanted at all.
+S = rep(S, "showAi:!!ai&&!s.aiDone[s.day],", "showAi:false,")
 
 # --- After an automatic update reload, come back to the same tab and day ---
 BOOT = rep(BOOT, "dcComp.componentDidMount();", "dcComp.componentDidMount();\ntry{const r=JSON.parse(sessionStorage.getItem('trip-resume')||'null');if(r){sessionStorage.removeItem('trip-resume');dcComp.setState(r)}}catch(e){}")
