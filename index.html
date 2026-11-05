@@ -10,11 +10,11 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-192.png">
-<script src="config.js?v=69cd6be6c1"></script>
+<script src="config.js?v=4845b488ef"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="shim.js?v=69cd6be6c1"></script>
-<script>window.APP_V='69cd6be6c1';
+<script src="shim.js?v=4845b488ef"></script>
+<script>window.APP_V='4845b488ef';
 // Pages that stay open pick up a new version on their own: check every minute and whenever the app comes back to the screen.
 (function(){let busy=false;const check=()=>{if(busy||document.hidden)return;busy=true;
   fetch('version.json?ts='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j&&j.v&&j.v!==window.APP_V){pend=j.v;tryGo()}}).catch(()=>{}).finally(()=>{busy=false})};
@@ -22,7 +22,9 @@
   let pend=null,last=Date.now();['pointerdown','keydown','scroll','touchstart'].forEach(t=>window.addEventListener(t,()=>{last=Date.now()},{passive:true,capture:true}));
   const go=()=>{try{const s=dcComp&&dcComp.state;if(s)sessionStorage.setItem('trip-resume',JSON.stringify({tab:s.tab,day:s.day,mode:s.mode}))}catch(e){}location.replace(location.pathname+'?v='+pend)};
   const tryGo=()=>{if(!pend)return;let open=false;try{open=!!(dcComp&&dcComp.state&&(dcComp.state.sheet||dcComp.state.drag))||!!document.getElementById('admin-gate')}catch(e){}if(!open&&(document.hidden||Date.now()-last>120000))go()};
-  setInterval(()=>{check();tryGo()},60000);document.addEventListener('visibilitychange',()=>{if(document.hidden)tryGo();else check()});window.addEventListener('focus',check)})();</script>
+  setInterval(()=>{check();tryGo()},60000);document.addEventListener('visibilitychange',()=>{if(document.hidden)tryGo();else check()});window.addEventListener('focus',check)})();
+// Offline: a service worker keeps the app's files so it still opens with no signal (trip data comes from Firestore's own offline cache).
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Travel App 東京河口湖</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -98,9 +100,10 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
             <div style="background:oklch(0.52 0.14 40);color:#fff;border-radius:22px;padding:18px 18px 16px;display:flex;flex-direction:column;gap:14px">
               <div style="display:flex;justify-content:space-between;align-items:center">
                 <span style="font:500 12px 'Noto Sans TC';opacity:.92">下一站 · {{ nextTime }} 抵達</span>
-                <span style="font:500 11px 'JetBrains Mono',monospace;background:rgba(255,255,255,.18);padding:3px 8px;border-radius:20px">建議出發 {{ leaveTime }}</span>
+                <span style="font:500 11px 'JetBrains Mono',monospace;background:rgba(255,255,255,.18);padding:3px 8px;border-radius:20px">{{ leaveLabel }}</span>
               </div>
               <div style="font:700 24px/1.25 'Noto Sans TC',sans-serif">{{ nextTitle }}</div>
+              <sc-if value="{{ hasHere }}"><div style="font:500 12px 'Noto Sans TC';opacity:.92;margin-top:-8px">{{ hereLabel }}</div></sc-if>
               <div style="display:flex;align-items:baseline;gap:8px">
                 <span style="font:600 40px/1 'JetBrains Mono',monospace;letter-spacing:-.02em">{{ countdown }}</span>
                 <span style="font:400 13px 'Noto Sans TC';opacity:.9">{{ cdUnit }}</span>
@@ -123,11 +126,11 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
               </div></sc-if>
               <div style="display:flex;gap:8px">
                 <a href="{{ nextNavUrl }}" target="_blank" rel="noopener" style="flex:1;height:46px;border:0;border-radius:13px;background:#fff;color:#221f1a;font:700 14px 'Noto Sans TC';cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none">Google 地圖導航</a>
-                <button onClick="{{ delay30 }}" style="flex:none;height:46px;padding:0 16px;border:1px solid rgba(255,255,255,.5);border-radius:13px;background:transparent;color:#fff;font:500 14px 'Noto Sans TC';cursor:pointer">延後 30 分</button>
+                <sc-for list="{{ delayOpts }}" as="o" hint-placeholder-count="2"><button onClick="{{ o.onClick }}" style="flex:none;height:46px;padding:0 11px;border:1px solid rgba(255,255,255,.5);border-radius:13px;background:transparent;color:#fff;font:500 13px 'Noto Sans TC';cursor:pointer;white-space:nowrap">{{ o.label }}</button></sc-for>
               </div>
             </div>
 
-            <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px">
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">
               <sc-for list="{{ quick }}" as="q" hint-placeholder-count="4">
                 <button onClick="{{ q.onClick }}" style="border:1px solid rgba(34,31,26,.1);background:#fffdf9;border-radius:16px;padding:14px 4px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;color:#221f1a" style-active="transform:scale(.96)">
                   <span style="width:34px;height:34px;border-radius:11px;background:{{ q.color }};display:flex;align-items:center;justify-content:center;color:#fff;font:700 15px 'Noto Sans TC'">{{ q.glyph }}</span>
@@ -136,10 +139,10 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
               </sc-for>
             </div>
 
-            <div style="border:1px solid oklch(0.62 0.12 85);background:oklch(0.97 0.025 85);border-radius:14px;padding:12px 14px;display:flex;gap:10px">
+            <sc-if value="{{ hasNote }}"><div style="border:1px solid oklch(0.62 0.12 85);background:oklch(0.97 0.025 85);border-radius:14px;padding:12px 14px;display:flex;gap:10px">
               <span style="flex:none;font:700 12px 'Noto Sans TC';color:oklch(0.45 0.1 85)">提醒</span>
               <span style="font:400 12.5px/1.55 'Noto Sans TC';color:#4d473f">{{ nextNote }}</span>
-            </div>
+            </div></sc-if>
 
             <div style="display:flex;flex-direction:column;gap:10px">
               <div style="display:flex;justify-content:space-between;align-items:baseline">
@@ -1009,8 +1012,12 @@ class Component extends DCLogic {
       exps:L.exps||EXPS.slice(),checked:L.checked||{},packX:L.packX||[],packNew:{},cur:'JPY',
       form:{t:'',amt:'',payer:ALL[0],cat:'餐飲',with:ALL.slice(),cur:'JPY'},errs:{},toast:'',phrase:0,ticket:0,moneyView:'list',settled:L.settled||[],aiDone:(()=>{try{return JSON.parse(localStorage.getItem('trip-aidone')||'{}')}catch(e){return {}}})(),catTouched:false,pl:null,draft:L.plan&&L.plan.draft||false,trText:'',trRes:null,trLoading:false,trErr:'',sync:'local',delArm:null,addQ:'',sr:null,srLoading:false,srErr:'',nearMe:false,myPlaces:[],np:null};
     this.mine=new Set();this.q=Promise.resolve();}
+  async whereAmI(){if(this.state.mode!=='trip'||this.state.sim||typeof getPlData!=='function')return;const g=await getLoc();if(g.err)return;
+    const P=await getPlData(),G=P.stops||{},C=clockOf(null,0),sch=this.sched(C.today);let best=null;
+    sch.forEach((it,i)=>{const p=typeof stopGeo==='function'?stopGeo(it,G):null;if(!p)return;const d=distM(g,p);if(d<=Math.max(350,g.acc||0)&&(!best||d<best.d))best={i,d}});
+    this.setState({here:best?{day:C.today,i:best.i,ts:Date.now()}:null})}
   componentDidMount(){
-    this.iv=setInterval(()=>this.tick(),1000);this.initStore();
+    this.iv=setInterval(()=>this.tick(),1000);setTimeout(()=>this.whereAmI(),1500);this.geoIv=setInterval(()=>this.whereAmI(),180000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)this.whereAmI()});this.initStore();
     this.onTouch=e=>{const t=e.touches[0];if(!t)return;const pr=this.press;if(pr&&!this.state.drag&&(Math.abs(t.clientY-pr.y)>8||Math.abs(t.clientX-pr.x)>8)){clearTimeout(pr.t);this.press=null}if(this.state.drag){e.preventDefault();this.moveTo(t.clientY)}};
     window.addEventListener('touchmove',this.onTouch,{passive:false});window.addEventListener('touchend',()=>this.endPress());window.addEventListener('touchcancel',()=>this.endPress());
     this.moveTo=y=>{const d=this.state.drag;if(!d)return;this.lastY=y;const lo=d.mids[0]-d.mids[d.i],hi=d.mids[d.mids.length-1]-d.mids[d.i],dy=Math.max(lo,Math.min(hi,y-d.y0+(d.sc?d.sc.scrollTop-d.st0:0))),c=d.mids[d.i]+dy;let over=0;d.mids.forEach((m,j)=>{if(j!==d.i&&m<c)over++});if(dy!==d.dy||over!==d.over)this.setState({drag:{...d,dy,over}})};
@@ -1055,7 +1062,7 @@ class Component extends DCLogic {
     if(!db)return;this.db=db;let first=true;const warn=e=>console.warn('db',e);
     db.doc('shared/plan').onSnapshot(snap=>{if(this.pt||this.saving||snap.metadata.hasPendingWrites)return;const d=snap.exists?snap.data():null;
       const days=d&&Array.isArray(d.days)?clone(d.days):clone(DAYS),before=JSON.stringify(days);days.forEach(x=>{this.relink(x.items);pinWaits(x)});
-      this.setState({sync:'shared',days,draft:d?d.draft||false:false});if(d&&JSON.stringify(days)!==before)this.savePlan()},warn);
+      this.setState({sync:'shared',days,draft:d?d.draft||false:false});if(d&&!snap.metadata.fromCache&&JSON.stringify(days)!==before)this.savePlan()},warn);
     db.collection('packitems').onSnapshot(qs=>{this.setState({packX:qs.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(a.ts||0)-(b.ts||0))})},warn);
     db.doc('shared/pack').onSnapshot(snap=>{const d=snap.exists?snap.data():null;this.setState({checked:d&&d.checked?{...d.checked}:{}})},warn);
     db.collection('expenses').onSnapshot(qs=>{const added=first?[]:qs.docChanges().filter(c=>c.type==='added'&&!this.mine.has(c.doc.id)).map(c=>c.doc.id);
@@ -1175,10 +1182,14 @@ class Component extends DCLogic {
     const s=this.state, trip=s.mode==='trip', showSec=this.props.showTWD??true, shared=s.sync==='shared';
     const M=n=>s.cur==='JPY'?fJ(n):fT(n), M2=n=>showSec?'≈ '+(s.cur==='JPY'?fT(n):fJ(n)):'';
     const day=s.days[s.day], sch=this.sched(s.day), tsch=this.sched(TODAY), td=s.days[TODAY];
-    const nextIdx=tsch.findIndex(it=>it.at>NOW);
+    const fi=TODAY===0?tsch.findIndex(x=>x.leg&&x.leg.mode==='flight'):-1,off=i=>fi>=0&&i<=fi?60:0;
+    const hr=s.here,here=!preview&&hr&&hr.day===TODAY&&Date.now()-hr.ts<15*60e3&&tsch[hr.i]?hr.i:-1;
+    let nextIdx=tsch.findIndex((it,i)=>it.at>NOW-off(i));if(here>=0&&(nextIdx<0||nextIdx<=here))nextIdx=here+1<tsch.length?here+1:-1;
     const next=tsch[nextIdx], prevT=nextIdx>0?tsch[nextIdx-1]:null, pl=prevT&&prevT.leg;
-    const leave=next?next.at-(prevT?prevT.lm:0):0;
-    const left=Math.max(0,leave*60-NOWSEC);
+    const isFl=!!next&&/起飛/.test(next.title),nOff=next?off(nextIdx):0;
+    const leave=next?(isFl?next.at:next.at-(prevT?prevT.lm:0)):0;
+    const left=Math.max(0,(leave+nOff)*60-NOWSEC),lateM=next&&!preview&&!isFl?Math.max(0,NOW-nOff-leave):0;
+    const fmtM=m=>m>=60?Math.floor(m/60)+'小時'+(m%60?(m%60)+'分':''):m+'分';
     const open=(di,i)=>()=>{if(this.dragged)return;this.setState({sheet:'stop',sel:{di,i}})};
     const warnOf=it=>it.late>0?{short:'比固定的 '+it.fix+' 晚 '+it.late+' 分',long:'照前面的停留和移動，會在 '+ft(it.at)+' 才到，比固定的 '+it.fix+' 晚 '+it.late+' 分。可以縮短前面的停留，或改這站的固定時間。'}:it.close&&it.dep>tm(it.close)&&it.at<tm(it.close)+60?{short:'會超過 '+it.close+' 打烊／截止',long:'離開時間 '+ft(it.dep)+' 超過 '+it.close+'（依你的備註），建議停留 '+Math.max(5,tm(it.close)-it.at)+' 分以內。',fix:Math.max(5,tm(it.close)-it.at)}:null;
     const d=s.drag;
@@ -1263,9 +1274,13 @@ class Component extends DCLogic {
       nav,goPlan:()=>this.setState({tab:'plan',day:TODAY}),
       todayHead:'DAY '+(TODAY+1)+' / '+s.days.length+' · '+td.date.replace(' ',' 週'),todayTitle:td.city,todayStay:td.lodge,
       nextTitle:next?next.title:'今日行程已完成',nextTime:next?ft(next.at):'--:--',leaveTime:next?ft(leave):'--:--',
-      nextNote:next?(next.sub||'沒有備註'):'今天的行程都完成了',
-      countdown:preview?(C.after?'—':String(C.daysLeft)):String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0'),
-      cdUnit:preview?(C.after?'旅程已結束':'天後出發'):'後該出發',isPreview:preview,
+      nextNote:next?(next.sub||''):'今天的行程都完成了',
+      countdown:preview?(C.after?'—':String(C.daysLeft)):!next?'—':lateM>0?'晚 '+fmtM(lateM):fmtM(Math.ceil(left/60)),
+      cdUnit:preview?(C.after?'旅程已結束':'天後出發'):!next?'':isFl?'後起飛':lateM>0?'該出發了':'後該出發',
+      leaveLabel:isFl?'起飛 '+ft(next.at):'建議出發 '+(next?ft(leave):'--:--')+(nOff?'（台灣時間）':''),
+      hasHere:here>=0,hereLabel:here>=0?'📍 你在「'+tsch[here].title+'」附近':'',
+      hasNote:!next||!!next.sub,
+      delayOpts:(preview?[]:[...(lateM>4?[lateM]:[]),10,30]).map(m=>({label:(m===lateM?'順延 ':'+')+m+' 分',onClick:()=>{this.setState(st=>({delay:st.delay+m}));this.flash('之後的行程都延後 '+m+' 分鐘')}})),isPreview:preview,
       previewNote:C.after?'旅程已結束，這裡顯示最後一天的行程。':'還沒出發，這是 '+s.days[0].date.split(' ')[0]+' 第一天的預覽。出發當天起會依東京時間自動變成當天行程。',
       todayLegs:pl&&pl.mode!=='flight'?this.legChips(TODAY,nextIdx-1,pl):[],route,hasLegs:!!(pl&&pl.mode!=='flight'),hasRoute:route.length>0,
       nextNavUrl:next?this.mapUrl(next,pl):'https://www.google.com/maps',selNavUrl:(()=>{const q=s.sel;if(q&&s.days[q.di]&&s.days[q.di].items[q.i]){const ss=this.sched(q.di);return this.mapUrl(ss[q.i],ss[q.i-1]&&ss[q.i-1].leg)}return 'https://www.google.com/maps'})(),afterNav:()=>setTimeout(()=>this.setState({sheet:null}),300),
@@ -1273,7 +1288,7 @@ class Component extends DCLogic {
       trText:s.trText,setTr:e=>this.setState({trText:e.target.value,trErr:''}),trKey:e=>{if(e.key==='Enter')this.doTr()},doTr:()=>this.doTr(),
       trBtn:s.trLoading?'翻譯中…':'翻譯',trOpacity:s.trLoading?.6:1,trErr:s.trErr,
       delay30:()=>{if(preview)return this.flash('出發當天才能延後行程');this.setState(st=>({delay:st.delay+30}));this.flash('之後行程已全部延後 30 分鐘')},
-      quick:[['翻','翻譯卡','translate',tc('交通')],['食','附近美食','food',tc('餐飲')],['¥','記一筆','exp',tc('景點')],['票','票券','ticket',tc('住宿')]].map(([g,l,k,c])=>({glyph:g,label:l,color:c,onClick:()=>this.setState({sheet:k,errs:{}})})),
+      quick:[['食','附近美食','food',tc('餐飲')],['¥','記一筆','exp',tc('景點')],['票','票券','ticket',tc('住宿')]].map(([g,l,k,c])=>({glyph:g,label:l,color:c,onClick:()=>this.setState({sheet:k,errs:{}})})),
       restToday,
       avatars:PEOPLE.map(p=>({i:(p.n||'?').slice(0,1),bg:p.bg})),
       statusLabel:trip?'旅途中':C.after?'旅程':'出發倒數',statusValue:trip?'Day '+(TODAY+1)+' / '+s.days.length:C.after?'已結束':C.daysLeft+' 天',

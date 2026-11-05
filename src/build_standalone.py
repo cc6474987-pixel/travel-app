@@ -40,7 +40,9 @@ head_extra = """<meta charset="utf-8">
   let pend=null,last=Date.now();['pointerdown','keydown','scroll','touchstart'].forEach(t=>window.addEventListener(t,()=>{last=Date.now()},{passive:true,capture:true}));
   const go=()=>{try{const s=dcComp&&dcComp.state;if(s)sessionStorage.setItem('trip-resume',JSON.stringify({tab:s.tab,day:s.day,mode:s.mode}))}catch(e){}location.replace(location.pathname+'?v='+pend)};
   const tryGo=()=>{if(!pend)return;let open=false;try{open=!!(dcComp&&dcComp.state&&(dcComp.state.sheet||dcComp.state.drag))||!!document.getElementById('admin-gate')}catch(e){}if(!open&&(document.hidden||Date.now()-last>120000))go()};
-  setInterval(()=>{check();tryGo()},60000);document.addEventListener('visibilitychange',()=>{if(document.hidden)tryGo();else check()});window.addEventListener('focus',check)})();</script>
+  setInterval(()=>{check();tryGo()},60000);document.addEventListener('visibilitychange',()=>{if(document.hidden)tryGo();else check()});window.addEventListener('focus',check)})();
+// Offline: a service worker keeps the app's files so it still opens with no signal (trip data comes from Firestore's own offline cache).
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script>
 """
 out_html = "<!doctype html>\n<html lang=\"zh-Hant\">\n<head>\n" + head_extra + page.replace("<template id=\"tpl\">", "</head>\n<body>\n<template id=\"tpl\">", 1) + "</body>\n</html>\n"
 import hashlib
@@ -49,4 +51,17 @@ out_html = out_html.replace("__V__", ver)
 os.makedirs(out, exist_ok=True)
 open(os.path.join(out, "version.json"), "w").write(json.dumps({"v": ver}) + "\n")
 open(os.path.join(out, "index.html"), "w", encoding="utf-8").write(out_html)
+# Same-origin files: network first (so updates arrive), cache when offline. Scripts and fonts from CDNs: cache first.
+SW = r"""const C='trip-__V__';
+const CORE=['./','index.html','config.js','shim.js','places.json','manifest.webmanifest','icon-192.png'];
+self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>Promise.all(CORE.map(u=>c.add(new Request(u,{cache:'reload'})).catch(()=>{}))))).then(()=>self.skipWaiting())});
+self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
+const CDN=/^https:\/\/(www\.gstatic\.com\/firebasejs|cdn\.jsdelivr\.net|fonts\.googleapis\.com|fonts\.gstatic\.com)\//;
+self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET')return;const u=new URL(r.url);
+  if(u.origin===location.origin){if(u.pathname.endsWith('version.json'))return;
+    e.respondWith(fetch(r).then(res=>{if(res.ok){const cp=res.clone();caches.open(C).then(c=>c.put(r.mode==='navigate'?'index.html':u.pathname.replace(/^.*\//,''),cp))}return res})
+      .catch(()=>caches.match(r.mode==='navigate'?'index.html':r,{ignoreSearch:true}).then(x=>x||caches.match(u.pathname.replace(/^.*\//,''),{ignoreSearch:true}))));return}
+  if(CDN.test(r.url))e.respondWith(caches.match(r).then(x=>x||fetch(r).then(res=>{if(res.ok||res.type==='opaque'){const cp=res.clone();caches.open(C).then(c=>c.put(r,cp))}return res})))});
+"""
+open(os.path.join(out, "sw.js"), "w", encoding="utf-8").write(SW.replace("__V__", ver))
 print("ok", len(out_html))
