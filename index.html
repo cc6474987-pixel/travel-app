@@ -10,11 +10,11 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-192.png">
-<script src="config.js?v=46ca21bfd3"></script>
+<script src="config.js?v=33d7a75cc5"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="shim.js?v=46ca21bfd3"></script>
-<script>window.APP_V='46ca21bfd3';
+<script src="shim.js?v=33d7a75cc5"></script>
+<script>window.APP_V='33d7a75cc5';
 // Pages that stay open pick up a new version on their own: check every minute and whenever the app comes back to the screen.
 (function(){let busy=false;const check=()=>{if(busy||document.hidden)return;busy=true;
   fetch('version.json?ts='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j&&j.v&&j.v!==window.APP_V){pend=j.v;tryGo()}}).catch(()=>{}).finally(()=>{busy=false})};
@@ -176,17 +176,14 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
                 </sc-for>
               </div>
             </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;background:#221f1a;color:#f7f4ef;border-radius:16px;padding:14px 16px">
-              <span style="font:500 13px 'Noto Sans TC'">{{ statusLabel }}</span>
-              <span style="font:600 18px 'JetBrains Mono',monospace">{{ statusValue }}</span>
-            </div>
+            <div style="font:600 13px 'Noto Sans TC';color:#4d473f;margin-top:-8px">{{ statusLabel }} <b style="font:700 14px 'JetBrains Mono',monospace;color:oklch(0.52 0.14 40)">{{ statusValue }}</b></div>
             <sc-if value="{{ isDraft }}">
               <div style="display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:14px;background:oklch(0.97 0.02 255);border:1px solid oklch(0.85 0.05 255)">
                 <span style="flex:1;font:400 12.5px/1.5 'Noto Sans TC';color:#4d473f"><b style="color:oklch(0.42 0.11 255)">{{ draftLabel }}</b> · 可直接拖曳、改交通與停留時間</span>
                 <button onClick="{{ restoreTrip }}" style="flex:none;border:1px solid rgba(34,31,26,.18);background:transparent;border-radius:10px;padding:6px 10px;font:500 12px 'Noto Sans TC';cursor:pointer;color:#221f1a;white-space:nowrap">還原匯入行程</button>
               </div>
             </sc-if>
-            <button onClick="{{ openPlanner }}" style="height:46px;border:1.5px dashed rgba(34,31,26,.25);border-radius:14px;background:transparent;font:500 14px 'Noto Sans TC';color:#221f1a;cursor:pointer">＋ 規劃新旅程（選目的地，AI 排草稿）</button>
+            
             <div style="display:flex;align-items:center;gap:8px;font:400 12px 'Noto Sans TC';color:#4d473f"><span style="width:7px;height:7px;border-radius:50%;background:oklch(0.62 0.14 150);flex:none;animation:pulse 1.6s infinite"></span>{{ presence }}</div>
             <div class="noscroll" style="scrollbar-width:none;display:flex;gap:8px;overflow-x:auto;margin:0 -20px;padding:0 20px 2px">
               <sc-for list="{{ dayPills }}" as="d" hint-placeholder-count="5">
@@ -206,15 +203,16 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
                 </div>
               </div>
             </sc-if>
-            <a href="{{ dayMapUrl }}" target="_blank" rel="noopener" style="height:132px;border-radius:16px;border:1px solid rgba(34,31,26,.1);background:repeating-linear-gradient(135deg,#efe9df 0 10px,#e8e1d5 10px 20px);display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:6px;padding:10px 12px;box-sizing:border-box;text-decoration:none">
-              <span style="font:500 11px 'JetBrains Mono',monospace;color:#6f685e;background:#f7f4efcc;padding:3px 7px;border-radius:6px;white-space:nowrap">地圖：{{ dayCity }} 當日路線 ↗</span>
-              <span style="font:500 11px 'JetBrains Mono',monospace;color:#4d473f;background:#f7f4efcc;padding:3px 7px;border-radius:6px;white-space:nowrap">{{ dayStats }}</span>
+            <a href="{{ dayMapUrl }}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:14px;border:1px solid rgba(34,31,26,.12);background:#fffdf9;text-decoration:none;color:#221f1a">
+              <span style="font:600 14px 'Noto Sans TC';flex:none">🗺 當日路線</span>
+              <span style="flex:1;min-width:0;font:400 12px 'Noto Sans TC';color:#4d473f;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ dayStats }}</span>
+              <span style="flex:none;color:#6f685e">↗</span>
             </a>
-            <div style="font:400 11.5px 'Noto Sans TC';color:#6f685e;margin:-6px 0 -4px">長按卡片拖曳排序 · 放開後時間自動重排</div>
+            <div style="font:400 11.5px 'Noto Sans TC';color:#6f685e;margin:-6px 0 -4px">點左邊的時間可以改抵達／離開 · 按住 ⋮⋮ 拖曳排序</div>
             <div style="display:flex;flex-direction:column">
               <sc-for list="{{ items }}" as="it" hint-placeholder-count="5">
                 <div data-row="1" style="display:flex;gap:10px;position:relative;user-select:none;-webkit-user-select:none;transform:{{ it.tf }};transition:{{ it.tr }};z-index:{{ it.z }}">
-                  <div style="width:44px;flex:none;padding-top:15px;font:600 13px 'JetBrains Mono',monospace;opacity:{{ it.opacity }}">{{ it.time }}</div>
+                  <div onClick="{{ it.openTime }}" style="width:48px;flex:none;padding-top:13px;cursor:pointer;opacity:{{ it.opacity }}"><span style="display:inline-block;font:700 14px 'JetBrains Mono',monospace;color:#221f1a;border-bottom:1.5px dashed rgba(34,31,26,.35);padding-bottom:1px">{{ it.time }}</span></div>
                   <div style="flex:none;width:12px;display:flex;flex-direction:column;align-items:center">
                     <div style="width:8px;height:8px;border-radius:50%;margin-top:19px;background:{{ it.dot }};border:2px solid {{ it.color }};flex:none"></div>
                     <div style="flex:1;width:2px;background:rgba(34,31,26,.1);margin-top:2px"></div>
@@ -223,13 +221,13 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
                     <div onClick="{{ it.open }}" onPointerDown="{{ it.down }}" onTouchStart="{{ it.tdown }}" onContextMenu="{{ noCtx }}" style="background:#fffdf9;border:1px solid {{ it.border }};border-radius:14px;padding:11px 14px;cursor:{{ it.cursor }};opacity:{{ it.opacity }};box-shadow:{{ it.shadow }};touch-action:pan-y;transition:box-shadow .15s;position:relative;padding-right:40px" style-hover="background:#fff">
                       <sc-if value="{{ it.canDrag }}"><div onTouchStart="{{ it.gdown }}" onPointerDown="{{ it.gpdown }}" onClick="{{ stopClick }}" aria-label="拖曳調整順序" style="position:absolute;top:0;right:0;bottom:0;width:38px;display:flex;align-items:center;justify-content:center;touch-action:none;cursor:grab;color:rgba(34,31,26,.35);font:700 15px/1 system-ui;letter-spacing:-2px">⋮⋮</div></sc-if>
                       <div style="display:flex;align-items:center;gap:6px">
-                        <span style="font:500 11px 'Noto Sans TC';color:{{ it.color }};white-space:nowrap">{{ it.type }}</span>
+                        <span style="font:600 11.5px 'Noto Sans TC';color:{{ it.color }};white-space:nowrap">{{ it.type }}</span>
                         <sc-if value="{{ it.isNext }}"><span style="font:700 10.5px 'Noto Sans TC';color:#fff;background:oklch(0.52 0.14 40);padding:1px 7px;border-radius:10px;white-space:nowrap">下一站</span></sc-if>
                         <sc-if value="{{ it.done }}"><span style="font:500 10.5px 'Noto Sans TC';color:#6f685e;white-space:nowrap">✓ 已完成</span></sc-if>
-                        <span style="margin-left:auto;font:500 11px 'JetBrains Mono',monospace;color:#6f685e;white-space:nowrap">{{ it.stayLabel }}</span>
+                        <span style="margin-left:auto;font:500 11.5px 'Noto Sans TC';color:#4d473f;white-space:nowrap">{{ it.stayLabel }}</span>
                       </div>
-                      <div style="font:600 15px/1.35 'Noto Sans TC';margin-top:3px">{{ it.title }}</div>
-                      <div style="font:400 12px/1.5 'Noto Sans TC';color:#6f685e;margin-top:1px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ it.sub }}</div>
+                      <div style="font:700 16px/1.35 'Noto Sans TC';margin-top:3px;color:#221f1a">{{ it.title }}</div>
+                      <div style="font:400 12.5px/1.5 'Noto Sans TC';color:#5c554c;margin-top:2px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden">{{ it.sub }}</div>
                       <sc-if value="{{ it.hasWarn }}"><div style="font:500 11.5px/1.5 'Noto Sans TC';color:oklch(0.48 0.14 35);margin-top:4px">! {{ it.warnShort }}</div></sc-if>
                     </div>
                     <sc-if value="{{ it.hasMove }}"><div style="display:flex;align-items:center;gap:5px;padding:7px 0 6px">
@@ -556,7 +554,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 
             <sc-if value="{{ sh.stop }}">
               <div style="display:flex;flex-direction:column;gap:12px">
-                <div style="height:110px;border-radius:16px;background:repeating-linear-gradient(135deg,#efe9df 0 10px,#e8e1d5 10px 20px);display:flex;align-items:center;justify-content:center;font:500 11px 'JetBrains Mono',monospace;color:#6f685e">照片：{{ sel.title }}</div>
+                
                 <div style="font:500 12px 'Noto Sans TC';color:{{ sel.color }}">{{ sel.type }} · {{ sel.span }}</div>
                 <div style="font:700 22px/1.3 'Noto Sans TC',sans-serif">{{ sel.title }}</div>
                 <div style="font:400 13.5px/1.65 'Noto Sans TC';color:#4d473f">{{ sel.sub }}</div>
@@ -578,7 +576,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
                 <div style="display:flex;flex-direction:column;gap:10px;background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:16px;padding:14px">
                   <span style="font:500 12px 'Noto Sans TC';color:#6f685e">抵達時間</span>
                   <div style="display:flex;align-items:center;gap:10px">
-                    <input id="fix-in" type="time" value="{{ sel.fixVal }}" onChange="{{ sel.setFix }}" style="height:44px;border-radius:12px;border:1.5px solid rgba(34,31,26,.18);background:#fffdf9;padding:0 12px;font:600 17px 'JetBrains Mono',monospace;color:#221f1a;outline:none">
+                    <button id="fix-in" onClick="{{ sel.openTime }}" style="height:44px;border-radius:12px;border:1.5px solid rgba(34,31,26,.18);background:#fffdf9;padding:0 14px;font:600 17px 'JetBrains Mono',monospace;color:#221f1a;cursor:pointer">{{ sel.fixVal }} ✎</button>
                     <sc-if value="{{ sel.isFix }}"><button onClick="{{ sel.clrFix }}" style="height:40px;padding:0 12px;border-radius:11px;border:1px solid rgba(34,31,26,.18);background:transparent;font:500 13px 'Noto Sans TC';color:#221f1a;cursor:pointer">取消固定</button></sc-if>
                     <sc-if value="{{ sel.notFix }}"><button onClick="{{ sel.pinNow }}" style="height:40px;padding:0 12px;border-radius:11px;border:0;background:#221f1a;font:500 13px 'Noto Sans TC';color:#fff;cursor:pointer">固定這個時間</button></sc-if>
                   </div>
@@ -736,6 +734,27 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
                     <span style="font:400 11.5px 'Noto Sans TC';color:#6f685e">{{ t.tag }}</span>
                   </div>
                 </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ sh.time }}">
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <div style="font:700 20px/1.3 'Noto Sans TC',sans-serif">{{ tv.title }}</div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <span style="font:600 13px 'Noto Sans TC';color:#4d473f">{{ tv.arrLabel }}</span>
+                  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><div style="display:flex;align-items:center;gap:6px"><select value="{{ tv.aH }}" onChange="{{ tv.aSetH }}" style="height:52px;border-radius:12px;border:1.5px solid rgba(34,31,26,.18);background:#fffdf9;padding:0 10px;font:600 22px 'JetBrains Mono',monospace;color:#221f1a;outline:none;-webkit-appearance:none;appearance:none;text-align:center;min-width:70px"><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select><span style="font:700 22px 'JetBrains Mono',monospace">:</span><select value="{{ tv.aM }}" onChange="{{ tv.aSetM }}" style="height:52px;border-radius:12px;border:1.5px solid rgba(34,31,26,.18);background:#fffdf9;padding:0 10px;font:600 22px 'JetBrains Mono',monospace;color:#221f1a;outline:none;-webkit-appearance:none;appearance:none;text-align:center;min-width:70px"><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option><option value="36">36</option><option value="37">37</option><option value="38">38</option><option value="39">39</option><option value="40">40</option><option value="41">41</option><option value="42">42</option><option value="43">43</option><option value="44">44</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option></select></div>
+                    <sc-if value="{{ tv.isFix }}"><button onClick="{{ tv.clr }}" style="height:44px;padding:0 12px;border-radius:11px;border:1px solid rgba(34,31,26,.18);background:transparent;font:500 13px 'Noto Sans TC';color:#221f1a;cursor:pointer">取消固定</button></sc-if>
+                  </div>
+                  <sc-if value="{{ tv.hasLate }}"><div style="font:600 12.5px 'Noto Sans TC';color:oklch(0.48 0.14 35)">! {{ tv.lateTxt }}</div></sc-if>
+                </div>
+                <sc-if value="{{ tv.showDep }}">
+                  <div style="display:flex;flex-direction:column;gap:8px">
+                    <span style="font:600 13px 'Noto Sans TC';color:#4d473f">離開時間 · {{ tv.stayTxt }}</span>
+                    <div style="display:flex;align-items:center;gap:6px"><select value="{{ tv.dH }}" onChange="{{ tv.dSetH }}" style="height:52px;border-radius:12px;border:1.5px solid rgba(34,31,26,.18);background:#fffdf9;padding:0 10px;font:600 22px 'JetBrains Mono',monospace;color:#221f1a;outline:none;-webkit-appearance:none;appearance:none;text-align:center;min-width:70px"><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select><span style="font:700 22px 'JetBrains Mono',monospace">:</span><select value="{{ tv.dM }}" onChange="{{ tv.dSetM }}" style="height:52px;border-radius:12px;border:1.5px solid rgba(34,31,26,.18);background:#fffdf9;padding:0 10px;font:600 22px 'JetBrains Mono',monospace;color:#221f1a;outline:none;-webkit-appearance:none;appearance:none;text-align:center;min-width:70px"><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option><option value="36">36</option><option value="37">37</option><option value="38">38</option><option value="39">39</option><option value="40">40</option><option value="41">41</option><option value="42">42</option><option value="43">43</option><option value="44">44</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option></select></div>
+                  </div>
+                </sc-if>
+                <div style="font:400 12.5px/1.6 'Noto Sans TC';color:#4d473f;background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:12px;padding:10px 12px">{{ tv.note }}<br>{{ tv.nextTxt }}</div>
+                <button onClick="{{ tv.openStop }}" style="height:46px;border-radius:13px;border:1px solid rgba(34,31,26,.18);background:transparent;font:500 14px 'Noto Sans TC';color:#221f1a;cursor:pointer">看這站的詳細資料</button>
               </div>
             </sc-if>
 
@@ -1193,11 +1212,25 @@ class Component extends DCLogic {
     const open=(di,i)=>()=>{if(this.dragged)return;this.setState({sheet:'stop',sel:{di,i}})};
     const warnOf=it=>it.late>0?{short:'比固定的 '+it.fix+' 晚 '+it.late+' 分',long:'照前面的停留和移動，會在 '+ft(it.at)+' 才到，比固定的 '+it.fix+' 晚 '+it.late+' 分。可以縮短前面的停留，或改這站的固定時間。'}:it.close&&it.dep>tm(it.close)&&it.at<tm(it.close)+60?{short:'會超過 '+it.close+' 打烊／截止',long:'離開時間 '+ft(it.dep)+' 超過 '+it.close+'（依你的備註），建議停留 '+Math.max(5,tm(it.close)-it.at)+' 分以內。',fix:Math.max(5,tm(it.close)-it.at)}:null;
     const d=s.drag;
+    let timeV=null;if(s.sheet==='time'&&s.tsel&&s.days[s.tsel.di]){const{di:tdi,i:ti}=s.tsel,tsc=this.sched(tdi),it=tsc[ti];
+      if(it){const first=ti===0,last=ti===tsc.length-1,a=ft(it.at),dp=ft(it.dep),nx=tsc[ti+1];
+        const setA=v=>{if(first){this.setState(st=>{const days=clone(st.days);days[tdi].start=v;return{days}});this.savePlan();this.flash('這天改成 '+v+' 出發')}
+          else{this.edit(tdi,l=>{l[ti].fix=v;l[ti].wait=0});this.flash('固定在 '+v+' 抵達')}};
+        const setD=v=>{const n=tm(v)-it.at;if(n<0)return this.flash('離開不能早於抵達 '+a);this.setStay(tdi,ti,n);this.flash(v+' 離開，停留 '+n+' 分')};
+        timeV={title:it.title,first,notFirst:!first,showDep:!last,arrLabel:first?'出發時間（這天的第一站）':'抵達時間',
+          aH:a.slice(0,2),aM:a.slice(3),dH:dp.slice(0,2),dM:dp.slice(3),
+          aSetH:e=>setA(e.target.value+':'+a.slice(3)),aSetM:e=>setA(a.slice(0,2)+':'+e.target.value),
+          dSetH:e=>setD(e.target.value+':'+dp.slice(3)),dSetM:e=>setD(dp.slice(0,2)+':'+e.target.value),
+          isFix:!first&&!!it.fix,clr:()=>{this.edit(tdi,l=>{delete l[ti].fix;l[ti].wait=0});this.flash('已取消固定，改跟著前一站推算')},
+          note:first?'改了之後，這天後面的時間會一起往前或往後移':it.fix?'📌 已固定在 '+it.fix+' 抵達，前面怎麼改都不會推動這站':'改抵達時間會把這站固定在那個時間；前面的行程改了也不會推動它',
+          stayTxt:'停留 '+it.stay+' 分',nextTxt:nx?'下一站「'+nx.title+'」'+ft(nx.at)+' 抵達':'這天的最後一站',
+          lateTxt:it.late>0?'照前面的安排會晚 '+it.late+' 分才到':'',hasLate:it.late>0,
+          openStop:()=>this.setState({sheet:'stop',sel:{di:tdi,i:ti}})}}}
     const mk=(di,arr,dragList)=>(it,i)=>{const done=trip&&(di<TODAY||(di===TODAY&&it.dep<=NOW)),isNext=trip&&di===TODAY&&i===nextIdx,c=tc(it.type),w=warnOf(it),lg=it.leg;
       let tf='none',z=1,shadow='none';
       if(dragList&&d){if(i===d.i){tf='translateY('+d.dy+'px) scale(1.02)';z=5;shadow='0 14px 32px rgba(40,30,20,.22)'}else if(d.i<d.over&&i>d.i&&i<=d.over)tf='translateY(-'+d.h+'px)';else if(d.i>d.over&&i>=d.over&&i<d.i)tf='translateY('+d.h+'px)'}
       const nxt=arr[i+1];
-      return{...it,time:ft(it.at),color:c,dot:done?c:'#f7f4ef',done,isNext,opacity:done?.55:1,
+      return{...it,time:ft(it.at),openTime:e=>{e.stopPropagation();this.setState({sheet:'time',tsel:{di,i}})},color:c,dot:done?c:'#f7f4ef',done,isNext,opacity:done?.55:1,
         stayLabel:[it.fix?'📌 固定 '+it.fix:'',it.rating?'★'+it.rating:'',it.stay?'停留 '+it.stay+' 分':''].filter(Boolean).join(' · '),hasWarn:!!w,warnShort:w?w.short:'',
         border:w?'oklch(0.6 0.14 35)':isNext?'oklch(0.52 0.14 40)':'rgba(34,31,26,.1)',
         hasMove:!!lg&&lg.mode!=='flight'&&!!nxt,legs:lg&&lg.mode!=='flight'?this.legChips(di,i,lg):[],
@@ -1238,7 +1271,7 @@ class Component extends DCLogic {
     let selV={};
     if(s.sel&&s.days[s.sel.di]&&s.days[s.sel.di].items[s.sel.i]){const {di,i}=s.sel,ss=this.sched(di),it=ss[i],pv=i>0?ss[i-1]:null,r=it.rec||REC[it.type]||[45,75],w=warnOf(it),nx=ss[i+1];
       selV={...it,color:tc(it.type),span:ft(it.at)+' 抵達 · '+ft(it.dep)+' 離開',stay:it.stay,
-        isFix:!!it.fix,notFix:!it.fix,fixVal:it.fix||ft(it.at),fixNote:it.fix?'固定在 '+it.fix+' 抵達，前面怎麼改都不會推動這站':'目前跟著前一站推算，設定後就固定在這個時間',
+        isFix:!!it.fix,notFix:!it.fix,fixVal:it.fix||ft(it.at),openTime:()=>this.setState({sheet:'time',tsel:{di,i}}),fixNote:it.fix?'固定在 '+it.fix+' 抵達，前面怎麼改都不會推動這站':'目前跟著前一站推算，設定後就固定在這個時間',
         setFix:e=>{const v=e.target.value;if(!/^\d\d:\d\d$/.test(v))return;this.edit(di,l=>{l[i].fix=v;l[i].wait=0});this.flash('已固定在 '+v+' 抵達')},
         pinNow:()=>{const v=ft(it.at);this.edit(di,l=>{l[i].fix=v;l[i].wait=0});this.flash('已固定在 '+v+' 抵達')},
         clrFix:()=>{this.edit(di,l=>{delete l[i].fix;l[i].wait=0});this.flash('已取消固定，改跟著前一站推算')},
@@ -1330,8 +1363,8 @@ class Component extends DCLogic {
         onClick:()=>this.togglePack(p.k)}))})).map((c,i,a)=>a[(i+a.length-1)%a.length]),
       toast:s.toast,hasToast:!!s.toast,
       hasSheet:!!sheet,closeSheet:()=>this.setState({sheet:null}),stop:e=>e.stopPropagation(),
-      sh:{stop:sheet==='stop'&&!!selV.title,add:sheet==='add',translate:sheet==='translate',food:sheet==='food',ticket:sheet==='ticket',exp:sheet==='exp',people:sheet==='people'},
-      sel:selV,
+      sh:{stop:sheet==='stop'&&!!selV.title,add:sheet==='add',translate:sheet==='translate',food:sheet==='food',ticket:sheet==='ticket',exp:sheet==='exp',people:sheet==='people',time:sheet==='time'&&!!timeV},
+      sel:selV,tv:timeV||{},
       delSel:()=>{const{di,i}=s.sel;this.edit(di,l=>{l.splice(i,1);this.relink(l)},{sheet:null,sel:null});this.flash('已從行程移除')},
       phrase:s.trRes||PHRASES[s.phrase],phrases:PHRASES.map((p,i)=>{const on=!s.trRes&&i===s.phrase;return{zh:p.zh,onClick:()=>this.setState({phrase:i,trRes:null}),bg:on?INK:'#fffdf9',color:on?'#fff':INK,border:on?INK:'rgba(34,31,26,.15)'}}),
       food:FOOD.map(x=>({...x,map:'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(x.n),twBg:x.twS.bg,twColor:x.twS.c,tbBg:x.tbS.bg,tbColor:x.tbS.c,onClick:()=>this.addItem(TODAY,{title:x.n,sub:x.why,type:'餐飲',rec:[20,45]},nextIdx-1)})),
