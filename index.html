@@ -10,11 +10,11 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-192.png">
-<script src="config.js?v=33d7a75cc5"></script>
+<script src="config.js?v=4b38c5cf34"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="shim.js?v=33d7a75cc5"></script>
-<script>window.APP_V='33d7a75cc5';
+<script src="shim.js?v=4b38c5cf34"></script>
+<script>window.APP_V='4b38c5cf34';
 // Pages that stay open pick up a new version on their own: check every minute and whenever the app comes back to the screen.
 (function(){let busy=false;const check=()=>{if(busy||document.hidden)return;busy=true;
   fetch('version.json?ts='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j&&j.v&&j.v!==window.APP_V){pend=j.v;tryGo()}}).catch(()=>{}).finally(()=>{busy=false})};
@@ -688,33 +688,27 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
             </sc-if>
 
             <sc-if value="{{ sh.food }}">
-              <div style="display:flex;flex-direction:column;gap:12px">
-                <div style="font:700 20px 'Noto Sans TC',sans-serif">附近美食 · 澀谷神南</div>
-                <button onClick="{{ foodNear }}" style="height:46px;border:0;border-radius:14px;background:oklch(0.5 0.11 255);color:#fff;font:600 14px 'Noto Sans TC';cursor:pointer">📍 用我現在的位置找附近美食</button>
-                <div style="display:flex;flex-direction:column;gap:6px;padding:11px 13px;border-radius:14px;background:oklch(0.97 0.02 255);border:1px solid oklch(0.85 0.05 255)">
-                  <span style="font:700 11.5px 'Noto Sans TC';color:oklch(0.42 0.11 255)">推薦依據</span>
-                  <span style="font:400 12px/1.6 'Noto Sans TC';color:#4d473f">① 台灣網友實際推薦（Dcard／Threads 貼文）② Tabelog 分數與百名店。以目前位置（BEAMS 神南）約 15 分鐘步行內，並標出 6 人是否好坐。資料查於 2026/10/18，正式版會依當下位置即時搜尋。</span>
-                  <a href="https://www.google.com/maps/search/?api=1&amp;query=%E6%B8%8B%E8%B0%B7%20%E7%A5%9E%E5%8D%97%20%E3%83%AC%E3%82%B9%E3%83%88%E3%83%A9%E3%83%B3" target="_blank" rel="noopener" style="font:500 12px 'Noto Sans TC';color:oklch(0.42 0.11 255);text-decoration:none">在 Google 地圖看附近所有餐廳 ↗</a>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div style="font:700 20px 'Noto Sans TC',sans-serif">附近美食</div>
+                  <button onClick="{{ fmRecenter }}" style="height:36px;padding:0 12px;border:1px solid rgba(34,31,26,.18);border-radius:11px;background:#fffdf9;font:500 13px 'Noto Sans TC';color:#221f1a;cursor:pointer">📍 重新定位</button>
                 </div>
-                <sc-for list="{{ food }}" as="f" hint-placeholder-count="5">
-                  <div style="display:flex;flex-direction:column;gap:8px;padding:13px 14px;background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:16px">
-                    <div style="display:flex;gap:10px;align-items:flex-start">
-                      <div style="flex:1;min-width:0">
-                        <div style="font:600 14.5px 'Noto Sans TC'">{{ f.n }}</div>
-                        <div style="font:400 11.5px 'Noto Sans TC';color:#6f685e;margin-top:1px">{{ f.tag }}</div>
-                      </div>
-                      <button onClick="{{ f.onClick }}" style="flex:none;border:1px solid rgba(34,31,26,.2);background:transparent;border-radius:10px;padding:6px 10px;font:500 12px 'Noto Sans TC';cursor:pointer;color:#221f1a;white-space:nowrap">排入</button>
+                <div style="display:flex;gap:6px;overflow-x:auto;scrollbar-width:none">
+                  <sc-for list="{{ fmChips }}" as="c" hint-placeholder-count="4"><button onClick="{{ c.onClick }}" style="flex:none;height:34px;padding:0 13px;border-radius:17px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};font:500 13px 'Noto Sans TC';cursor:pointer">{{ c.label }}</button></sc-for>
+                </div>
+                <div id="fmap" style="height:46vh;min-height:260px;border-radius:16px;overflow:hidden;border:1px solid rgba(34,31,26,.12);background:#e8e1d5"></div>
+                <div style="display:flex;justify-content:space-between;gap:8px;font:400 12px 'Noto Sans TC';color:#4d473f"><span>{{ fmNote }}</span><span style="flex:none">{{ fmCount }}</span></div>
+                <sc-if value="{{ hasFmErr }}"><div style="font:600 12.5px 'Noto Sans TC';color:oklch(0.48 0.14 35)">{{ fmErr }}</div></sc-if>
+                <sc-for list="{{ fmList }}" as="f" hint-placeholder-count="5">
+                  <div onClick="{{ f.focus }}" style="display:flex;gap:10px;align-items:flex-start;padding:11px 13px;background:#fffdf9;border:1px solid rgba(34,31,26,.1);border-radius:14px;cursor:pointer">
+                    <span style="width:10px;height:10px;border-radius:50%;background:{{ f.dot }};flex:none;margin-top:6px"></span>
+                    <div style="flex:1;min-width:0">
+                      <div style="font:600 14.5px 'Noto Sans TC'">{{ f.n }}</div>
+                      <div style="font:400 12px 'Noto Sans TC';color:#4d473f;margin-top:1px">{{ f.tag }}</div>
+                      <sc-if value="{{ f.hasHours }}"><div style="font:400 12px 'Noto Sans TC';color:#4d473f">{{ f.hours }}</div></sc-if>
+                      <div style="font:400 12px/1.5 'Noto Sans TC';color:#5c554c;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden">{{ f.note }}</div>
                     </div>
-                    <div style="display:flex;flex-wrap:wrap;gap:6px">
-                      <span style="font:500 11px 'Noto Sans TC';padding:3px 8px;border-radius:8px;background:{{ f.twBg }};color:{{ f.twColor }}">{{ f.tw }}</span>
-                      <span style="font:500 11px 'JetBrains Mono',monospace;padding:3px 8px;border-radius:8px;background:{{ f.tbBg }};color:{{ f.tbColor }}">{{ f.tb }}</span>
-                      <span style="font:500 11px 'Noto Sans TC';padding:3px 8px;border-radius:8px;background:rgba(34,31,26,.06);color:#4d473f">{{ f.group }}</span>
-                    </div>
-                    <div style="font:400 12px/1.55 'Noto Sans TC';color:#4d473f">{{ f.why }}</div>
-                    <div style="display:flex;flex-wrap:wrap;gap:14px">
-                      <a href="{{ f.url }}" target="_blank" rel="noopener" style="font:500 11.5px 'Noto Sans TC';color:oklch(0.45 0.11 255);text-decoration:none">來源：{{ f.src }} ↗</a>
-                      <a href="{{ f.map }}" target="_blank" rel="noopener" style="font:500 11.5px 'Noto Sans TC';color:oklch(0.45 0.11 255);text-decoration:none">Google 地圖 ↗</a>
-                    </div>
+                    <a href="{{ f.nav }}" target="_blank" rel="noopener" onClick="{{ stopClick }}" style="flex:none;align-self:center;padding:7px 10px;border-radius:10px;background:#221f1a;color:#fff;font:500 12px 'Noto Sans TC';text-decoration:none">導航</a>
                   </div>
                 </sc-for>
               </div>
@@ -722,16 +716,35 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 
             <sc-if value="{{ sh.ticket }}">
               <div style="display:flex;flex-direction:column;gap:12px">
-                <div style="font:700 20px 'Noto Sans TC',sans-serif">票券（可離線）</div>
-                <div style="background:#fffdf9;border:1px solid rgba(34,31,26,.12);border-radius:18px;padding:18px;display:flex;flex-direction:column;align-items:center;gap:12px">
-                  <div style="width:170px;height:170px;border-radius:12px;background:repeating-linear-gradient(45deg,#e6dfd3 0 6px,#f3eee6 6px 12px);display:flex;align-items:center;justify-content:center;font:500 11px 'JetBrains Mono',monospace;color:#6f685e">QR code</div>
-                  <div style="font:700 16px 'Noto Sans TC'">{{ ticket.n }}</div>
-                  <div style="font:400 12px 'Noto Sans TC';color:#6f685e">{{ ticket.s }}</div>
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div style="font:700 20px 'Noto Sans TC',sans-serif">票券</div>
+                  <button onClick="{{ addTicket }}" style="height:38px;padding:0 14px;border:0;border-radius:11px;background:#221f1a;color:#fff;font:500 13px 'Noto Sans TC';cursor:pointer">＋ 新增票券</button>
                 </div>
+                <sc-if value="{{ ticket.has }}">
+                <div style="background:#fffdf9;border:1px solid rgba(34,31,26,.12);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:12px">
+                  <sc-if value="{{ ticket.hasImg }}"><img onClick="{{ ticket.zoom }}" src="{{ ticket.img }}" alt="票券截圖" style="{{ ticket.imgStyle }};border-radius:10px;background:#fff;cursor:zoom-in"></sc-if>
+                  <sc-if value="{{ ticket.noImg }}"><div style="height:120px;border-radius:12px;border:1.5px dashed rgba(34,31,26,.25);display:flex;align-items:center;justify-content:center;font:400 13px 'Noto Sans TC';color:#5c554c;text-align:center;padding:0 16px">還沒有截圖。按下面「上傳截圖」，選訂單畫面或 QR code 的截圖</div></sc-if>
+                  <sc-if value="{{ ticket.notEditing }}">
+                    <div style="font:700 17px/1.35 'Noto Sans TC'">{{ ticket.n }}</div>
+                    <div style="font:400 13px/1.6 'Noto Sans TC';color:#4d473f;white-space:pre-wrap">{{ ticket.s }}</div>
+                  </sc-if>
+                  <sc-if value="{{ ticket.editing }}">
+                    <input value="{{ ticket.edN }}" onChange="{{ ticket.setN }}" placeholder="名稱，例如 SHIBUYA SKY" style="height:46px;border-radius:12px;border:1.5px solid rgba(34,31,26,.18);background:#fffdf9;padding:0 12px;font:400 16px 'Noto Sans TC';color:#221f1a;outline:none;width:100%;box-sizing:border-box">
+                    <textarea value="{{ ticket.edS }}" onChange="{{ ticket.setS }}" placeholder="日期、訂單編號、注意事項" style="height:46px;border-radius:12px;border:1.5px solid rgba(34,31,26,.18);background:#fffdf9;padding:0 12px;font:400 16px 'Noto Sans TC';color:#221f1a;outline:none;width:100%;box-sizing:border-box;height:96px;padding:10px 12px;line-height:1.5;resize:vertical"></textarea>
+                    <div style="display:flex;gap:8px"><button onClick="{{ ticket.saveEdit }}" style="flex:1;height:44px;border:0;border-radius:12px;background:#221f1a;color:#fff;font:500 14px 'Noto Sans TC';cursor:pointer">儲存</button><button onClick="{{ ticket.cancelEdit }}" style="height:44px;padding:0 14px;border-radius:12px;border:1px solid rgba(34,31,26,.18);background:transparent;font:500 14px 'Noto Sans TC';color:#221f1a;cursor:pointer">取消</button></div>
+                  </sc-if>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap">
+                    <label style="height:44px;padding:0 14px;border-radius:12px;border:1px solid rgba(34,31,26,.18);background:transparent;font:500 14px 'Noto Sans TC';color:#221f1a;cursor:pointer;display:inline-flex;align-items:center;background:#221f1a;color:#fff;border-color:#221f1a">{{ ticket.pickLabel }}<input type="file" accept="image/*" onChange="{{ ticket.pick }}" style="display:none"></label>
+                    <sc-if value="{{ ticket.hasImg }}"><button onClick="{{ ticket.zoom }}" style="height:44px;padding:0 14px;border-radius:12px;border:1px solid rgba(34,31,26,.18);background:transparent;font:500 14px 'Noto Sans TC';color:#221f1a;cursor:pointer">{{ ticket.zoomLabel }}</button></sc-if>
+                    <sc-if value="{{ ticket.notEditing }}"><button onClick="{{ ticket.startEdit }}" style="height:44px;padding:0 14px;border-radius:12px;border:1px solid rgba(34,31,26,.18);background:transparent;font:500 14px 'Noto Sans TC';color:#221f1a;cursor:pointer">編輯文字</button></sc-if>
+                    <button onClick="{{ ticket.del }}" style="height:44px;padding:0 14px;border-radius:12px;border:1px solid rgba(34,31,26,.18);background:transparent;font:500 14px 'Noto Sans TC';color:#221f1a;cursor:pointer;color:oklch(0.5 0.15 30);margin-left:auto">刪除</button>
+                  </div>
+                </div>
+                </sc-if>
                 <sc-for list="{{ tickets }}" as="t" hint-placeholder-count="3">
-                  <div onClick="{{ t.onClick }}" style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:14px;border:1px solid {{ t.border }};background:#fffdf9;cursor:pointer">
-                    <span style="font:500 14px 'Noto Sans TC'">{{ t.n }}</span>
-                    <span style="font:400 11.5px 'Noto Sans TC';color:#6f685e">{{ t.tag }}</span>
+                  <div onClick="{{ t.onClick }}" style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;border:1.5px solid {{ t.border }};background:#fffdf9;cursor:pointer">
+                    <span style="font:500 14px 'Noto Sans TC';min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.clip }}{{ t.n }}</span>
+                    <span style="flex:none;font:400 12px 'Noto Sans TC';color:#5c554c">{{ t.tag }}</span>
                   </div>
                 </sc-for>
               </div>
@@ -921,6 +934,11 @@ const FOOD=[
  {n:'陳家私菜 渋谷店',tag:'四川菜・頂天石燒麻婆豆腐',tw:'台灣網友：未查到',twS:NONE,tb:'Tabelog 3.41',tbS:TB,group:'6 人：接受宴會訂位',why:'Tabelog 神南居酒屋分類排名前段，店家標明接受各種宴會，6 人比較好坐。',src:'Tabelog 神南居酒屋',url:'https://tabelog.com/tokyo/C13113/C36625/rstLst/izakaya/'}];
 const TICKETS=[{n:'teamLab Planets TOKYO',s:'11/12 08:00・KKday #26KK268884483・憑證 KKDAY-20260929-FCD4・大人 6',tag:'門票'},{n:'the Moto Hotel Ueno II',s:'11/11–13・Booking 6402.905.665／PIN 4398',tag:'住宿'},{n:'ORIX 租車',s:'11/13 08:00・Klook XAA089762・現場付 ¥52,140',tag:'租車'},{n:'民宿 紫陽花（柴菊房）',s:'11/13–15・Booking 6946.194.818／PIN 9936',tag:'住宿'},{n:'the Moto Hotel Ueno II',s:'11/15–17・Booking 6013.900.321／PIN 4344',tag:'住宿'},{n:'送機包車',s:'11/17・SAR427709・Toyota Hiace 9 人座・只等 30 分',tag:'交通'}];
 const clone=o=>JSON.parse(JSON.stringify(o));
+const tkCache={get:id=>{try{return localStorage.getItem('tk-img-'+id)}catch(e){return null}},set:(id,v)=>{try{if(v)localStorage.setItem('tk-img-'+id,v);else localStorage.removeItem('tk-img-'+id)}catch(e){}}};
+const shrinkImg=file=>new Promise((ok,bad)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{URL.revokeObjectURL(u);let w=im.naturalWidth,h=im.naturalHeight,m=1600;
+  for(let tries=0;tries<6;tries++){const k=Math.min(1,m/Math.max(w,h)),c=document.createElement('canvas');c.width=Math.round(w*k);c.height=Math.round(h*k);
+    const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);g.drawImage(im,0,0,c.width,c.height);const q=tries<3?.8-tries*.1:.6;const d=c.toDataURL('image/jpeg',q);
+    if(d.length<800000)return ok(d);m=Math.round(m*.8)}bad(new Error('too big'))};im.onerror=()=>{URL.revokeObjectURL(u);bad(new Error('not an image'))};im.src=u});
 const dayModeOf=items=>{const c={};items.forEach(it=>{if(it.leg&&!it.leg.est)c[it.leg.orig]=(c[it.leg.orig]||0)+1});return (c.car||0)>(c.train||0)+(c.walk||0)/2?'car':'train'};
 
 
@@ -1002,6 +1020,13 @@ const pinWaits=d=>{let t=tm(d.start||'09:00');const n=d.items.length;d.items.for
   if(!it.fix&&(it.wait||0)>4){it.fix=ft(at);it.wait=0}else if(it.fix&&it.wait)it.wait=0;t=at+it.stay+(i<n-1&&it.leg?mins(it.leg):0)})};
 const getLoc=()=>new Promise(res=>{try{if(!navigator.geolocation)return res({err:'none'});navigator.geolocation.getCurrentPosition(p=>res({lat:p.coords.latitude,lng:p.coords.longitude,acc:p.coords.accuracy}),e=>res({err:e&&e.code===1?'denied':'fail'}),{enableHighAccuracy:true,timeout:10000,maximumAge:120000})}catch(e){res({err:'none'})}});
 let PLDATA=null;
+const FM_GROUPS=[['all','全部'],['meal','正餐'],['sweet','甜點'],['cafe','咖啡・麵包']];
+const fmGroup=c=>/甜點|和菓子|冰淇淋|甘味|聖代/.test(c||'')?'sweet':/咖啡|麵包|喫茶/.test(c||'')?'cafe':'meal';
+const FM_COL={meal:'#c2410c',sweet:'#be185d',cafe:'#7c5a2a'};
+const fmEsc=t=>String(t||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmNav=p=>p.src&&/google\.com\/maps/.test(p.src)?p.src:'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent((p.jp||p.name)+' '+(p.addr||''));
+let FM_LL=null;const loadLeaflet=()=>FM_LL||(FM_LL=new Promise((ok,bad)=>{if(window.L)return ok();const c=document.createElement('link');c.rel='stylesheet';c.href='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css';document.head.appendChild(c);
+  const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js';s.onload=()=>ok();s.onerror=()=>{FM_LL=null;bad(new Error('leaflet'))};document.head.appendChild(s)}));
 const getPlData=async()=>{if(PLDATA)return PLDATA;try{const r=await fetch('places.json',{cache:'no-cache'});PLDATA=await r.json()}catch(e){PLDATA={places:[],stops:{}}}return PLDATA};
 const distM=(a,b)=>{const R=6371e3,r=Math.PI/180,dl=(b.lat-a.lat)*r,dg=(b.lng-a.lng)*r,x=Math.sin(dl/2)**2+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(dg/2)**2;return 2*R*Math.asin(Math.sqrt(x))};
 const fmtDist=m=>m<30?'就在附近':m<1000?'約 '+Math.round(m/10)*10+'m':'約 '+(m/1000).toFixed(1)+'km';
@@ -1028,8 +1053,8 @@ const getSample=async()=>{try{return window.claude&&window.claude.use?await wind
 class Component extends DCLogic {
   constructor(p){super(p);const C=clockOf(null,0),m=C.trip?'trip':'plan',L=lsGet();if(Array.isArray(L.people)&&L.people.length)setPeopleG(L.people);
     this.state={people:Array.isArray(L.people)&&L.people.length?L.people:PEOPLE0,newName:'',sim:null,mode:m,tab:m==='trip'?'today':'plan',day:m==='trip'?C.today:0,days:L.plan&&Array.isArray(L.plan.days)?L.plan.days:clone(DAYS),delay:0,elapsed:15,sheet:null,sel:null,drag:null,
-      exps:L.exps||EXPS.slice(),checked:L.checked||{},packX:L.packX||[],packNew:{},cur:'JPY',
-      form:{t:'',amt:'',payer:ALL[0],cat:'餐飲',with:ALL.slice(),cur:'JPY'},errs:{},toast:'',phrase:0,ticket:0,moneyView:'list',settled:L.settled||[],aiDone:(()=>{try{return JSON.parse(localStorage.getItem('trip-aidone')||'{}')}catch(e){return {}}})(),catTouched:false,pl:null,draft:L.plan&&L.plan.draft||false,trText:'',trRes:null,trLoading:false,trErr:'',sync:'local',delArm:null,addQ:'',sr:null,srLoading:false,srErr:'',nearMe:false,myPlaces:[],np:null};
+      exps:L.exps||EXPS.slice(),checked:L.checked||{},packX:L.packX||[],packNew:{},tix:null,tkEdit:null,tkZoom:false,tkBusy:false,cur:'JPY',
+      form:{t:'',amt:'',payer:ALL[0],cat:'餐飲',with:ALL.slice(),cur:'JPY'},errs:{},toast:'',phrase:0,ticket:0,moneyView:'list',settled:L.settled||[],aiDone:(()=>{try{return JSON.parse(localStorage.getItem('trip-aidone')||'{}')}catch(e){return {}}})(),catTouched:false,pl:null,draft:L.plan&&L.plan.draft||false,trText:'',trRes:null,trLoading:false,trErr:'',sync:'local',delArm:null,addQ:'',sr:null,srLoading:false,srErr:'',nearMe:false,myPlaces:[],np:null,fm:{cat:'all',center:null,src:'',loading:false,err:'',sel:null}};
     this.mine=new Set();this.q=Promise.resolve();}
   async whereAmI(){if(this.state.mode!=='trip'||this.state.sim||typeof getPlData!=='function')return;const g=await getLoc();if(g.err)return;
     const P=await getPlData(),G=P.stops||{},C=clockOf(null,0),sch=this.sched(C.today);let best=null;
@@ -1062,6 +1087,36 @@ class Component extends DCLogic {
   delPackItem(id,l){askAdmin('刪除清單項目「'+l+'」要先輸入管理密碼。',()=>{const checked={...this.state.checked};delete checked['x-'+id];
     this.setState(st=>({packX:st.packX.filter(x=>x.id!==id),checked}));
     if(this.db){this.write(()=>this.db.collection('packitems').doc(id).delete());this.write(()=>this.db.doc('shared/pack').set({checked}))}else lsSet({packX:this.state.packX.filter(x=>x.id!==id),checked});this.flash('已刪除「'+l+'」')},true)}
+  tkList(){return this.state.tix||TICKETS.map((t,i)=>({...t,id:'seed'+i,img:tkCache.get('seed'+i)||''}))}
+  tkSave(id,o){const tix=this.tkList().map(t=>t.id===id?{...t,...o}:t);this.setState({tix});if(o.img!==undefined)tkCache.set(id,o.img);
+    if(this.db){const t=tix.find(x=>x.id===id);this.write(()=>this.db.collection('tickets').doc(id).set({n:t.n,s:t.s||'',tag:t.tag||'',img:t.img||'',ts:t.ts!=null?t.ts:Date.now()}))}}
+  tkAdd(){const id='t'+Date.now().toString(36),t={id,n:'新票券',s:'',tag:'其他',img:'',ts:Date.now()};this.setState(st=>({tix:[...this.tkList(),t],ticket:this.tkList().length,tkEdit:{n:'',s:''}}));
+    if(this.db)this.write(()=>this.db.collection('tickets').doc(id).set({n:t.n,s:'',tag:t.tag,img:'',ts:t.ts}))}
+  async tkPick(e,id){const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;this.setState({tkBusy:true});
+    try{const d=await shrinkImg(f);this.tkSave(id,{img:d});this.flash('截圖已存好，大家都看得到')}catch(err){this.flash('這張圖存不了，換一張試試')}this.setState({tkBusy:false})}
+  tkDel(id,n){askAdmin('刪除票券「'+n+'」要先輸入管理密碼。',()=>{const tix=this.tkList().filter(t=>t.id!==id);tkCache.set(id,null);this.setState({tix,ticket:0,tkEdit:null});
+    if(this.db)this.write(()=>this.db.collection('tickets').doc(id).delete());this.flash('已刪除「'+n+'」')},true)}
+  openFood(){this.setState(st=>({sheet:'food',fm:{...st.fm,loading:true,err:'',sel:null}}));this.fmStart()}
+  async fmStart(){let err='';try{await loadLeaflet()}catch(e){err='地圖載入失敗，請確認網路後再開一次'}
+    const P=await getPlData(),g=await getLoc();let c=null,src='me';
+    if(!g.err){c={lat:g.lat,lng:g.lng};if(!P.places.some(p=>distM(c,p)<30000))c=null}
+    if(!c){src='trip';const C=clockOf(null,0),di=this.state.mode==='trip'?C.today:this.state.day,sc=this.sched(di),G=P.stops||{};
+      const nx=sc.findIndex(it=>it.at>NOW),order=nx>=0?[...sc.slice(nx),...sc.slice(0,nx)]:sc;for(const it of order){const q=stopGeo(it,G);if(q){c=q;src='trip:'+it.title;break}}}
+    if(!c){c={lat:35.7101,lng:139.7777};src='trip:上野'}
+    this.setState(st=>({fm:{...st.fm,center:c,src,acc:g.acc||0,loading:false,err}}));setTimeout(()=>this.fmDraw(true),60)}
+  fmItems(){const f=this.state.fm;if(!PLDATA||!f.center)return[];const all=PLDATA.places.concat((this.state.myPlaces||[]).filter(p=>p.lat));
+    return all.map(p=>({...p,d:distM(f.center,p),g:fmGroup(p.cat)})).filter(p=>p.d<=1000&&(f.cat==='all'||p.g===f.cat)).sort((a,b)=>a.d-b.d)}
+  fmDraw(recenter){const el=document.getElementById('fmap'),f=this.state.fm;if(!el||!window.L||!f.center)return;
+    if(this.fmMap&&this.fmMap.getContainer()!==el){this.fmMap.remove();this.fmMap=null}
+    if(!this.fmMap){this.fmMap=L.map(el,{zoomControl:false,preferCanvas:true});L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(this.fmMap);this.fmLayer=L.layerGroup().addTo(this.fmMap);recenter=true}
+    if(recenter)this.fmMap.setView([f.center.lat,f.center.lng],15);this.fmLayer.clearLayers();this.fmDots={};
+    L.circle([f.center.lat,f.center.lng],{radius:1000,color:'#2563eb',weight:1,fill:false,dashArray:'4 6'}).addTo(this.fmLayer);
+    if(f.src==='me')L.circleMarker([f.center.lat,f.center.lng],{radius:8,color:'#fff',weight:3,fillColor:'#2563eb',fillOpacity:1}).addTo(this.fmLayer);
+    else L.circleMarker([f.center.lat,f.center.lng],{radius:7,color:'#221f1a',weight:2,fillColor:'#fff',fillOpacity:1}).addTo(this.fmLayer);
+    this.fmItems().forEach((p,i)=>{const m=L.circleMarker([p.lat,p.lng],{radius:7,color:'#fff',weight:1.5,fillColor:FM_COL[p.g],fillOpacity:.95}).addTo(this.fmLayer);
+      m.bindPopup('<b>'+fmEsc(p.name)+'</b><br><span style="color:#5c554c">'+fmEsc(p.cat)+' · '+Math.round(p.d)+' m</span>'+(p.hours?'<br>'+fmEsc(p.hours):'')+(p.note?'<br><span style="color:#5c554c">'+fmEsc(p.note)+'</span>':'')+'<br><a href="'+fmEsc(fmNav(p))+'" target="_blank" rel="noopener">Google 地圖導航 ↗</a>',{maxWidth:240});
+      this.fmDots[p.name+'|'+p.lat]=m});setTimeout(()=>this.fmMap&&this.fmMap.invalidateSize(),80)}
+  fmFocus(p){if(!this.fmMap)return;const m=this.fmDots&&this.fmDots[p.name+'|'+p.lat];this.fmMap.setView([p.lat,p.lng],17);if(m)m.openPopup();const el=document.getElementById('fmap');if(el)el.scrollIntoView({behavior:'smooth',block:'center'})}
   togglePack(k){const checked={...this.state.checked};if(checked[k])delete checked[k];else checked[k]=true;this.setState({checked});
     if(this.db)this.write(()=>this.db.doc('shared/pack').set({checked}));else lsSet({checked})}
   addExp(e){const x={...e,ts:Date.now()};
@@ -1082,6 +1137,8 @@ class Component extends DCLogic {
     db.doc('shared/plan').onSnapshot(snap=>{if(this.pt||this.saving||snap.metadata.hasPendingWrites)return;const d=snap.exists?snap.data():null;
       const days=d&&Array.isArray(d.days)?clone(d.days):clone(DAYS),before=JSON.stringify(days);days.forEach(x=>{this.relink(x.items);pinWaits(x)});
       this.setState({sync:'shared',days,draft:d?d.draft||false:false});if(d&&!snap.metadata.fromCache&&JSON.stringify(days)!==before)this.savePlan()},warn);
+    db.collection('tickets').onSnapshot(qs=>{if(qs.empty&&!qs.metadata.fromCache){TICKETS.forEach((t,i)=>this.write(()=>db.collection('tickets').doc('seed'+i).set({n:t.n,s:t.s,tag:t.tag,img:'',ts:i})));return}
+      const tix=qs.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(a.ts||0)-(b.ts||0));tix.forEach(t=>{if(t.img)tkCache.set(t.id,t.img);else t.img=tkCache.get(t.id)||''});this.setState({tix})},warn);
     db.collection('packitems').onSnapshot(qs=>{this.setState({packX:qs.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(a.ts||0)-(b.ts||0))})},warn);
     db.doc('shared/pack').onSnapshot(snap=>{const d=snap.exists?snap.data():null;this.setState({checked:d&&d.checked?{...d.checked}:{}})},warn);
     db.collection('expenses').onSnapshot(qs=>{const added=first?[]:qs.docChanges().filter(c=>c.type==='added'&&!this.mine.has(c.doc.id)).map(c=>c.doc.id);
@@ -1321,7 +1378,7 @@ class Component extends DCLogic {
       trText:s.trText,setTr:e=>this.setState({trText:e.target.value,trErr:''}),trKey:e=>{if(e.key==='Enter')this.doTr()},doTr:()=>this.doTr(),
       trBtn:s.trLoading?'翻譯中…':'翻譯',trOpacity:s.trLoading?.6:1,trErr:s.trErr,
       delay30:()=>{if(preview)return this.flash('出發當天才能延後行程');this.setState(st=>({delay:st.delay+30}));this.flash('之後行程已全部延後 30 分鐘')},
-      quick:[['食','附近美食','food',tc('餐飲')],['¥','記一筆','exp',tc('景點')],['票','票券','ticket',tc('住宿')]].map(([g,l,k,c])=>({glyph:g,label:l,color:c,onClick:()=>this.setState({sheet:k,errs:{}})})),
+      quick:[['食','附近美食','food',tc('餐飲')],['¥','記一筆','exp',tc('景點')],['票','票券','ticket',tc('住宿')]].map(([g,l,k,c])=>({glyph:g,label:l,color:c,onClick:()=>k==='food'?this.openFood():this.setState({sheet:k,errs:{}})})),
       restToday,
       avatars:PEOPLE.map(p=>({i:(p.n||'?').slice(0,1),bg:p.bg})),
       statusLabel:trip?'旅途中':C.after?'旅程':'出發倒數',statusValue:trip?'Day '+(TODAY+1)+' / '+s.days.length:C.after?'已結束':C.daysLeft+' 天',
@@ -1368,7 +1425,22 @@ class Component extends DCLogic {
       delSel:()=>{const{di,i}=s.sel;this.edit(di,l=>{l.splice(i,1);this.relink(l)},{sheet:null,sel:null});this.flash('已從行程移除')},
       phrase:s.trRes||PHRASES[s.phrase],phrases:PHRASES.map((p,i)=>{const on=!s.trRes&&i===s.phrase;return{zh:p.zh,onClick:()=>this.setState({phrase:i,trRes:null}),bg:on?INK:'#fffdf9',color:on?'#fff':INK,border:on?INK:'rgba(34,31,26,.15)'}}),
       food:FOOD.map(x=>({...x,map:'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(x.n),twBg:x.twS.bg,twColor:x.twS.c,tbBg:x.tbS.bg,tbColor:x.tbS.c,onClick:()=>this.addItem(TODAY,{title:x.n,sub:x.why,type:'餐飲',rec:[20,45]},nextIdx-1)})),
-      ticket:TICKETS[s.ticket],tickets:TICKETS.map((t,i)=>({...t,onClick:()=>this.setState({ticket:i}),border:i===s.ticket?INK:'rgba(34,31,26,.1)'})),
+      ticket:(()=>{const L=this.tkList(),t=L[Math.min(s.ticket,L.length-1)];if(!t)return{none:true};const ed=s.tkEdit;
+        return{...t,has:true,hasImg:!!t.img,noImg:!t.img,imgStyle:s.tkZoom?'width:100%;height:auto;display:block':'width:100%;max-height:52vh;object-fit:contain;display:block',
+          zoomLabel:s.tkZoom?'縮小':'放大',zoom:()=>this.setState(st=>({tkZoom:!st.tkZoom})),
+          pickLabel:s.tkBusy?'處理中…':t.img?'換截圖':'＋ 上傳截圖',pick:e=>this.tkPick(e,t.id),
+          editing:!!ed,notEditing:!ed,edN:ed?ed.n:'',edS:ed?ed.s:'',
+          startEdit:()=>this.setState({tkEdit:{n:t.n,s:t.s||''}}),setN:e=>{const v=e.target.value;this.setState(st=>({tkEdit:{...st.tkEdit,n:v}}))},setS:e=>{const v=e.target.value;this.setState(st=>({tkEdit:{...st.tkEdit,s:v}}))},
+          saveEdit:()=>{const n=(s.tkEdit.n||'').trim()||'未命名票券';this.tkSave(t.id,{n,s:(s.tkEdit.s||'').trim()});this.setState({tkEdit:null});this.flash('已儲存')},
+          cancelEdit:()=>this.setState({tkEdit:null}),del:()=>this.tkDel(t.id,t.n)}})(),
+      addTicket:()=>this.tkAdd(),
+      fmChips:FM_GROUPS.map(([k,l])=>{const on=s.fm.cat===k;return{label:l,bg:on?INK:'#fffdf9',color:on?'#fff':INK,border:on?INK:'rgba(34,31,26,.18)',onClick:()=>{this.setState(st=>({fm:{...st.fm,cat:k}}));setTimeout(()=>this.fmDraw(false),30)}}}),
+      fmLoading:!!s.fm.loading,fmErr:s.fm.err||'',hasFmErr:!!s.fm.err,
+      fmNote:s.fm.loading?'正在讀取你的位置…':!s.fm.center?'':s.fm.src==='me'?'藍點是你，虛線圈是 1 公里':'你現在不在日本或沒開定位，先顯示「'+s.fm.src.slice(5)+'」附近 1 公里',
+      fmRecenter:()=>this.openFood(),
+      fmList:(s.sheet==='food'?this.fmItems():[]).slice(0,40).map(p=>({n:p.name,tag:[p.cat,Math.round(p.d)+' m',p.area].filter(Boolean).join(' · '),hours:p.hours||'',note:p.note||'',hasHours:!!p.hours,dot:FM_COL[p.g],nav:fmNav(p),focus:()=>this.fmFocus(p)})),
+      fmCount:s.sheet==='food'&&s.fm.center?this.fmItems().length+' 間在 1 公里內':'',
+      tickets:this.tkList().map((t,i)=>({...t,clip:t.img?'📎 ':'',onClick:()=>this.setState({ticket:i,tkEdit:null,tkZoom:false}),border:i===s.ticket?INK:'rgba(34,31,26,.1)'})),
       form:f,errs:s.errs,formCurName:f.cur==='JPY'?'日幣':'台幣',
       formCurBtns:tog(f.cur,k=>this.setState(st=>({form:{...st.form,cur:k}}))),
       amtTwd:amtN>0&&f.with.length?'≈ '+(f.cur==='JPY'?fT(amtJ):fJ(amtJ))+' · 每人 '+(f.cur==='JPY'?fJ(amtJ/f.with.length):fT(amtJ/f.with.length)):'輸入後自動換算'+(f.cur==='JPY'?'台幣':'日幣')+'與每人分攤',

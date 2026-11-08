@@ -333,6 +333,7 @@ exec(open(os.path.join(HERE,'prep_patch.py'),encoding='utf-8').read())
 exec(open(os.path.join(HERE,'fixtime_patch.py'),encoding='utf-8').read())
 exec(open(os.path.join(HERE,'trip_patch.py'),encoding='utf-8').read())
 exec(open(os.path.join(HERE,'timeedit_patch.py'),encoding='utf-8').read())
+exec(open(os.path.join(HERE,'tickets_patch.py'),encoding='utf-8').read())
 
 head = """<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Travel App 東京河口湖</title>

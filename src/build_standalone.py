@@ -18,6 +18,7 @@ page = rep(page, "'要先登入 Claude，並在 Claude 裡打開這個連結才�
 page = rep(page, "'需要允許這個 app 使用 Claude 才能搜尋'", "'AI 搜尋暫時無法使用，請稍後再試'")
 exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "places_patch.py"), encoding="utf-8").read())
 page = apply(page, rep)
+exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "foodmap_patch.py"), encoding="utf-8").read())
 
 head_extra = """<meta charset="utf-8">
 <meta name="apple-mobile-web-app-capable" content="yes">
