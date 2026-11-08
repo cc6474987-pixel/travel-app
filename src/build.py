@@ -329,6 +329,7 @@ exec(open(os.path.join(HERE,'loc_patch.py'),encoding='utf-8').read())
 exec(open(os.path.join(HERE,'legfix_patch.py'),encoding='utf-8').read())
 exec(open(os.path.join(HERE,'admin_patch.py'),encoding='utf-8').read())
 exec(open(os.path.join(HERE,'pack_patch.py'),encoding='utf-8').read())
+exec(open(os.path.join(HERE,'prep_patch.py'),encoding='utf-8').read())
 exec(open(os.path.join(HERE,'fixtime_patch.py'),encoding='utf-8').read())
 exec(open(os.path.join(HERE,'trip_patch.py'),encoding='utf-8').read())
 

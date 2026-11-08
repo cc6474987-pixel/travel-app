@@ -10,11 +10,11 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-192.png">
-<script src="config.js?v=4845b488ef"></script>
+<script src="config.js?v=f4e7b6606b"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="shim.js?v=4845b488ef"></script>
-<script>window.APP_V='4845b488ef';
+<script src="shim.js?v=f4e7b6606b"></script>
+<script>window.APP_V='f4e7b6606b';
 // Pages that stay open pick up a new version on their own: check every minute and whenever the app comes back to the screen.
 (function(){let busy=false;const check=()=>{if(busy||document.hidden)return;busy=true;
   fetch('version.json?ts='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j&&j.v&&j.v!==window.APP_V){pend=j.v;tryGo()}}).catch(()=>{}).finally(()=>{busy=false})};
@@ -890,7 +890,7 @@ const EXPS=[];
 const AI={0:{title:'丸之內聖誕點燈 11/11 可能還沒亮',body:'你的備註提到點燈通常 11 月中才開始。行幸通り仍可拍站體，30 分鐘不用改。',info:true},
   1:{title:'想逛 PARCO 服飾？刪掉 SHIPS，把 20 分給 PARCO',body:'照你備註的取捨：PARCO 停留 20 → 40 分，1F／2F 服飾樓層也能看，之後時間自動重排。',info:false}};
 const guess=t=>!t.trim()?null:/車|JR|巴士|地鐵|計程|特急|電車|Suica|新幹線|過路|油/.test(t)?'交通':/門票|入場|票|纜車/.test(t)?'門票':/買|藥妝|伴手|紀念|衣|唐吉|免稅|Outlet/.test(t)?'購物':/飯店|民宿|住/.test(t)?'住宿':'餐飲';
-const PACK=[{name:'證件與錢',items:[['護照（免稅要帶）','各自'],['台灣駕照＋日文譯本','會開車的人'],['Visit Japan Web 六人份','我'],['信用卡＋日圓現金','各自'],['千圓鈔（停車場）','阿哲']]},{name:'穿著',items:[['好捲的褲子（teamLab 水深到膝）','各自'],['厚外套（河口湖清晨 3–5°C）','各自'],['好走的鞋（忠靈塔 398 階）','各自']]},{name:'其他',items:[['行動電源（隨身行李）','各自'],['Suica','各自'],['防水手機袋（teamLab）','Mei'],['大購物袋（Outlet）','我']]}];
+const PACK=[{name:'證件與錢',items:[['護照（免稅要帶）','各自'],['台灣駕照＋日文譯本','會開車的人'],['Visit Japan Web 六人份','我'],['信用卡＋日圓現金','各自'],['千圓鈔（停車場）','阿哲']]},{name:'穿著',items:[['好捲的褲子（teamLab 水深到膝）','各自'],['厚外套（河口湖清晨 3–5°C）','各自'],['好走的鞋（忠靈塔 398 階）','各自']]},{name:'其他',items:[['行動電源（隨身行李）','各自'],['Suica','各自'],['防水手機袋（teamLab）','Mei'],['大購物袋（Outlet）','我']]},{name:'出國前要辦',items:[['確認 11/17 08:00 送機有有效訂單','舊單 SAR427709 已取消'],['訂 SHIBUYA SKY 11/12 16:20 ×6','Klook／KKday'],['訂 63 ANGEL 11/12 晚場 ×6','Klook・限 20 歲'],['訂 Gyu Star 11/11 午餐 ×6','☎ 03-3834-2215'],['訂 湖波 11/13 18:00 ×6','☎ 0555-72-0349'],['訂 牛たんの檸檬 11/15 19:45 ×6','TableCheck 中文'],['訂 GOKU 淺草寺店 11/16 11:40 ×6','TableCheck 中文'],['訂 伊豆榮本店 11/16 17:30 ×6','☎ 03-3831-0954'],['訂 Maidreamin 11/16 六人位','官網'],['酷航 TR866 線上報到','起飛前 48 小時開放'],['確認去回程託運行李額度','酷航／樂桃'],['11/11 清晨去桃園機場','04:40 前到'],['網路：eSIM 或 Wi-Fi 分享器','各自'],['旅平險／不便險','各自'],['手機把這個 App 加到主畫面並打開一次','離線也能用'],['Google 地圖下載離線區域','東京・河口湖・鎌倉']]}];
 const PHRASES=[{zh:'6 個人，有位子嗎？',jp:'6人です。席はありますか？',ro:'Rokunin desu. Seki wa arimasu ka?'},{zh:'我有預約',jp:'予約しています',ro:'Yoyaku shite imasu'},{zh:'可以分開坐沒關係',jp:'別々の席でも大丈夫です',ro:'Betsubetsu no seki demo daijōbu desu'},{zh:'可以刷卡嗎？',jp:'カードは使えますか？',ro:'Kādo wa tsukaemasu ka?'},{zh:'可以辦免稅嗎？',jp:'免税できますか？',ro:'Menzei dekimasu ka?'},{zh:'洗手間在哪裡？',jp:'トイレはどこですか？',ro:'Toire wa doko desu ka?'}];
 const TW={bg:'oklch(0.95 0.04 40)',c:'oklch(0.42 0.13 40)'},TB={bg:'oklch(0.95 0.04 85)',c:'oklch(0.42 0.1 85)'},NONE={bg:'rgba(34,31,26,.06)',c:'#6f685e'};
 const FOOD=[
@@ -1327,7 +1327,7 @@ class Component extends DCLogic {
       packCount:doneN+' / '+allPack.length,packPct:(doneN/allPack.length*100)+'%',
       packCats:pack.map((c,ci)=>({name:c.name,newVal:(s.packNew||{})[ci]||'',setNew:e=>{const v=e.target.value;this.setState(st=>({packNew:{...st.packNew,[ci]:v}}))},newKey:e=>{if(e.key==='Enter')this.addPackItem(ci,e.target.value)},add:()=>this.addPackItem(ci),
         items:c.items.map((p,pi)=>({label:p.l,who:p.w,isX:!!p.xid,onDel:e=>{e.stopPropagation();this.delPackItem(p.xid,p.l)},mark:p.d?'✓':'',boxBg:p.d?INK:'transparent',boxBorder:p.d?INK:'rgba(34,31,26,.3)',color:p.d?MUTED:INK,deco:p.d?'line-through':'none',
-        onClick:()=>this.togglePack(p.k)}))})),
+        onClick:()=>this.togglePack(p.k)}))})).map((c,i,a)=>a[(i+a.length-1)%a.length]),
       toast:s.toast,hasToast:!!s.toast,
       hasSheet:!!sheet,closeSheet:()=>this.setState({sheet:null}),stop:e=>e.stopPropagation(),
       sh:{stop:sheet==='stop'&&!!selV.title,add:sheet==='add',translate:sheet==='translate',food:sheet==='food',ticket:sheet==='ticket',exp:sheet==='exp',people:sheet==='people'},
