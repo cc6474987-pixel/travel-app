@@ -1,7 +1,7 @@
 # --- Pre-departure to-do list (bang, 2026-11-08): a 出國前要辦 group in the 清單 tab, shown first ---
 # Appended to PACK so the checked-state keys of the existing groups (index-index) don't shift; only the display order puts it on top.
 S = rep(S, "['大購物袋（Outlet）','我']]}];", "['大購物袋（Outlet）','我']]},{name:'出國前要辦',items:["
-  "['確認 11/17 08:00 送機有有效訂單','舊單 SAR427709 已取消'],"
+  "['確認 11/17 06:30 送機有有效訂單','舊單 SAR427709 已取消'],"
   "['訂 SHIBUYA SKY 11/12 16:20 ×6','Klook／KKday'],"
   "['訂 63 ANGEL 11/12 晚場 ×6','Klook・限 20 歲'],"
   "['訂 Gyu Star 11/11 午餐 ×6','☎ 03-3834-2215'],"
